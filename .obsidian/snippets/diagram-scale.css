@@ -1,0 +1,84 @@
+/* ============================================================
+   Diagram scaling for Obsidian
+   Goal: fit page width, keep text readable, avoid tiny renders
+   ============================================================ */
+
+:root {
+  --diagram-min-width: 100%;
+  --excalidraw-min-width: 100%;
+  --excalidraw-max-height: 78vh;
+  --diagram-font-min: 13px;
+  --diagram-font-max: 19px;
+}
+
+/* Mermaid container */
+.markdown-preview-view .mermaid,
+.markdown-rendered .mermaid {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  padding: 6px 0;
+}
+
+/* Keep diagrams readable: allow horizontal scroll instead of over-shrinking */
+.markdown-preview-view .mermaid svg,
+.markdown-rendered .mermaid svg {
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: var(--diagram-min-width);
+  height: auto;
+  margin: 0 auto;
+  font-size: clamp(var(--diagram-font-min), 1.05vw, var(--diagram-font-max)) !important;
+}
+
+/* Aggressive Excalidraw scaling */
+.markdown-preview-view .internal-embed[src$=".excalidraw"],
+.markdown-rendered .internal-embed[src$=".excalidraw"] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  margin: 10px 0 14px;
+}
+
+.markdown-preview-view .internal-embed[src$=".excalidraw"] .markdown-embed-content,
+.markdown-rendered .internal-embed[src$=".excalidraw"] .markdown-embed-content {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: var(--excalidraw-min-width);
+}
+
+.markdown-preview-view .internal-embed[src$=".excalidraw"] svg,
+.markdown-rendered .internal-embed[src$=".excalidraw"] svg,
+.markdown-preview-view .internal-embed[src$=".excalidraw"] img,
+.markdown-rendered .internal-embed[src$=".excalidraw"] img,
+.markdown-preview-view .internal-embed[src$=".excalidraw"] canvas,
+.markdown-rendered .internal-embed[src$=".excalidraw"] canvas,
+.markdown-preview-view .internal-embed[src$=".excalidraw"] .excalidraw-svg,
+.markdown-rendered .internal-embed[src$=".excalidraw"] .excalidraw-svg {
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: var(--excalidraw-min-width);
+  height: auto !important;
+  max-height: var(--excalidraw-max-height);
+  object-fit: contain;
+}
+
+/* Mobile: no forced min width, keep full viewport fit */
+@media (max-width: 900px) {
+  :root {
+    --diagram-min-width: 100%;
+    --excalidraw-min-width: 100%;
+    --excalidraw-max-height: 62vh;
+  }
+
+  .markdown-preview-view .mermaid svg,
+  .markdown-rendered .mermaid svg {
+    min-width: 100%;
+  }
+}

@@ -1,6 +1,6 @@
 # NOTICE — Formatting Fix Log
 
-Last updated: 2026-03-07
+Last updated: 2026-03-07 (updated)
 Platform: Obsidian vault
 Obsidian compatibility (minimum): 1.12.0
 Note: `app.json` in this vault is empty (`{}`), so the exact app version is not pinned in-repo.
@@ -23,6 +23,8 @@ This file records formatting issues that were already fixed, to avoid regression
 
 - Problem: `\n` in node labels was not rendered reliably.
 - Resolution: replaced with `<br/>` inside Mermaid blocks.
+- Problem: `quadrantChart` may fail on lines like `quadrant-1 ...`, `quadrant-2 ...`.
+- Resolution: remove `quadrant-1..4` labels and keep only axes + data points.
 
 ## 3. Absolute wiki-links
 
@@ -54,14 +56,24 @@ After mass rename/move/refactor:
 1. Verify every `[[...]]` target `.md` exists.
 2. Re-check index pages (`Concepts`, `Models`, `Datasets`) first.
 3. Reload Obsidian if render cache artifacts appear.
+4. For `.excalidraw`, verify plugin settings:
+   - `renderImageInMarkdownReadingMode: true`
+   - recommended: `mdSVGwidth: 1200`, `mdSVGmaxHeight: 1600`
 
 ## 7. Anti-patterns (do not use)
 
 - Do not use `[[path|label]]` inside markdown tables.
 - Do not use relative links.
 - Do not put HTML inside `[[...]]`.
+- Do not apply aggressive Excalidraw CSS scaling without validating Reading view (it may break rendering).
 
-## 8. File maintenance
+## 8. Diagram and illustration scaling
+
+- Use `.obsidian/snippets/diagram-scale.css`.
+- Goal: Mermaid and Excalidraw should match text container width (`100%`) with readable text.
+- If illustrations disappear after styling: check Excalidraw plugin settings first, then CSS.
+
+## 9. File maintenance
 
 - Keep this file updated after every major formatting or structure refactor.
 - Ukrainian counterpart: `NOTICE.md`.

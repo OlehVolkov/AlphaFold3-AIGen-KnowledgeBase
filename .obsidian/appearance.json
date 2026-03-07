@@ -2,6 +2,7 @@
   "cssTheme": "",
   "enabledCssSnippets": [
     "homepage",
-    "math-note"
+    "math-note",
+    "diagram-scale"
   ]
 }
