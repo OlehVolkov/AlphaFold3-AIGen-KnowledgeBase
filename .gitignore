@@ -1,0 +1,17 @@
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Editor/temporary files
+*.swp
+*.swo
+*~
+
+# Local environment
+.smart-env/
+
+# Obsidian transient files
+.obsidian/cache/
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/snapshots/
