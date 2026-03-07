@@ -1,0 +1,115 @@
+/* ============================================================
+   Diffusion note — додаткові стилі для нотаток з LaTeX і ASCII-діаграмами
+   cssclasses: diffusion-note
+   ============================================================ */
+
+/* ── Блокові формули — виділяємо фоном ── */
+.diffusion-note .markdown-preview-view mjx-container[display="true"] {
+  background: rgba(99, 179, 237, 0.05);
+  border-left: 3px solid rgba(99, 179, 237, 0.4);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 16px;
+  margin: 14px 0;
+  overflow-x: auto;
+}
+
+/* ── Boxed формули (ключові результати) ── */
+.diffusion-note .markdown-preview-view mjx-container[display="true"] mjx-menclose,
+.diffusion-note .markdown-preview-view .math-block {
+  font-size: 1.05em;
+}
+
+/* ── Inline math ── */
+.diffusion-note .markdown-preview-view mjx-container:not([display="true"]) {
+  color: #a5f3fc;
+}
+
+/* ── ASCII-діаграми в code blocks ── */
+.diffusion-note .markdown-preview-view pre > code {
+  font-family: "Cascadia Mono", "Fira Code", "JetBrains Mono", "Consolas", monospace !important;
+  font-size: 0.82em !important;
+  line-height: 1.55 !important;
+  background: rgba(15, 23, 42, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 10px !important;
+  padding: 16px 18px !important;
+  color: #cbd5e1 !important;
+  display: block;
+  overflow-x: auto;
+  white-space: pre !important;
+}
+
+/* ── Виділення ключових символів в ASCII ── */
+.diffusion-note .markdown-preview-view pre > code {
+  /* символи рамок — трохи яскравіші */
+  text-rendering: optimizeLegibility;
+}
+
+/* ── Секції blockquote = джерела ── */
+.diffusion-note .markdown-preview-view blockquote {
+  border-left: 3px solid rgba(139, 92, 246, 0.5) !important;
+  background: rgba(139, 92, 246, 0.05);
+  border-radius: 0 8px 8px 0;
+  padding: 8px 14px;
+  color: #94a3b8;
+  font-size: 0.87em;
+  margin: 4px 0 16px !important;
+}
+
+.diffusion-note .markdown-preview-view blockquote p {
+  margin: 2px 0 !important;
+}
+
+.diffusion-note .markdown-preview-view blockquote a {
+  color: #a78bfa !important;
+}
+
+/* ── Таблиці ── */
+.diffusion-note .markdown-preview-view table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.9em;
+  margin: 10px 0 20px;
+}
+
+.diffusion-note .markdown-preview-view th {
+  background: rgba(255,255,255,0.04);
+  color: #64748b;
+  font-size: 0.8em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.diffusion-note .markdown-preview-view td {
+  padding: 7px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: #cbd5e1;
+  vertical-align: top;
+}
+
+.diffusion-note .markdown-preview-view tr:hover td {
+  background: rgba(255,255,255,0.025);
+}
+
+/* ── H2 секції ── */
+.diffusion-note .markdown-preview-view h2 {
+  border-bottom: 1px solid rgba(99, 179, 237, 0.2) !important;
+  padding-bottom: 6px !important;
+  margin-top: 36px !important;
+  color: #93c5fd !important;
+}
+
+/* ── H3 підсекції ── */
+.diffusion-note .markdown-preview-view h3 {
+  color: #c4b5fd !important;
+  font-size: 1.05em !important;
+  margin-top: 24px !important;
+}
+
+/* ── Boxed highlight: важливі формули через $\boxed{}$ виділяємо ── */
+.diffusion-note .markdown-preview-view mjx-mrow > mjx-menclose[data-frame*="box"] {
+  padding: 4px 8px !important;
+}

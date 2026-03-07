@@ -1,0 +1,337 @@
+# Working with FASTA Files
+
+[[EN/🏠 Home]] > Resources
+🇺🇦 [[01_AlphaFold3/Ресурси/Робота з FASTA файлами|Українська]]
+
+---
+
+## What is FASTA?
+
+**FASTA** is a text format for storing biological sequences (proteins, DNA, RNA). Named after the FASTA sequence comparison program (1988). It is the de-facto standard for exchanging sequences between bioinformatics tools.
+
+### Full example record
+
+```
+>sp|P68871|HBB_HUMAN Hemoglobin subunit beta OS=Homo sapiens OX=9606 GN=HBB PE=1 SV=2
+MVHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPK
+VKAHGKKVLGAFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFG
+KEFTPPVQAAYQKVVAGVANALAHKYH
+```
+
+### Anatomy of a UniProt header line
+
+```
+>sp|P68871|HBB_HUMAN Hemoglobin subunit beta OS=Homo sapiens OX=9606 GN=HBB PE=1 SV=2
+  ^^  ^^^^^^ ^^^^^^^^^^                         ^^^^^^^^^^^ ^^^^^^^^ ^^^^ ^^^^ ^^^^
+  db  AccID  EntryName  ProteinName             Organism    TaxonID  Gene PE   SV
+```
+
+| Field | Value | Description |
+|-------|-------|-------------|
+| `db` | `sp` / `tr` | Database: SwissProt or TrEMBL |
+| `AccID` | `P68871` | Unique accession number |
+| `EntryName` | `HBB_HUMAN` | Name_Organism |
+| `OS=` | `Homo sapiens` | Organism |
+| `OX=` | `9606` | NCBI Taxonomy ID |
+| `GN=` | `HBB` | Gene name |
+| `PE=` | `1` | Evidence level (1 = experimentally confirmed) |
+| `SV=` | `2` | Sequence version |
+
+
+### Single-letter amino acid codes
+
+```
+A Ala  Alanine       C Cys  Cysteine      D Asp  Aspartate
+E Glu  Glutamate     F Phe  Phenylalanine G Gly  Glycine
+H His  Histidine     I Ile  Isoleucine    K Lys  Lysine
+L Leu  Leucine       M Met  Methionine    N Asn  Asparagine
+P Pro  Proline       Q Gln  Glutamine     R Arg  Arginine
+S Ser  Serine        T Thr  Threonine     V Val  Valine
+W Trp  Tryptophan    Y Tyr  Tyrosine
+
+X  — unknown amino acid
+*  — stop codon
+-  — gap in alignment
+```
+
+### Nucleotide codes (DNA/RNA)
+
+```
+A  Adenine    C  Cytosine   G  Guanine    T  Thymine (DNA)
+U  Uracil (RNA)
+N  — any nucleotide
+R  — A or G (purines)
+Y  — C or T (pyrimidines)
+```
+
+---
+
+## FASTA Format Variants
+
+| Format | Extension | Description |
+|--------|-----------|-------------|
+| FASTA | `.fasta`, `.fa` | General format |
+| FASTQ | `.fastq`, `.fq` | FASTA + quality scores (NGS reads) |
+| Multi-FASTA | `.fasta` | Multiple records in one file |
+| Masked FASTA | `.fasta` | Lowercase = soft-masked (repeats) |
+| Stockholm | `.sto` | Alignment with annotation |
+
+
+---
+
+## Reading FASTA — Pure Python (no libraries)
+
+```python
+def parse_fasta(filepath: str) -> dict[str, dict]:
+    """
+    Reads a FASTA file, returns {id: {seq, description}}.
+    Handles multi-line sequences and blank lines.
+    """
+    records = {}
+    current_id = None
+    current_desc = ""
+    current_seq = []
+
+    with open(filepath, "r") as f:
+        for line in f:
+            line = line.rstrip("\n")
+            if not line.strip():
+                continue                          # skip blank lines
+            if line.startswith(">"):
+                if current_id:
+                    records[current_id] = {
+                        "seq": "".join(current_seq),
+                        "description": current_desc,
+                    }
+                header = line[1:]
+                parts = header.split(None, 1)     # split on first whitespace
+                current_id   = parts[0]
+                current_desc = parts[1] if len(parts) > 1 else ""
+                current_seq  = []
+            else:
+                current_seq.append(line.upper().strip())
+
+    if current_id:                                # last record
+        records[current_id] = {
+            "seq": "".join(current_seq),
+            "description": current_desc,
+        }
+    return records
+
+
+records = parse_fasta("proteins.fasta")
+for seq_id, data in records.items():
+    print(f"{seq_id:20s}  {len(data['seq'])} aa  {data['description'][:40]}")
+```
+
+
+---
+
+## Reading and Writing via BioPython
+
+```python
+from Bio import SeqIO
+from Bio.SeqRecord import SeqRecord
+from Bio.Seq import Seq
+
+# --- Reading ---
+records = list(SeqIO.parse("proteins.fasta", "fasta"))
+
+for rec in records:
+    print(f"ID:          {rec.id}")
+    print(f"Name:        {rec.name}")
+    print(f"Description: {rec.description}")
+    print(f"Length:      {len(rec.seq)} aa")
+    print(f"Sequence:    {rec.seq[:30]}...")
+    print()
+
+# --- Writing ---
+new_records = [
+    SeqRecord(Seq("MVHLTPEEKSAVTALWGKVNV"), id="HBB_HUMAN",
+              description="Hemoglobin subunit beta OS=Homo sapiens"),
+    SeqRecord(Seq("MGHFTEEDKATITSLWGKVN"),  id="HBA_HUMAN",
+              description="Hemoglobin subunit alpha OS=Homo sapiens"),
+]
+
+with open("output.fasta", "w") as fh:
+    SeqIO.write(new_records, fh, "fasta")
+
+# --- Format conversion ---
+SeqIO.convert("sequences.fasta", "fasta", "sequences.gb", "genbank")
+SeqIO.convert("sequences.gb",    "genbank", "sequences.fasta", "fasta")
+```
+
+---
+
+## Sequence Composition Analysis
+
+```python
+from Bio import SeqIO
+from Bio.SeqUtils.ProtParam import ProteinAnalysis
+
+rec = list(SeqIO.parse("proteins.fasta", "fasta"))[0]
+seq_str = str(rec.seq)
+
+analysis = ProteinAnalysis(seq_str)
+
+print(f"Length:             {len(seq_str)}")
+print(f"Molecular weight:   {analysis.molecular_weight():.1f} Da")
+print(f"Isoelectric point:  {analysis.isoelectric_point():.2f}")
+print(f"GRAVY index:        {analysis.gravy():.3f}")
+print(f"Instability index:  {analysis.instability_index():.1f}")
+
+# Top-5 most frequent amino acids
+aa_percent = analysis.get_amino_acids_percent()
+top5 = sorted(aa_percent.items(), key=lambda x: -x[1])[:5]
+for aa, pct in top5:
+    print(f"  {aa}: {pct*100:.1f}%")
+```
+
+
+---
+
+## Motif Searching
+
+```python
+import re
+from Bio import SeqIO
+
+records = list(SeqIO.parse("proteins.fasta", "fasta"))
+
+MOTIFS = {
+    "N-glycosylation":    r"N[^P][ST][^P]",
+    "RGD (integrin)":     r"RGD",
+    "KDEL (ER retention)":r"KDEL$",
+    "Casein kinase II":   r"[ST]..[DE]",
+    "PKA site":           r"R[RK]..[ST]",
+    "Nuclear localization":r"K[KR]{2,}",
+}
+
+for rec in records:
+    seq = str(rec.seq)
+    print(f"\n=== {rec.id} ({len(seq)} aa) ===")
+    for name, pattern in MOTIFS.items():
+        matches = [(m.start(), m.group()) for m in re.finditer(pattern, seq)]
+        if matches:
+            locs = ", ".join(f"{pos}:{m}" for pos, m in matches[:5])
+            print(f"  {name:25s}: {locs}")
+```
+
+---
+
+## Preparing FASTA for AlphaFold 3
+
+AF3 accepts a multi-chain FASTA where each chain is a separate record.
+
+```python
+from Bio.SeqRecord import SeqRecord
+from Bio.Seq import Seq
+from Bio import SeqIO
+
+def prepare_af3_fasta(
+    chains: dict[str, str],
+    output_path: str,
+    copies: dict[str, int] | None = None,
+):
+    """
+    Prepares a multi-chain FASTA for AF3.
+
+    chains — {chain_id: sequence}
+    copies — {chain_id: number_of_copies} for homomers
+    """
+    copies = copies or {}
+    records = []
+
+    for chain_id, seq in chains.items():
+        n = copies.get(chain_id, 1)
+        for i in range(n):
+            label = f"{chain_id}_{i+1}" if n > 1 else chain_id
+            records.append(SeqRecord(Seq(seq), id=label, description=""))
+
+    with open(output_path, "w") as fh:
+        SeqIO.write(records, fh, "fasta")
+    print(f"Written {len(records)} chains → {output_path}")
+
+
+# Heterodimer
+prepare_af3_fasta({"A": "MVHLT...", "B": "MGHFT..."}, "dimer.fasta")
+
+# Homotetramer (4 identical chains)
+prepare_af3_fasta({"A": "MVHLT..."}, "tetramer.fasta", copies={"A": 4})
+```
+
+
+---
+
+## Fetching Sequences from UniProt / NCBI
+
+```python
+from Bio import Entrez, SeqIO
+import urllib.request
+
+# --- Option 1: UniProt REST API ---
+def fetch_uniprot(accession: str) -> str:
+    url = f"https://rest.uniprot.org/uniprotkb/{accession}.fasta"
+    with urllib.request.urlopen(url) as resp:
+        fasta = resp.read().decode()
+    record = next(SeqIO.parse(fasta.splitlines(keepends=True), "fasta"))
+    return str(record.seq)
+
+seq = fetch_uniprot("P68871")   # Hemoglobin β
+print(f"P68871: {len(seq)} aa")
+
+# --- Option 2: NCBI Entrez ---
+Entrez.email = "your@email.com"   # required!
+
+def fetch_ncbi(accession: str) -> str:
+    handle = Entrez.efetch(db="protein", id=accession,
+                           rettype="fasta", retmode="text")
+    record = SeqIO.read(handle, "fasta")
+    handle.close()
+    return str(record.seq)
+
+seq_ncbi = fetch_ncbi("NP_000509.1")
+print(f"NP_000509.1: {len(seq_ncbi)} aa")
+```
+
+---
+
+## Filtering, Deduplication, Statistics
+
+```python
+from Bio import SeqIO
+
+records = list(SeqIO.parse("large_db.fasta", "fasta"))
+
+filtered = [r for r in records
+            if 50 <= len(r.seq) <= 2000
+            and "X" not in str(r.seq)
+            and str(r.seq).startswith("M")]
+
+seen, unique = set(), []
+for r in filtered:
+    key = str(r.seq)
+    if key not in seen:
+        seen.add(key)
+        unique.append(r)
+
+lengths = [len(r.seq) for r in unique]
+print(f"Total:    {len(records)}")
+print(f"Filtered: {len(filtered)}")
+print(f"Unique:   {len(unique)}")
+print(f"Length:   min={min(lengths)}, max={max(lengths)}, "
+      f"median={sorted(lengths)[len(lengths)//2]}")
+
+with open("filtered.fasta", "w") as fh:
+    SeqIO.write(unique, fh, "fasta")
+```
+
+---
+
+## Related Notes
+- [[EN/01_AlphaFold3/Resources/Working with mmCIF Files]]
+- [[EN/01_AlphaFold3/Resources/Key Terms]]
+- [[EN/01_AlphaFold3/Architecture/AF3 Architecture Overview]]
+
+## Tags
+`#fasta` `#biopython` `#python` `#data-formats` `#sequences` `#uniprot` `#ncbi`

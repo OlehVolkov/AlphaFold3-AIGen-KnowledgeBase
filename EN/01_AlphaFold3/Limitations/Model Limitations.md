@@ -1,0 +1,53 @@
+# Model Limitations
+
+[[EN/🏠 Home]] > Limitations
+🇺🇦 [[01_AlphaFold3/Обмеження/Обмеження моделі|Українська]]
+
+---
+
+## 1. Stereochemistry — Chirality Problem
+
+AF3 **does not always respect chirality** of ligands, despite receiving reference structures with correct chirality as input features.
+
+- Chirality violation rate on PoseBusters: **~4.4%**
+- Mitigation: chirality violation penalty added to the ranking formula
+
+## 2. Clashing Atoms
+
+The model occasionally generates structures with **overlapping atoms**. In extreme cases, entire chains of homomers can overlap.
+
+- Clash penalty during ranking reduces the issue but does not eliminate it
+- Most commonly occurs in protein–nucleic acid complexes (>100 nucleotides + >2,000 residues)
+
+## 3. Hallucinations
+
+The generative nature of the Diffusion Module leads to **invented structures** in disordered regions.
+
+- Unlike AF2 (characteristic ribbon-like loops), AF3 can generate compact false structures
+- These typically have low pLDDT, but do not always look like "disorder"
+
+## 4. Static Structures
+
+AF3, like AF2, predicts **static structures** (as seen in PDB), not the dynamical behaviour of biomolecules in solution.
+
+- Multiple random seeds do not approximate a solution conformational ensemble
+- Relevant for molecular dynamics tasks
+
+## 5. Limited Conformational Coverage
+
+The model may predict the **wrong conformational state**.
+
+Example: E3 ubiquitin ligases — AF3 **always** predicts the closed state, even for the apo form which is natively open.
+
+## 6. Computationally Expensive Targets
+
+For some target classes (especially antibody–antigen), generating **large numbers of seeds** (up to 1,000) is needed for maximum accuracy, greatly increasing computational cost.
+
+---
+
+## Related Notes
+- [[EN/01_AlphaFold3/Architecture/Diffusion Module]]
+- [[EN/01_AlphaFold3/Results/Accuracy Across Complex Types]]
+
+## Tags
+`#limitations` `#hallucinations` `#chirality` `#static-structures`

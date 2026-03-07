@@ -1,0 +1,324 @@
+/* ============================================================
+   AlphaFold 3 — Homepage stylesheet (pure Markdown approach)
+   ============================================================ */
+
+/* ── Page padding ── */
+.homepage .markdown-preview-view {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+/* ── Main title ── */
+.homepage .markdown-preview-view h1 {
+  font-size: 2.4em !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #93c5fd, #c4b5fd, #67e8f9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  border: none !important;
+  margin-bottom: 4px !important;
+}
+
+/* ── Subtitle paragraph (bold line under h1) ── */
+.homepage .markdown-preview-view h1 + p {
+  color: #64748b;
+  font-size: 0.92em;
+  margin-top: 0 !important;
+  margin-bottom: 4px !important;
+}
+
+/* ── Blockquote = source citation (тільки звичайні >, не callout) ── */
+.homepage .markdown-preview-view blockquote:not(.callout) {
+  border-left: 3px solid #3b82f6 !important;
+  background: rgba(59,130,246,0.05);
+  border-radius: 0 8px 8px 0;
+  padding: 8px 14px;
+  color: #64748b;
+  font-size: 0.85em;
+  margin: 0 0 24px !important;
+}
+
+.homepage .markdown-preview-view blockquote:not(.callout) p { margin: 0 !important; }
+
+/* ── Callouts — не чіпаємо базові стилі Obsidian ── */
+.homepage .callout {
+  margin: 6px 0 10px !important;
+  border-radius: 8px !important;
+}
+
+/* Посилання всередині callout */
+.homepage .callout .internal-link {
+  text-decoration: none !important;
+  font-weight: 500;
+  border-bottom: none !important;
+}
+
+/* Callout content — щільніше */
+.homepage .callout-content {
+  padding: 8px 14px 10px !important;
+  line-height: 1.7 !important;
+}
+
+/* Callout title */
+.homepage .callout-title {
+  font-size: 0.8em !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Emojis у посиланнях callout — показуємо нормально */
+.homepage .callout .internal-link,
+.homepage .callout a {
+  font-size: 0.92em;
+}
+
+/* ── Section headings (h2) ── */
+.homepage .markdown-preview-view h2 {
+  font-size: 0.78em !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #475569 !important;
+  border: none !important;
+  margin: 36px 0 10px !important;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+
+/* ── Links — кожен на своєму рядку виглядає як кнопка (тільки в ul, не в callout) ── */
+.homepage .markdown-preview-view ul li > a,
+.homepage .markdown-preview-view ul li .internal-link,
+.homepage .markdown-preview-view ul li .external-link {
+  font-weight: 500;
+  text-decoration: none !important;
+  color: #60a5fa !important;
+  border-bottom: 1px solid rgba(96,165,250,0.25);
+  padding-bottom: 1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.homepage .markdown-preview-view ul li > a:hover,
+.homepage .markdown-preview-view ul li .internal-link:hover {
+  color: #93c5fd !important;
+  border-bottom-color: rgba(147,197,253,0.5);
+}
+
+/* ── List items as nav rows ── */
+.homepage .markdown-preview-view ul {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 0 4px !important;
+}
+
+.homepage .markdown-preview-view ul li {
+  padding: 5px 10px;
+  border-radius: 6px;
+  margin-bottom: 2px;
+  transition: background 0.15s;
+  line-height: 1.5;
+}
+
+.homepage .markdown-preview-view ul li:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+/* ── Description after em dash ── */
+.homepage .markdown-preview-view ul li {
+  color: #94a3b8;
+  font-size: 0.93em;
+}
+
+/* ── Table (key numbers) ── */
+.homepage .markdown-preview-view table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88em;
+  margin: 8px 0 16px;
+}
+
+.homepage .markdown-preview-view th {
+  background: rgba(255,255,255,0.04);
+  color: #64748b;
+  font-size: 0.78em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.homepage .markdown-preview-view td {
+  padding: 7px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: #cbd5e1;
+}
+
+.homepage .markdown-preview-view td strong {
+  color: #93c5fd;
+}
+
+.homepage .markdown-preview-view tr:hover td {
+  background: rgba(255,255,255,0.025);
+}
+
+
+/* ── Dataview table ── */
+.homepage .block-language-dataview table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86em;
+  margin: 6px 0;
+}
+
+.homepage .block-language-dataview th {
+  color: #475569;
+  font-weight: 600;
+  font-size: 0.78em;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  text-align: left;
+}
+
+.homepage .block-language-dataview td {
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: #94a3b8;
+}
+
+.homepage .block-language-dataview tr:hover td {
+  background: rgba(255,255,255,0.03);
+}
+
+.homepage .block-language-dataview a {
+  color: #60a5fa !important;
+  text-decoration: none !important;
+}
+
+/* ── HR dividers ── */
+.homepage .markdown-preview-view hr {
+  border: none !important;
+  border-top: 1px solid rgba(255,255,255,0.06) !important;
+  margin: 8px 0 !important;
+}
+
+/* ── Emoji in h2 — трохи більше ── */
+.homepage .markdown-preview-view h2 .cm-emoji,
+.homepage .markdown-preview-view h2 {
+  font-size: 0.82em !important;
+}
+
+/* ── Inline code у підзаголовках ── */
+.homepage .markdown-preview-view code {
+  font-size: 0.83em;
+  background: rgba(255,255,255,0.07);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+
+/* ══════════════════════════════════════════
+   COLORED LINK SPANS  (Obsidian.md pattern)
+   HTML wraps wiki-links, not the other way
+   ══════════════════════════════════════════ */
+
+/* Blue — Overview / Biology */
+.homepage .link-blue a,
+.homepage .link-blue a.internal-link {
+  color: #60a5fa !important;
+  font-weight: 500;
+  text-decoration: none !important;
+}
+.homepage .link-blue a:hover { color: #93c5fd !important; }
+
+/* Purple — Architecture / ML */
+.homepage .link-purple a,
+.homepage .link-purple a.internal-link {
+  color: #a78bfa !important;
+  font-weight: 500;
+  text-decoration: none !important;
+}
+.homepage .link-purple a:hover { color: #c4b5fd !important; }
+
+/* Green — Results */
+.homepage .link-green a,
+.homepage .link-green a.internal-link {
+  color: #4ade80 !important;
+  font-weight: 500;
+  text-decoration: none !important;
+}
+.homepage .link-green a:hover { color: #86efac !important; }
+
+/* Orange — Limitations */
+.homepage .link-orange a,
+.homepage .link-orange a.internal-link {
+  color: #fb923c !important;
+  font-weight: 500;
+  text-decoration: none !important;
+}
+.homepage .link-orange a:hover { color: #fdba74 !important; }
+
+/* Teal — Resources / Bioinformatics */
+.homepage .link-teal a,
+.homepage .link-teal a.internal-link {
+  color: #2dd4bf !important;
+  font-weight: 500;
+  text-decoration: none !important;
+}
+.homepage .link-teal a:hover { color: #5eead4 !important; }
+
+/* EN flag link */
+.homepage .link-en a,
+.homepage .link-en a.internal-link {
+  color: #5eead4 !important;
+  font-weight: 600;
+  font-size: 0.9em;
+  text-decoration: none !important;
+}
+
+/* UA flag link */
+.homepage .link-ua a,
+.homepage .link-ua a.internal-link {
+  color: #60a5fa !important;
+  font-weight: 600;
+  font-size: 0.9em;
+  text-decoration: none !important;
+}
+
+/* ── Meta subtitle under H1 ── */
+.homepage .home-meta {
+  font-size: 0.85em;
+  color: #64748b;
+  margin-top: -8px;
+  margin-bottom: 12px;
+}
+
+/* ── Index button ── */
+.homepage .home-index-btn {
+  display: inline-block;
+  margin: 6px 0 10px 0;
+}
+.homepage .home-index-btn a,
+.homepage .home-index-btn a.internal-link {
+  display: inline-block;
+  padding: 5px 14px;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  border-radius: 6px;
+  color: #a78bfa !important;
+  font-weight: 600;
+  font-size: 0.88em;
+  text-decoration: none !important;
+  transition: background 0.15s;
+}
+.homepage .home-index-btn a:hover {
+  background: rgba(99, 102, 241, 0.28) !important;
+  color: #c4b5fd !important;
+}

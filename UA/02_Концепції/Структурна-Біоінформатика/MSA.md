@@ -1,0 +1,113 @@
+---
+cssclasses: [concepts-note]
+tags: [bioinformatics, MSA, evolution, coevolution, alignment]
+---
+
+# MSA — Multiple Sequence Alignment
+
+[[UA/02_Концепції/Індекс]] > Structural-Bioinformatics
+
+> **MSA** — вирівнювання трьох і більше еволюційно споріднених послідовностей для виявлення консервативних залишків, функціональних сайтів і коеволюційних пар. Ключовий вхід для AlphaFold 2.
+
+---
+
+## Що таке MSA
+
+```mermaid
+flowchart TD
+    QRY["Запит (Query)\nMAEVGTQLGGQ..."]:::query
+    DB["Бази даних\nUniRef90, UniClust30\nBFD (2.5B сиквенсів)"]:::db
+    HITS["Гомологи\n(hits, E < 0.001)"]:::hits
+    MSA["MSA\n(матриця N×L)"]:::msa
+
+    QRY --> DB --> HITS --> MSA
+
+    INFO["Еволюційна\nінформація:\n• консервація\n• коеволюція\n• делеції/вставки"]:::info
+    MSA --> INFO
+
+    classDef query fill:#1e3a5f,stroke:#3b82f6,color:#93c5fd
+    classDef db    fill:#312e81,stroke:#7c3aed,color:#c4b5fd
+    classDef hits  fill:#14532d,stroke:#22c55e,color:#86efac
+    classDef msa   fill:#7c2d12,stroke:#ea580c,color:#fdba74,font-weight:bold
+    classDef info  fill:#1e293b,stroke:#475569,color:#94a3b8
+```
+
+## Алгоритми побудови MSA
+
+| Алгоритм | Тип | Складність | Використання в AF |
+|----------|-----|-----------|-------------------|
+| **Needleman-Wunsch** | Глобальний (пара) | $O(mn)$ | — |
+| **Smith-Waterman** | Локальний (пара) | $O(mn)$ | — |
+| **HHblits** | Profile-HMM | $O(N\cdot L^2)$ | ✅ AF2, AF3 |
+| **Jackhmmer** | Ітеративний | $O(k\cdot N\cdot L)$ | ✅ AF2, AF3 |
+| **ColabFold MMseqs2** | Швидкий LSH | $O(N)$ | ✅ ColabFold |
+
+## Коеволюційний сигнал
+
+**Ключова ідея**: якщо залишки $i$ і $j$ взаємодіють, мутації в одному компенсуються мутаціями в іншому:
+
+$$C_{ij} = \langle x_i x_j \rangle - \langle x_i \rangle\langle x_j \rangle$$
+
+де $x_i$ — амінокислота на позиції $i$ в MSA. Матриця $C$ після DCA/MI → контактна карта.
+
+### Mutual Information (MI)
+
+$$\text{MI}(i,j) = \sum_{a,b} p_{ij}(a,b)\log\frac{p_{ij}(a,b)}{p_i(a)\,p_j(b)}$$
+
+AF2/AF3 навчаються **безпосередньо** з MSA — не потребують явного обчислення MI.
+
+## MSA depth: скільки гомологів потрібно?
+
+```mermaid
+xychart-beta
+    title "Якість предикції vs MSA depth (AF2)"
+    x-axis "log10(Neff)" [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4]
+    y-axis "TM-score" 0.0 --> 1.0
+    line "AF2" [0.40, 0.52, 0.65, 0.76, 0.83, 0.88, 0.92, 0.93, 0.94]
+    line "ESMFold (no MSA)" [0.78, 0.78, 0.78, 0.78, 0.78, 0.78, 0.78, 0.78, 0.78]
+```
+
+$N_\text{eff}$ — ефективна кількість послідовностей (з урахуванням надмірності):
+
+$$N_\text{eff} = \sum_i \frac{1}{\sum_j \mathbf{1}[\text{seq\_id}(i,j) > 80\%]}$$
+
+## AF3 і MSA: менше, але розумніше
+
+Порівняно з AF2, AF3 **зменшив роль MSA**:
+
+| | AF2 | AF3 |
+|--|-----|-----|
+| MSA блоки | 48 | **4** |
+| Pair блоки | 48 | **48** |
+| MSA субвибірка | 512 рядків | 1024 рядки |
+| Без MSA | Дуже погано | Прийнятно (pLM-компенсація) |
+
+Раціональне: парне представлення ($z_{ij}$) вже кодує коеволюційний сигнал. MSA потрібен менше, якщо pair representation достатньо глибоке.
+
+## Формати MSA файлів
+
+```
+# A3M format (HHblits output):
+>query
+MAEVGTQLGGQVATNLGLKL
+>UniRef90_P12345 homolog1
+MAEVGTQLGGQVATNLGLKL
+>UniRef90_Q98765 homolog2
+MAEVG--LGGQVATNLGLKL   ← делеція (lowercase в A3M)
+```
+
+- **A3M** — стиснений, делеції як lowercase або крапки
+- **FASTA** — стандартний, всі позиції збережені
+- **Stockholm** — з анотаціями (Pfam, Rfam)
+
+> Remmert et al. (2012). *HHblits: lightning-fast iterative protein sequence searching by HMM-HMM alignment*. Nat Methods 9.
+> DOI: [10.1038/nmeth.1818](https://doi.org/10.1038/nmeth.1818)
+
+---
+
+## Пов'язані нотатки
+
+- [[UA/02_Концепції/Машинне-Навчання/Білкові мовні моделі]]
+- [[UA/01_AlphaFold3/Архітектура/Pairformer]]
+- [[UA/01_AlphaFold3/Архітектура/Навчання моделі]]
+- [[UA/01_AlphaFold3/Ресурси/Робота з FASTA файлами]]

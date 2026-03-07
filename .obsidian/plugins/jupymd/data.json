@@ -1,0 +1,7 @@
+{
+  "autoSync": true,
+  "bidirectionalSync": false,
+  "pythonInterpreter": "python",
+  "notebookEditorCommand": "jupyverse",
+  "enableCodeBlocks": true
+}

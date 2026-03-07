@@ -1,0 +1,57 @@
+# Key Terms
+
+[[EN/🏠 Home]] > Resources
+🇺🇦 [[01_AlphaFold3/Ресурси/Ключові терміни|Українська]]
+
+---
+
+## Quality Metrics
+
+| Term | Full Name | Meaning |
+|---|---|---|
+| **LDDT** | Local Distance Difference Test | Local structure quality (0–100) |
+| **DockQ** | Docking Quality | Docking quality (0–1); >0.23 = correct, >0.8 = very high |
+| **RMSD** | Root Mean Square Deviation | Average deviation of atomic positions (Å) |
+| **GDT** | Global Distance Test | Global structural similarity |
+| **iLDDT** | Interface LDDT | LDDT for inter-chain interfaces |
+| **ipTM** | Interface predicted TM-score | Confidence in interface quality |
+| **pLDDT** | predicted LDDT | Predicted local structure quality |
+| **PAE** | Predicted Aligned Error | Pairwise error matrix between segments |
+| **TM-score** | Template Modeling score | Topological similarity between structures |
+
+## Architectural Terms
+
+| Term | Meaning |
+|---|---|
+| **Pairformer** | New core block of AF3; replaces Evoformer |
+| **Evoformer** | Core block of AF2; processed MSA + pairs |
+| **MSA** | Multiple Sequence Alignment — alignment of related sequences |
+| **Diffusion Module** | Generates atom coordinates via denoising |
+| **Crop size** | Maximum number of tokens in a training mini-batch |
+| **pTM** | Predicted TM-score for a single chain |
+
+## Chemical Terms
+
+| Term | Meaning |
+|---|---|
+| **SMILES** | Text representation of a ligand chemical structure |
+| **Ligand** | Small molecule that binds to a protein |
+| **Glycosylation** | Attachment of carbohydrates to a protein |
+| **Holo structure** | Protein structure with bound ligand |
+| **Apo structure** | Protein structure without ligand |
+| **Covalent modification** | Covalent chemical modification of a residue |
+| **CCD** | Chemical Components Dictionary (PDB) |
+
+## Benchmarks
+
+| Name | Description |
+|---|---|
+| **PoseBusters** | Set of 428 (V1) or 308 (V2) protein–ligand structures |
+| **CASP15** | Critical Assessment of Structure Prediction, round 15 |
+| **CAID 2** | Assessment of intrinsic disorder prediction |
+| **PDB** | Protein Data Bank — database of 3D biomolecular structures |
+
+---
+
+## Tags
+`#glossary` `#terms` `#metrics`

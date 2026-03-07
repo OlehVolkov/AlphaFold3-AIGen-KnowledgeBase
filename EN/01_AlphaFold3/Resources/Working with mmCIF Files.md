@@ -1,0 +1,127 @@
+# Working with mmCIF Files
+
+[[EN/🏠 Home]] > Resources
+🇺🇦 [[01_AlphaFold3/Ресурси/Робота з mmCIF файлами|Українська]]
+
+---
+
+## What is mmCIF?
+
+**mmCIF** (macromolecular Crystallographic Information File) is the official PDB format since 2014. Built on the **CIF** standard (Crystallographic Information File) developed by IUCr. It replaced the legacy PDB format (`.pdb`), which had limits on atom count and chain IDs.
+
+### mmCIF vs Legacy PDB
+
+| | mmCIF / `.cif` | PDB legacy / `.pdb` |
+|---|---|---|
+| Status | Official PDB standard | Deprecated, still supported |
+| Max atoms | Unlimited | ~99,999 |
+| Max chains | Unlimited | 62 (A-Z, 0-9) |
+| Structure | Key-value + tables | Fixed-width columns |
+| Metadata | Full (experiment, authors…) | Limited |
+| Large complexes | ✅ | ❌ |
+
+---
+
+## mmCIF File Structure
+
+```
+data_1ABC                          ← data block (structure name)
+#
+_entry.id                1ABC      ← single-value field
+_struct.title            'Human hemoglobin'
+_exptl.method            'X-RAY DIFFRACTION'
+_refine.ls_d_res_high    1.74      ← resolution (Å)
+#
+loop_                              ← table start
+_atom_site.group_PDB               ← column names...
+_atom_site.id
+_atom_site.type_symbol
+_atom_site.label_atom_id
+_atom_site.label_comp_id
+_atom_site.label_asym_id
+_atom_site.label_seq_id
+_atom_site.Cartn_x
+_atom_site.Cartn_y
+_atom_site.Cartn_z
+_atom_site.occupancy
+_atom_site.B_iso_or_equiv
+ATOM  1  N  N   MET A 1   11.751  26.466  21.000  1.00  30.00
+ATOM  2  C  CA  MET A 1   12.501  25.322  20.500  1.00  28.00
+HETATM 1000 C  C1 HEM A .  15.100  18.200  12.300  1.00  20.00
+```
+
+### Key `_atom_site` fields
+
+| Field | Description | Example |
+|-------|-------------|---------|
+| `group_PDB` | Record type | `ATOM` (polymer) / `HETATM` (ligand) |
+| `label_asym_id` | Chain ID | `A`, `B` |
+| `label_comp_id` | Three-letter residue code | `MET`, `HEM`, `ATP` |
+| `label_seq_id` | Residue sequence number | `1`, `42` |
+| `label_atom_id` | Atom name | `CA`, `N`, `O`, `CB` |
+| `type_symbol` | Chemical element | `C`, `N`, `O`, `S`, `FE` |
+| `Cartn_x/y/z` | Coordinates (Å) | `11.751` |
+| `occupancy` | Occupancy (0–1) | `1.00` |
+| `B_iso_or_equiv` | B-factor / pLDDT in AF3 | `30.00` |
+
+
+---
+
+## Reading via BioPython — MMCIFParser
+
+```python
+from Bio.PDB import MMCIFParser
+import numpy as np
+
+parser = MMCIFParser(QUIET=True)
+structure = parser.get_structure("1abc", "1abc.cif")
+
+# Hierarchy: Structure → Model → Chain → Residue → Atom
+model = structure[0]                          # first model (NMR may have several)
+
+for chain in model:
+    residues = list(chain.get_residues())
+    aa_res   = [r for r in residues if r.id[0] == " "]
+    hetatm   = [r for r in residues if r.id[0].startswith("H")]
+    water    = [r for r in residues if r.id[0] == "W"]
+
+    print(f"Chain {chain.id}: "
+          f"{len(aa_res)} AA, {len(hetatm)} HETATM, {len(water)} waters")
+
+    for residue in aa_res[:2]:
+        print(f"  {residue.resname} {residue.id[1]}")
+        for atom in residue:
+            # atom.coord      → np.array([x, y, z])
+            # atom.bfactor    → B-factor
+            # atom.occupancy  → occupancy
+            print(f"    {atom.name:4s}  xyz={atom.coord}  B={atom.bfactor:.1f}")
+```
+
+---
+
+## Reading via gemmi (recommended for large structures)
+
+`gemmi` is 5–20× faster than BioPython and has a cleaner API for analysis.
+
+```python
+import gemmi
+
+st = gemmi.read_structure("1abc.cif")
+
+print(f"Name:       {st.name}")
+print(f"Resolution: {st.resolution:.2f} Å")
+print(f"Models:     {len(st)}")
+
+model = st[0]
+for chain in model:
+    print(f"\nChain {chain.name}: {len(chain)} residues")
+    for res in chain:
+        is_ligand = not res.is_water() and res.entity_type != gemmi.EntityType.Polymer
+        tag = "[LIG]" if is_ligand else ""
+        print(f"  {res.name:4s} {str(res.seqid):5s} {tag}")
+        for atom in res:
+            print(f"    {atom.name:4s}  "
+                  f"({atom.pos.x:7.3f}, {atom.pos.y:7.3f}, {atom.pos.z:7.3f})  "
+                  f"B={atom.b_iso:.1f}  occ={atom.occ:.2f}")
+```
+
