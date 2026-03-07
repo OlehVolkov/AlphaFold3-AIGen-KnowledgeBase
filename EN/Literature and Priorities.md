@@ -5,8 +5,8 @@ tags: [alphafold3, literature, references, ranking]
 
 # Literature and Priorities
 
-[[EN/1. AlphaFold3/1.0. Home|Home]] > Resources
-🇺🇦 [[UA/1.5.5. Література та пріоритети|Українська]]
+[[Home|Home]] > Resources
+🇺🇦 [[UA/Література та пріоритети|Українська]]
 
 Prioritized reading list for AF3. Rank `1` means highest importance.
 
@@ -65,4 +65,4 @@ Prioritized reading list for AF3. Rank `1` means highest importance.
 
 - [[EN/1. AlphaFold3/1.5. Resources/1.5.1. Key Terms|Key Terms]]
 - [[EN/1. AlphaFold3/1.5. Resources/1.5.2. Comparison with Predecessors|Comparison with Predecessors]]
-- [[EN/2.0. Index|Concepts Index]]
+- [[EN/Index|Concepts Index]]

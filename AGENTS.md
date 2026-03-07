@@ -8,9 +8,11 @@
 
 ```text
 AlphaFold3/
-├── 🏠 Головна.md
+├── Home.md
 ├── AGENTS.md
+├── NOTICE.md
 ├── UA/
+│   ├── Головна.md
 │   ├── 1. AlphaFold3/
 │   │   ├── 1.1. Огляд/
 │   │   ├── 1.2. Архітектура/
@@ -19,19 +21,23 @@ AlphaFold3/
 │   │   ├── 1.5. Ресурси/
 │   │   └── 1.6. Ілюстрації/
 │   └── 2. Концепції/
-│       ├── 2.0. Індекс.md
+│       ├── …
 │       ├── 2.1. Біологія/
 │       ├── 2.2. Машинне-Навчання/
 │       └── 2.3. Структурна-Біоінформатика/
+│   ├── Індекс.md
+│   └── Література та пріоритети.md
 └── EN/
     ├── AGENTS.md
+    ├── NOTICE.md
+    ├── Index.md
+    ├── Literature and Priorities.md
     ├── 2. Concepts/
-    │   ├── 2.0. Index.md
+    │   ├── …
     │   ├── 2.1. Biology/
     │   ├── 2.2. Machine-Learning/
     │   └── 2.3. Structural-Bioinformatics/
     └── 1. AlphaFold3/
-        ├── 1.0. Home.md
         ├── 1.1. Overview/
         ├── 1.2. Architecture/
         ├── 1.3. Results/
@@ -64,8 +70,8 @@ tags: [topic_name, domain_name]    # snake_case
 ```markdown
 # Назва
 
-[[🏠 Головна]] > [[UA/2.0. Індекс|Концепції]] > Розділ
-🇬🇧 [[EN/1. AlphaFold3/1.0. Home|Home]]
+[[UA/Головна]] > [[UA/Індекс|Концепції]] > Розділ
+🇬🇧 [[Home|Home]]
 ```
 
 ### 2.3 Wiki-links
@@ -73,8 +79,8 @@ tags: [topic_name, domain_name]    # snake_case
 ```markdown
 ✅ [[UA/1. AlphaFold3/1.2. Архітектура/1.2.2. Pairformer|Pairformer]]
 ✅ [[EN/1. AlphaFold3/1.2. Architecture/1.2.2. Pairformer|Pairformer]]
-❌ [[Pairformer]]
-❌ [[Архітектура/Pairformer]]
+❌ `Pairformer`
+❌ `Архітектура/Pairformer`
 ```
 
 ---
@@ -111,9 +117,14 @@ tags: [topic_name, domain_name]    # snake_case
 - Не змішувати мови в межах мовної папки.
 - Не додавати несистемні файли в корінь vault.
 
+## 7. NOTICE-файли
+
+- Вести журнал форматних змін у `NOTICE.md` (UA) та `EN/NOTICE.md` (EN).
+- Оновлювати ці файли після кожного масового перейменування, переносу або форматного рефакторингу.
+
 ---
 
-## 7. Комунікація агента
+## 8. Комунікація агента
 
 - За замовчуванням відповідати українською.
 - Російську не використовувати.

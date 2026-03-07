@@ -8,9 +8,11 @@
 
 ```text
 AlphaFold3/
-├── 🏠 Головна.md
+├── Home.md
 ├── AGENTS.md
+├── NOTICE.md
 ├── UA/
+│   ├── Головна.md
 │   ├── 1. AlphaFold3/
 │   │   ├── 1.1. Огляд/
 │   │   ├── 1.2. Архітектура/
@@ -19,19 +21,23 @@ AlphaFold3/
 │   │   ├── 1.5. Ресурси/
 │   │   └── 1.6. Ілюстрації/
 │   └── 2. Концепції/
-│       ├── 2.0. Індекс.md
+│       ├── …
 │       ├── 2.1. Біологія/
 │       ├── 2.2. Машинне-Навчання/
 │       └── 2.3. Структурна-Біоінформатика/
+│   ├── Індекс.md
+│   └── Література та пріоритети.md
 └── EN/
     ├── AGENTS.md
+    ├── NOTICE.md
+    ├── Index.md
+    ├── Literature and Priorities.md
     ├── 2. Concepts/
-    │   ├── 2.0. Index.md
+    │   ├── …
     │   ├── 2.1. Biology/
     │   ├── 2.2. Machine-Learning/
     │   └── 2.3. Structural-Bioinformatics/
     └── 1. AlphaFold3/
-        ├── 1.0. Home.md
         ├── 1.1. Overview/
         ├── 1.2. Architecture/
         ├── 1.3. Results/
@@ -64,7 +70,7 @@ tags: [topic_name, domain_name]    # snake_case
 ```markdown
 # Title
 
-[[EN/1. AlphaFold3/1.0. Home|Home]] > [[EN/1. AlphaFold3/1.2. Architecture|Architecture]] > Topic
+[[Home|Home]] > [[EN/1. AlphaFold3/1.2. Architecture/1.2.1. AF3 Architecture Overview|Architecture]] > Topic
 🇺🇦 [[UA/1. AlphaFold3/1.2. Архітектура/1.2.2. Pairformer|Українська]]
 ```
 
@@ -73,8 +79,8 @@ tags: [topic_name, domain_name]    # snake_case
 ```markdown
 ✅ [[UA/1. AlphaFold3/1.2. Архітектура/1.2.2. Pairformer|Pairformer]]
 ✅ [[EN/1. AlphaFold3/1.2. Architecture/1.2.2. Pairformer|Pairformer]]
-❌ [[Pairformer]]
-❌ [[Architecture/Pairformer]]
+❌ `Pairformer`
+❌ `Architecture/Pairformer`
 ```
 
 ---
@@ -111,9 +117,14 @@ All scientific/technical claims require sources:
 - No mixed languages inside one language folder.
 - No non-system files in vault root.
 
+## 7. NOTICE files
+
+- Maintain formatting-change logs in `NOTICE.md` (UA) and `EN/NOTICE.md` (EN).
+- Update these files after each mass rename, move, or formatting refactor.
+
 ---
 
-## 7. Agent Communication
+## 8. Agent Communication
 
 - Reply in Ukrainian by default unless user asks for English.
 - Never use Russian.
