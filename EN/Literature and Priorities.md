@@ -48,18 +48,18 @@ Prioritized reading list for AF3. Rank `1` means highest importance.
 | Rank | Source | Importance | Critical sections |
 |---|---|---|---|
 | 10 | Anfinsen (1973), *Principles that govern the folding of protein chains* | Foundational folding hypothesis | `[2.1.1 Protein Folding]` |
-|   | DOI: [10.1126/science.181.4096.223](https://doi.org/10.1126/science.181.4096.223) |  |  |
+|    | DOI: [10.1126/science.181.4096.223](https://doi.org/10.1126/science.181.4096.223) |  |  |
 | 11 | Dill & MacCallum (2012), *The Protein-Folding Problem, 50 Years On* | Modern folding framework | `[2.1.1 Protein Folding]` |
-|   | DOI: [10.1126/science.1219021](https://doi.org/10.1126/science.1219021) |  |  |
+|    | DOI: [10.1126/science.1219021](https://doi.org/10.1126/science.1219021) |  |  |
 
 ## E. Alignment and Evolutionary Signal
 
 | Rank | Source | Importance | Critical sections |
 |---|---|---|---|
 | 12 | Needleman & Wunsch (1970), *A general method applicable to the search for similarities in the amino acid sequence of two proteins* | Alignment algorithm foundation | `[2.3.4 MSA]` |
-|   | DOI: [10.1016/0022-2836(70)90057-4](https://doi.org/10.1016/0022-2836(70)90057-4) |  |  |
+|    | DOI: [10.1016/0022-2836(70)90057-4](https://doi.org/10.1016/0022-2836(70)90057-4) |  |  |
 | 13 | Altschul et al. (1990), *Basic local alignment search tool* | Practical homology search standard | `[2.3.4 MSA]` `[1.5.3 FASTA]` |
-|   | DOI: [10.1016/S0022-2836(05)80360-2](https://doi.org/10.1016/S0022-2836(05)80360-2) |  |  |
+|    | DOI: [10.1016/S0022-2836(05)80360-2](https://doi.org/10.1016/S0022-2836(05)80360-2) |  |  |
 
 ## Related Notes
 
