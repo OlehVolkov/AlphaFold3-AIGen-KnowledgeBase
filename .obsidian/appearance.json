@@ -3,6 +3,7 @@
   "enabledCssSnippets": [
     "homepage",
     "math-note",
-    "diagram-scale"
+    "diagram-scale",
+    "content-width"
   ]
 }

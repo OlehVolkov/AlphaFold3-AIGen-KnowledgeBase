@@ -148,3 +148,25 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
 - Added mandatory `flowchart` class standard: `input`, `trunk`, `diffusion`, `confidence`, `output`, `neutral`.
 - Added explicit requirement: every `flowchart` must define `classDef` for all 6 classes.
 - Documented exceptions for non-flowchart types (`timeline`, `mindmap`, `xychart-beta`, `quadrantChart`).
+
+## 14. Adaptive page text width (2026-03-11)
+
+- Added new snippet: `.obsidian/snippets/content-width.css`.
+- Goal: make text **wider than default readable width** but **not full-width**.
+- Implementation:
+  - adaptive width via `clamp(860px, 86vw, 1180px)`,
+  - centered content container,
+  - same logic for Reading view and Editing view (CM6),
+  - mobile profile via `@media (max-width: 900px)`.
+- Snippet enabled in `.obsidian/appearance.json` as `content-width`.
+
+## 15. Structure audit and instruction sync (2026-03-11)
+
+- Re-checked vault structure against `AGENTS.md` / `EN/AGENTS.md`.
+- Verified critical entry/index pages:
+  - `Home.md`, `UA/Головна.md`, `UA/Індекс.md`, `EN/Index.md`.
+- Verified parity of numbered note IDs between `UA/` and `EN/` (`1.x.x`–`4.x.x`): no mismatches found.
+- Updated AGENTS instructions:
+  - added system root entries `.git/`, `.gitignore`, `.obsidian/`, `.smart-env/`,
+  - synchronized `README.md` presence in the structure example,
+  - clarified allowed root files/directories list.

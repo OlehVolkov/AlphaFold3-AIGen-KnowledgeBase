@@ -7,36 +7,36 @@ tags: [alphafold3, implementation, python, diffusion, pairformer]
 
 [[Home|Home]]
 
-## Що важливо перед стартом
+## What matters before you start
 
-`AlphaFold 3` — це не просто один `model.py`, а повний стек:
-- підготовка даних (FASTA/mmCIF/MSA/templates/ligands),
-- феатуризація (featureization),
-- trunk-модель (`Pairformer`),
-- структурний генератор (diffusion over 3D coordinates),
-- постпроцесинг, ранжування, оцінка якості.
+`AlphaFold 3` is not just one `model.py` file, but a full stack:
+- data preparation (FASTA/mmCIF/MSA/templates/ligands),
+- featureization,
+- trunk model (`Pairformer`),
+- structural generator (diffusion over 3D coordinates),
+- post-processing, ranking, and quality assessment.
 
-Практично в Python найкраще працює модульний підхід: кожен етап як окремий компонент з чітким I/O-контрактом.
+In practice, a modular Python design works best: each stage is an isolated component with a clear I/O contract.
 
-## Головні підходи до імплементації на Python
+## Main Python implementation approaches
 
-| Підхід | Коли обирати | Переваги | Ризики/обмеження |
+| Approach | When to choose | Advantages | Risks/limitations |
 |---|---|---|---|
-| `Inference-first` (готовий стек + адаптація пайплайну) | Потрібен швидкий практичний результат | Найменший R&D ризик, швидкий time-to-result | Менший контроль над архітектурою |
-| `AF3-like modular reimplementation` | Потрібна дослідницька гнучкість | Контроль над компонентами, абляції | Високі витрати на валідацію |
-| `Hybrid` (готові ембеддинги + власний diffusion head) | Потрібен компроміс швидкості/контролю | Баланс продуктивності та керованості | Інтеграційна складність |
-| `Train-from-scratch` | Академічні/індустріальні ресурси великого масштабу | Максимальна незалежність | Дуже дорогі compute/data, тривалий цикл |
+| `Inference-first` (existing stack + pipeline adaptation) | Need fast practical results | Lowest R&D risk, shortest time-to-result | Less architectural control |
+| `AF3-like modular reimplementation` | Need research flexibility | Fine-grained component control, ablations | High validation cost |
+| `Hybrid` (ready embeddings + custom diffusion head) | Need speed/control balance | Good trade-off between performance and control | Integration complexity |
+| `Train-from-scratch` | Large-scale academic/industrial resources | Maximum independence | Very high compute/data cost, long cycle |
 
-## Рекомендований Python-стек
+## Recommended Python stack
 
-- `PyTorch` — тренування/інференс моделей.
-- `numpy` — базова тензорна підготовка.
-- `biopython`, `gemmi` — парсинг біоструктурних форматів.
-- `rdkit` — феатури лігандів.
-- `pydantic` або `dataclasses` — строгі схеми I/O між етапами.
-- `hydra` або `omegaconf` — керування конфігураціями експериментів.
+- `PyTorch` for model training/inference.
+- `numpy` for core tensor preprocessing.
+- `biopython`, `gemmi` for structural bioformat parsing.
+- `rdkit` for ligand features.
+- `pydantic` or `dataclasses` for strict stage-level I/O schemas.
+- `hydra` or `omegaconf` for experiment configuration management.
 
-## Базова архітектура пайплайну
+## Baseline pipeline architecture
 
 ```mermaid
 flowchart LR
@@ -54,7 +54,7 @@ flowchart LR
     classDef neutral fill:#1e293b,stroke:#475569,color:#94a3b8
 ```
 
-## Мінімальний дизайн компонентів у Python
+## Minimal Python component design
 
 ```python
 from dataclasses import dataclass
@@ -98,33 +98,33 @@ class AF3LikePipeline:
         return x_t
 ```
 
-## Практична стратегія реалізації (recommended)
+## Practical implementation strategy (recommended)
 
-1. `Data contract first`: зафіксувати формати `Batch` та target-метрик.
-2. `Featureization first`: стабільний пайплайн FASTA/mmCIF/ligands до тензорів.
-3. `Frozen trunk + trainable head`: спочатку тренувати лише diffusion/ranking блок.
-4. `Progressive unfreezing`: поступово розморожувати trunk для domain adaptation.
-5. `Evaluation loop`: автоматично рахувати RMSD/lDDT/DockQ по кожному експерименту.
+1. `Data contract first`: lock down `Batch` formats and target metrics.
+2. `Featureization first`: build a stable FASTA/mmCIF/ligand-to-tensor pipeline.
+3. `Frozen trunk + trainable head`: initially train only diffusion/ranking blocks.
+4. `Progressive unfreezing`: gradually unfreeze trunk for domain adaptation.
+5. `Evaluation loop`: compute RMSD/lDDT/DockQ automatically for each run.
 
-## Які метрики обов'язкові
+## Required metrics
 
-- `RMSD` — глобальне відхилення координат.
-- `lDDT / pLDDT` — локальна якість геометрії.
-- `DockQ` — якість інтерфейсів у комплексах.
-- `Clash/contact checks` — фізична правдоподібність.
+- `RMSD` for global coordinate deviation.
+- `lDDT / pLDDT` for local geometry quality.
+- `DockQ` for interface quality in complexes.
+- `Clash/contact checks` for physical plausibility.
 
-## Типові помилки імплементації
+## Common implementation errors
 
-- Нестабільний parsing (`mmCIF`/chain mapping/altloc) ламає train data.
-- Невідповідність індексів між sequence-level і atom-level тензорами.
-- Занадто ранній end-to-end тренінг без перевіреного data pipeline.
-- Відсутність розділення на `validation by complex type` (protein-only, protein-ligand, protein-RNA тощо).
+- Unstable parsing (`mmCIF`/chain mapping/altloc) corrupts training data.
+- Index mismatches between sequence-level and atom-level tensors.
+- Starting end-to-end training too early without a validated data pipeline.
+- Missing `validation by complex type` splits (protein-only, protein-ligand, protein-RNA, etc.).
 
-## Висновок
+## Conclusion
 
-Для Python-імплементації AF3-подібного стеку найефективніший шлях:
-`модульна архітектура + строгі data contracts + поетапне тренування`.
-Це зменшує технічний ризик і прискорює ітерації порівняно з повним монолітним `train-from-scratch`.
+For an AF3-like Python stack, the most effective path is:
+`modular architecture + strict data contracts + staged training`.
+This reduces technical risk and accelerates iteration versus a monolithic `train-from-scratch` effort.
 
 ## Related Notes
 

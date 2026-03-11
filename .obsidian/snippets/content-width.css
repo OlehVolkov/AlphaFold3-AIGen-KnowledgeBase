@@ -1,0 +1,48 @@
+/* ============================================================
+   Content width tuning for Obsidian (adaptive, not full width)
+   - Wider than default readable line width
+   - Still centered and limited on large displays
+   - Applied to Reading and Editing (Live Preview/Source) views
+   ============================================================ */
+
+:root {
+  /* min, preferred, max */
+  --kb-content-width: clamp(860px, 86vw, 1180px);
+  --kb-content-padding: clamp(14px, 2vw, 28px);
+}
+
+/* Make Obsidian use a wider readable width variable */
+.workspace-leaf-content[data-type="markdown"] {
+  --file-line-width: var(--kb-content-width);
+}
+
+/* Reading view */
+.markdown-reading-view .markdown-preview-sizer,
+.markdown-rendered .markdown-preview-sizer {
+  max-width: var(--kb-content-width) !important;
+  width: min(var(--kb-content-width), calc(100vw - (2 * var(--kb-content-padding)))) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: var(--kb-content-padding);
+  padding-right: var(--kb-content-padding);
+  box-sizing: border-box;
+}
+
+/* Editing view (Live Preview / Source) */
+.markdown-source-view.mod-cm6 .cm-contentContainer {
+  max-width: var(--kb-content-width) !important;
+  width: min(var(--kb-content-width), calc(100vw - (2 * var(--kb-content-padding)))) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: var(--kb-content-padding);
+  padding-right: var(--kb-content-padding);
+  box-sizing: border-box;
+}
+
+/* Slightly denser on smaller screens */
+@media (max-width: 900px) {
+  :root {
+    --kb-content-width: 94vw;
+    --kb-content-padding: 10px;
+  }
+}

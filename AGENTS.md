@@ -8,30 +8,60 @@
 
 ```text
 AlphaFold3/
+├── .git/
+├── .gitignore
+├── .obsidian/
+├── .smart-env/
 ├── Home.md
 ├── AGENTS.md
 ├── NOTICE.md
+├── README.md
+├── Summary.md
 ├── UA/
 │   ├── Головна.md
 │   ├── Індекс.md
 │   ├── Література та пріоритети.md
 │   ├── 1. AlphaFold3/
 │   │   ├── 1.1. Огляд/
+│   │   │   └── 1.1.1. Контекст і мотивація.md
 │   │   ├── 1.2. Архітектура/
 │   │   │   ├── 1.2.1. Загальна архітектура AF3.md
 │   │   │   ├── 1.2.2. Pairformer.md
-│   │   │   ├── 1.2.3. Diffusion Module.md
-│   │   │   ├── 1.2.4. Diffusion Models — Theory and Applications.md
-│   │   │   ├── 1.2.5. Model Training.md
+│   │   │   ├── 1.2.3. Дифузійний модуль.md
+│   │   │   ├── 1.2.4. Дифузійні моделі — теорія та застосування.md
+│   │   │   ├── 1.2.5. Навчання моделі.md
 │   │   │   └── 1.2.6. Феатуризація.md
 │   │   ├── 1.3. Результати/
+│   │   │   ├── 1.3.1. Точність по типах комплексів.md
+│   │   │   └── 1.3.2. Ступінь впевненості.md
 │   │   ├── 1.4. Обмеження/
+│   │   │   └── 1.4.1. Обмеження моделі.md
 │   │   ├── 1.5. Ресурси/
+│   │   │   ├── 1.5.1. Ключові терміни.md
+│   │   │   ├── 1.5.2. Порівняння з попередниками.md
+│   │   │   ├── 1.5.3. Робота з FASTA файлами.md
+│   │   │   └── 1.5.4. Робота з mmCIF файлами.md
 │   │   └── 1.6. Ілюстрації/
+│   │       ├── 1.6.1. Галерея ілюстрацій.md
+│   │       ├── af3-diffusion-pipeline.excalidraw
+│   │       ├── diffusion-bio-landscape.excalidraw
+│   │       └── diffusion-forward-reverse.excalidraw
 │   ├── 2. Концепції/
 │   │   ├── 2.1. Біологія/
+│   │   │   ├── 2.1.1. Згортання білків.md
+│   │   │   ├── 2.1.2. Білок-білок взаємодії.md
+│   │   │   ├── 2.1.3. Ліганди та малі молекули.md
+│   │   │   └── 2.1.4. Нуклеїнові кислоти.md
 │   │   ├── 2.2. Машинне-Навчання/
+│   │   │   ├── 2.2.1. Трансформери.md
+│   │   │   ├── 2.2.2. Дифузійні моделі.md
+│   │   │   ├── 2.2.3. Білкові мовні моделі.md
+│   │   │   └── 2.2.4. Геометричне глибоке навчання.md
 │   │   └── 2.3. Структурна-Біоінформатика/
+│   │       ├── 2.3.1. RMSD.md
+│   │       ├── 2.3.2. lDDT.md
+│   │       ├── 2.3.3. DockQ.md
+│   │       └── 2.3.4. MSA.md
 │   ├── 3. Моделі/
 │   │   ├── 3.0. Огляд моделей.md
 │   │   ├── 3.1. AlphaFold2.md
@@ -52,6 +82,7 @@ AlphaFold3/
     ├── Literature and Priorities.md
     ├── 1. AlphaFold3/
     │   ├── 1.1. Overview/
+    │   │   └── 1.1.1. Context and Motivation.md
     │   ├── 1.2. Architecture/
     │   │   ├── 1.2.1. AF3 Architecture Overview.md
     │   │   ├── 1.2.2. Pairformer.md
@@ -60,13 +91,36 @@ AlphaFold3/
     │   │   ├── 1.2.5. Model Training.md
     │   │   └── 1.2.6. Featurization.md
     │   ├── 1.3. Results/
+    │   │   ├── 1.3.1. Accuracy Across Complex Types.md
+    │   │   └── 1.3.2. Confidence Scores.md
     │   ├── 1.4. Limitations/
+    │   │   └── 1.4.1. Model Limitations.md
     │   ├── 1.5. Resources/
+    │   │   ├── 1.5.1. Key Terms.md
+    │   │   ├── 1.5.2. Comparison with Predecessors.md
+    │   │   ├── 1.5.3. Working with FASTA Files.md
+    │   │   └── 1.5.4. Working with mmCIF Files.md
     │   └── 1.6. Illustrations/
+    │       ├── 1.6.1. Illustration Gallery.md
+    │       ├── af3-diffusion-pipeline.excalidraw
+    │       ├── diffusion-bio-landscape.excalidraw
+    │       └── diffusion-forward-reverse.excalidraw
     ├── 2. Concepts/
     │   ├── 2.1. Biology/
+    │   │   ├── 2.1.1. Protein Folding.md
+    │   │   ├── 2.1.2. Protein-Protein Interactions.md
+    │   │   ├── 2.1.3. Ligands and Small Molecules.md
+    │   │   └── 2.1.4. Nucleic Acids.md
     │   ├── 2.2. Machine-Learning/
+    │   │   ├── 2.2.1. Transformers.md
+    │   │   ├── 2.2.2. Diffusion Models.md
+    │   │   ├── 2.2.3. Protein Language Models.md
+    │   │   └── 2.2.4. Geometric Deep Learning.md
     │   └── 2.3. Structural-Bioinformatics/
+    │       ├── 2.3.1. RMSD.md
+    │       ├── 2.3.2. lDDT.md
+    │       ├── 2.3.3. DockQ.md
+    │       └── 2.3.4. MSA.md
     ├── 3. Models/
     │   ├── 3.0. Models Overview.md
     │   ├── 3.1. AlphaFold2.md
@@ -89,6 +143,7 @@ AlphaFold3/
 - Ієрархічна нумерація: `1.`, `1.1.`, `1.1.1.` і далі.
 - Посилання лише абсолютні від кореня vault.
 - Суттєві UA-нотатки мають EN-дзеркало.
+- `Home.md` — головна точка входу; root-файли `Summary*.md` дозволені як технічні дайджести/implementation-нотатки.
 
 ### 1.2 Синхронізація EN ↔ UA (обов'язково)
 
@@ -185,6 +240,7 @@ tags: [topic_name, domain_name]    # snake_case
 - Не використовувати відносні шляхи.
 - Не змішувати мови в межах мовної папки.
 - Не додавати несистемні файли в корінь vault.
+- Дозволені root-файли/папки: `.git/`, `.gitignore`, `.obsidian/`, `.smart-env/`, `Home.md`, `Summary*.md`, `README.md`, `AGENTS.md`, `NOTICE.md`, `UA/`, `EN/`.
 
 
 ## 7. NOTICE-файли
@@ -197,13 +253,17 @@ tags: [topic_name, domain_name]    # snake_case
 
 ## 8. CSS та масштабування
 
-- Активні сніпети: `homepage`, `math-note`, `diagram-scale`.
+- Активні сніпети: `homepage`, `math-note`, `diagram-scale`, `content-width`.
 - Тема: **GitHub Theme** — має власні `max-width` для `img`, тому сніпети пишуться з явним `!important`.
 - `diagram-scale.css` — відповідає за рівне масштабування Mermaid та зображень:
   - Mermaid SVG → `width: 100%` через `.mermaid svg`
   - Зображення → `width: 100%` через `img` (без `:not([class])`) + `.markdown-preview-section img`
   - `img[width]` — виняток: зображення з явно заданою шириною не розтягуються (іконки, badges)
   - `.note` scope додано до всіх ключових правил для сумісності з `cssclasses: [note]`
+- `content-width.css` — адаптивна ширина текстового контейнера:
+  - текст ширший за default readable width, але не full-width,
+  - `clamp(860px, 86vw, 1180px)` для desktop/tablet,
+  - окреме вирівнювання для Reading + Editing (CM6).
 - Якщо після змін ілюстрації зникли: перевірити Excalidraw plugin → потім CSS.
 
 ---

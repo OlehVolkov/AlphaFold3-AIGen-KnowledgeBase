@@ -8,9 +8,15 @@
 
 ```text
 AlphaFold3/
+├── .git/
+├── .gitignore
+├── .obsidian/
+├── .smart-env/
 ├── Home.md
+├── Summary.md                  ← optional technical implementation summary/blueprint
 ├── AGENTS.md
 ├── NOTICE.md
+├── README.md
 ├── UA/
 │   ├── Головна.md
 │   ├── Індекс.md
@@ -90,6 +96,7 @@ AlphaFold3/
 - Hierarchical numbering: `1.`, `1.1.`, `1.1.1.`, and so on.
 - Use absolute links from vault root only.
 - Substantial UA notes must have EN mirrors.
+- `Home.md` is the main entry point; root-level `Summary*.md` files are allowed for technical digests/implementation notes.
 
 ### 1.2 EN ↔ UA Synchronization (required)
 
@@ -185,7 +192,8 @@ All scientific/technical claims require sources:
 
 - No relative links.
 - No mixed languages inside one language folder.
-- No non-system files in vault root.
+- Do not add non-system files to vault root.
+- Allowed root files/directories: `.git/`, `.gitignore`, `.obsidian/`, `.smart-env/`, `Home.md`, `Summary*.md`, `README.md`, `AGENTS.md`, `NOTICE.md`, `UA/`, `EN/`.
 
 ---
 
@@ -199,13 +207,17 @@ All scientific/technical claims require sources:
 
 ## 8. CSS and scaling
 
-- Active snippets: `homepage`, `math-note`, `diagram-scale`.
+- Active snippets: `homepage`, `math-note`, `diagram-scale`, `content-width`.
 - Theme: **GitHub Theme** — has its own `max-width` for `img`; snippets use explicit `!important` to override.
 - `diagram-scale.css` — governs uniform scaling of Mermaid diagrams and images:
   - Mermaid SVG → `width: 100%` via `.mermaid svg`
   - Images → `width: 100%` via `img` (no `:not([class])`) + `.markdown-preview-section img`
   - `img[width]` exception: images with an explicit width attribute are not stretched (icons, badges)
   - `.note` scope added to all key rules for compatibility with `cssclasses: [note]`
+- `content-width.css` — adaptive text container width:
+  - wider than default readable width but not full-width,
+  - `clamp(860px, 86vw, 1180px)` on desktop/tablet,
+  - dedicated alignment for Reading + Editing (CM6).
 - If illustrations disappear after CSS changes: check Excalidraw plugin settings first, then CSS.
 
 ---
