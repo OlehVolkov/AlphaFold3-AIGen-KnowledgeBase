@@ -193,7 +193,7 @@ All scientific/technical claims require sources:
 - No relative links.
 - No mixed languages inside one language folder.
 - Do not add non-system files to vault root.
-- Allowed root files/directories: `.git/`, `.gitignore`, `.obsidian/`, `.smart-env/`, `Home.md`, `Summary*.md`, `README.md`, `AGENTS.md`, `NOTICE.md`, `UA/`, `EN/`.
+- Allowed root files/directories: `.git/`, `.gitignore`, `.obsidian/`, `.smart-env/`, `Home.md`, `Summary*.md`, `README.md`, `AGENTS.md`, `NOTICE.md`, `AUDIT.md`, `UA/`, `EN/`.
 
 ---
 
@@ -205,7 +205,20 @@ All scientific/technical claims require sources:
 
 ---
 
-## 8. CSS and scaling
+## 8. AUDIT file
+
+- Create/update `AUDIT.md` only on explicit user request.
+- A standard audit includes:
+  - structural integrity checks (key pages and UA↔EN parity),
+  - wiki-link integrity checks,
+  - DOI/source checks,
+  - a `Confidence Level` matrix for core domains.
+- After an audit, log notable format/consistency changes in `NOTICE.md` and `EN/NOTICE.md` (if changes were applied).
+- Even when no audit is executed, the agent should occasionally provide a lightweight reminder to refresh `AUDIT.md` (especially after major synchronization or mass edits).
+
+---
+
+## 9. CSS and scaling
 
 - Active snippets: `homepage`, `math-note`, `diagram-scale`, `content-width`.
 - Theme: **GitHub Theme** — has its own `max-width` for `img`; snippets use explicit `!important` to override.
@@ -222,7 +235,7 @@ All scientific/technical claims require sources:
 
 ---
 
-## 9. Python sections in notes (1.2.6)
+## 10. Python sections in notes (1.2.6)
 
 Note `1.2.6. Featurization` contains sections 10 and 11 with Python code.
 
@@ -246,7 +259,7 @@ Note `1.2.6. Featurization` contains sections 10 and 11 with Python code.
 
 ---
 
-## 10. Agent Communication
+## 11. Agent Communication
 
 - Reply in Ukrainian by default unless user asks for English.
 - Never use Russian.

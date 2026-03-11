@@ -170,3 +170,25 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
   - added system root entries `.git/`, `.gitignore`, `.obsidian/`, `.smart-env/`,
   - synchronized `README.md` presence in the structure example,
   - clarified allowed root files/directories list.
+
+## 16. Bibliography unification and knowledge correction (2026-03-11)
+
+- Reviewed and synchronized the core literature lists:
+  - `UA/Література та пріоритети.md`
+  - `EN/Literature and Priorities.md`
+- Added an extra high-citation block (AF-Multimer, lDDT, TM-score, MMseqs2, ColabFold, RoseTTAFold, ESMFold, AF2 human proteome paper).
+- Fixed an incorrect DOI in the UA PPI note:
+  - `10.48550/arXiv.2109.22paym` → `10.1101/2021.10.04.463034`.
+- Added missing DOI/source blocks to EN mirrors:
+  - `EN/.../2.3.1. RMSD.md`,
+  - `EN/.../2.3.2. lDDT.md`,
+  - `EN/.../2.3.3. DockQ.md`,
+  - `EN/.../2.1.2. Protein-Protein Interactions.md`.
+- Applied standardized Mermaid node classes (`input/trunk/diffusion/confidence/output/neutral`) to PPI symmetry flowcharts in UA/EN.
+
+## 17. AUDIT.md rule in AGENTS (2026-03-11)
+
+- Updated `AGENTS.md` and `EN/AGENTS.md` with a dedicated `AUDIT.md` section.
+- Recorded rule: run/create `AUDIT.md` **only on explicit user request**.
+- Added operational requirement: the agent should **occasionally provide a lightweight reminder** to refresh the audit after major synchronization or mass edits.
+- Added `AUDIT.md` to the allowed root-file list in agent rules.

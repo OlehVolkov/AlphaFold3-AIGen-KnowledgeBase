@@ -61,6 +61,27 @@ Prioritized reading list for AF3. Rank `1` means highest importance.
 | 13 | Altschul et al. (1990), *Basic local alignment search tool* | Practical homology search standard | `[2.3.4 MSA]` `[1.5.3 FASTA]` |
 |    | DOI: [10.1016/S0022-2836(05)80360-2](https://doi.org/10.1016/S0022-2836(05)80360-2) |  |  |
 
+## F. Additional Highly Cited Papers (recommended for core reading)
+
+| Rank | Source | Importance | Critical sections |
+|---|---|---|---|
+| 14 | Tunyasuvunakool et al. (2021), *Highly accurate protein structure prediction for the human proteome* | AF2 scaling at proteome level | `[1.5 Resources]` `[4.3 AlphaFoldDB]` |
+|    | DOI: [10.1038/s41586-021-03828-1](https://doi.org/10.1038/s41586-021-03828-1) |  |  |
+| 15 | Evans et al. (2021), *Protein complex prediction with AlphaFold-Multimer* | Key transition from monomer to complex prediction | `[1.3 Results]` `[2.1.2 Protein-Protein Interactions]` |
+|    | DOI: [10.1101/2021.10.04.463034](https://doi.org/10.1101/2021.10.04.463034) |  |  |
+| 16 | Mariani et al. (2013), *lDDT: a local superposition-free score for comparing protein structures and models* | Foundational `lDDT/pLDDT` reference | `[2.3.2 lDDT]` `[1.3 Results]` |
+|    | DOI: [10.1093/bioinformatics/btt473](https://doi.org/10.1093/bioinformatics/btt473) |  |  |
+| 17 | Zhang & Skolnick (2004), *Scoring function for automated assessment of protein structure template quality* | Canonical source for `TM-score` | `[2.3.1 RMSD]` `[1.3 Results]` |
+|    | DOI: [10.1002/prot.20264](https://doi.org/10.1002/prot.20264) |  |  |
+| 18 | Steinegger & Söding (2017), *MMseqs2 enables sensitive protein sequence searching for the analysis of massive data sets* | High-throughput standard for large-scale sequence search | `[2.3.4 MSA]` `[1.5.3 FASTA]` |
+|    | DOI: [10.1038/nbt.3988](https://doi.org/10.1038/nbt.3988) |  |  |
+| 19 | Mirdita et al. (2022), *ColabFold: making protein folding accessible to all* | Practical engineering standard for AF2/AF-Multimer workflows | `[1.5 Resources]` `[2.3.4 MSA]` |
+|    | DOI: [10.1038/s41592-022-01488-1](https://doi.org/10.1038/s41592-022-01488-1) |  |  |
+| 20 | Baek et al. (2021), *Accurate prediction of protein structures and interactions using a three-track neural network* | Competitive `RoseTTAFold` architecture for benchmarking | `[3.3 RoseTTAFold]` `[1.5.2 Comparison]` |
+|    | DOI: [10.1126/science.abj8754](https://doi.org/10.1126/science.abj8754) |  |  |
+| 21 | Lin et al. (2023), *Evolutionary-scale prediction of atomic-level protein structure with a language model* | Landmark `ESMFold` / pLM paradigm reference | `[3.4 ESMFold]` `[2.2.3 Protein Language Models]` |
+|    | DOI: [10.1126/science.ade2574](https://doi.org/10.1126/science.ade2574) |  |  |
+
 ## Related Notes
 
 - [[EN/1. AlphaFold3/1.5. Resources/1.5.1. Key Terms|Key Terms]]
