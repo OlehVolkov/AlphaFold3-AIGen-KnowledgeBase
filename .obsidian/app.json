@@ -1,1 +1,6 @@
-{}
+{
+  "defaultViewMode": "source",
+  "readableLineLength": true,
+  "strictLineBreaks": false,
+  "autoConvertHtml": true
+}

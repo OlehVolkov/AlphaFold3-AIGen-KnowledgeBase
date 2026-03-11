@@ -1,6 +1,6 @@
 # NOTICE — Formatting Fix Log
 
-Last updated: 2026-03-07 (updated)
+Last updated: 2026-03-11
 Platform: Obsidian vault
 Obsidian compatibility (minimum): 1.12.0
 Note: `app.json` in this vault is empty (`{}`), so the exact app version is not pinned in-repo.
@@ -67,13 +67,84 @@ After mass rename/move/refactor:
 - Do not put HTML inside `[[...]]`.
 - Do not apply aggressive Excalidraw CSS scaling without validating Reading view (it may break rendering).
 
-## 8. Diagram and illustration scaling
+## 8. Diagram and image scaling fix (2026-03-11)
 
-- Use `.obsidian/snippets/diagram-scale.css`.
-- Goal: Mermaid and Excalidraw should match text container width (`100%`) with readable text.
-- If illustrations disappear after styling: check Excalidraw plugin settings first, then CSS.
+Three simultaneous root causes were found for the scale mismatch between Mermaid and images:
+
+**Cause 1 — dead `.note` scope.**
+All notes have `cssclasses: [note]`, but `diagram-scale.css` had no `.note`-scoped rules. The snippet only applied via global `.markdown-preview-view` selectors, which GitHub Theme overrode with higher-specificity rules.
+- Fix: added `.note .markdown-preview-view` scope to all key rules.
+
+**Cause 2 — GitHub Theme constrains `img`.**
+The theme applies its own `max-width` to `.markdown-preview-section img`, which differed from the Mermaid container width.
+- Fix: added explicit `img` selector + `.markdown-preview-section img` with `!important`.
+
+**Cause 3 — `img:not([class])` missed images with classes.**
+GitHub Theme adds its own classes to `<img>` tags — those images were entirely outside the snippet's scope.
+- Fix: changed `img:not([class])` → `img` (no class filter).
+
+**New exception:** `img[width]` — images with an explicit width attribute (icons, badges) are not stretched.
+**New variable:** `--content-max-width: 100%` for centralised control.
+
+- Snippet: `.obsidian/snippets/diagram-scale.css`.
+- Goal: Mermaid SVG and `<img>` render at the same width — 100% of the text container.
+- If illustrations disappear after CSS changes: check Excalidraw plugin settings first, then CSS.
 
 ## 9. File maintenance
 
 - Keep this file updated after every major formatting or structure refactor.
 - Ukrainian counterpart: `NOTICE.md`.
+
+## 10. Obsidian Mermaid render fix (2026-03-11)
+
+Some diagrams rendered worse in Obsidian than in VS Code/GitHub due to overly aggressive local CSS and narrow readable-width mode.
+
+- `.obsidian/app.json`:
+  - `readableLineLength: true` → `false` (so wide Mermaid diagrams are not squeezed by the readable-width container).
+- `.obsidian/snippets/diagram-scale.css`:
+  - removed forced `font-size: ... !important` on `.mermaid svg` (it could break label auto-layout for some Mermaid types),
+  - changed Mermaid container `overflow-x: hidden` → `overflow-x: auto` (to avoid clipping),
+  - removed `max-height` constraints for Excalidraw/internal embeds (`svg/img/canvas`) to avoid vertical compression.
+
+## 11. Mass EN↔UA synchronization (2026-03-11)
+
+Performed content parity sync where EN notes were shorter than UA mirrors (sections, tables, formulas, and practical examples).
+
+- Updated EN Concepts core notes (`2.1`, `2.2`, `2.3`):
+  - `2.1.1 Protein Folding`
+  - `2.1.2 Protein-Protein Interactions`
+  - `2.1.3 Ligands and Small Molecules`
+  - `2.1.4 Nucleic Acids`
+  - `2.2.1 Transformers`
+  - `2.2.2 Diffusion Models`
+  - `2.2.3 Protein Language Models`
+  - `2.2.4 Geometric Deep Learning`
+  - `2.3.1 RMSD`
+  - `2.3.2 lDDT`
+  - `2.3.3 DockQ`
+- Substantially expanded:
+  - `EN/1. AlphaFold3/1.5. Resources/1.5.4. Working with mmCIF Files.md`
+    (metadata extraction, NumPy coordinates, interface analysis, AF3 output parsing, PDB download, write/modify workflow).
+- Validated wiki-links in changed EN files: no broken targets detected.
+
+## 12. Mermaid style unification (2026-03-11)
+
+Applied a single Mermaid styling standard across newly added/updated EN and UA notes (Concepts + mmCIF resource):
+
+- Standard node classes:
+  - `input`
+  - `trunk`
+  - `diffusion`
+  - `confidence`
+  - `output`
+  - `neutral`
+- Added unified `classDef` palette (from `AGENTS.md`) to flowchart blocks.
+- Replaced local/legacy class names (`root`, `sm`, `emb`, `clean`, `gen`, `model`, etc.) with the unified set.
+- Goal: consistent semantics and visual rendering in Obsidian Reading view across EN/UA.
+
+## 13. AGENTS/NOTICE update (2026-03-11)
+
+- Synchronized `AGENTS.md` and `EN/AGENTS.md` with the current Mermaid rules.
+- Added mandatory `flowchart` class standard: `input`, `trunk`, `diffusion`, `confidence`, `output`, `neutral`.
+- Added explicit requirement: every `flowchart` must define `classDef` for all 6 classes.
+- Documented exceptions for non-flowchart types (`timeline`, `mindmap`, `xychart-beta`, `quadrantChart`).

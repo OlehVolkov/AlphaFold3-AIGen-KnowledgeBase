@@ -1,84 +1,141 @@
 /* ============================================================
-   Diagram scaling for Obsidian
-   Goal: fit page width, keep text readable, avoid tiny renders
+   Diagram & image scaling for Obsidian — AlphaFold3 vault
+   Goal: Mermaid diagrams and embedded images both render at
+         the same visual width — 100% of the note content area.
+
+   Root causes of mismatch:
+     1. Mermaid SVG has an explicit viewBox width that Obsidian
+        does not override → appears narrower than images.
+     2. GitHub Theme caps images via .markdown-preview-section img
+        with a max-width that differs from the Mermaid container.
+     3. cssclasses: [note] selector was missing — snippet rules
+        were silently ignored for all regular notes.
+     4. img:not([class]) missed images that GitHub Theme annotates
+        with its own class names.
+   Fix: use higher-specificity selectors scoped to the preview
+        containers, and add an explicit .note scope so the rules
+        actually fire on standard note pages.
    ============================================================ */
 
 :root {
-  --diagram-min-width: 100%;
-  --excalidraw-min-width: 100%;
-  --excalidraw-max-height: 78vh;
-  --diagram-font-min: 13px;
-  --diagram-font-max: 19px;
+  --diagram-font-min:     13px;
+  --diagram-font-max:     19px;
+  --excalidraw-max-height: none;
+  --content-max-width:    100%;
 }
 
-/* Mermaid container */
+/* ── Mermaid container ────────────────────────────────────── */
 .markdown-preview-view .mermaid,
-.markdown-rendered .mermaid {
+.markdown-rendered .mermaid,
+.note .markdown-preview-view .mermaid {
   display: block;
   width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  max-width: var(--content-max-width);
+  overflow-x: auto;
   padding: 6px 0;
 }
 
-/* Keep diagrams readable: allow horizontal scroll instead of over-shrinking */
 .markdown-preview-view .mermaid svg,
-.markdown-rendered .mermaid svg {
-  display: block;
+.markdown-rendered .mermaid svg,
+.note .markdown-preview-view .mermaid svg {
+  display: block !important;
   width: 100% !important;
-  max-width: 100% !important;
-  min-width: var(--diagram-min-width);
-  height: auto;
+  max-width: var(--content-max-width) !important;
+  height: auto !important;
   margin: 0 auto;
-  font-size: clamp(var(--diagram-font-min), 1.05vw, var(--diagram-font-max)) !important;
+  max-height: none !important;
 }
 
-/* Aggressive Excalidraw scaling */
-.markdown-preview-view .internal-embed[src$=".excalidraw"],
-.markdown-rendered .internal-embed[src$=".excalidraw"] {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-  overflow-y: hidden;
+/* ── Standalone images ─────────────────────────────────────
+   Covers: ![alt](url), ![[image.png]], and GitHub Theme
+   annotated images. Higher specificity than theme default.  */
+.markdown-preview-view img,
+.markdown-rendered img,
+.note .markdown-preview-view img,
+.markdown-preview-section img {
+  display: block !important;
+  width: 100% !important;
+  max-width: var(--content-max-width) !important;
+  height: auto !important;
+  margin: 8px 0 !important;
+  /* Reset GitHub Theme's own max-width cap */
+  max-height: none;
+}
+
+/* Exception: tiny inline icons / badges should not stretch */
+.markdown-preview-view img[width],
+.markdown-rendered img[width] {
+  width: unset !important;
+  max-width: unset !important;
+}
+
+/* ── Excalidraw — plugin class ─────────────────────────────── */
+.markdown-preview-view .excalidraw-svg,
+.markdown-rendered .excalidraw-svg,
+.note .markdown-preview-view .excalidraw-svg {
+  display: block !important;
+  width: 100% !important;
+  max-width: var(--content-max-width) !important;
+  height: auto !important;
+  max-height: none;
   margin: 10px 0 14px;
 }
 
-.markdown-preview-view .internal-embed[src$=".excalidraw"] .markdown-embed-content,
-.markdown-rendered .internal-embed[src$=".excalidraw"] .markdown-embed-content {
+.markdown-preview-view .excalidraw-svg svg,
+.markdown-rendered .excalidraw-svg svg,
+.markdown-preview-view .excalidraw-svg img,
+.markdown-rendered .excalidraw-svg img {
+  display: block !important;
   width: 100% !important;
-  max-width: 100% !important;
-  min-width: var(--excalidraw-min-width);
-}
-
-.markdown-preview-view .internal-embed[src$=".excalidraw"] svg,
-.markdown-rendered .internal-embed[src$=".excalidraw"] svg,
-.markdown-preview-view .internal-embed[src$=".excalidraw"] img,
-.markdown-rendered .internal-embed[src$=".excalidraw"] img,
-.markdown-preview-view .internal-embed[src$=".excalidraw"] canvas,
-.markdown-rendered .internal-embed[src$=".excalidraw"] canvas,
-.markdown-preview-view .internal-embed[src$=".excalidraw"] .excalidraw-svg,
-.markdown-rendered .internal-embed[src$=".excalidraw"] .excalidraw-svg {
-  display: block;
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: var(--excalidraw-min-width);
+  max-width: var(--content-max-width) !important;
   height: auto !important;
-  max-height: var(--excalidraw-max-height);
+  max-height: none;
   object-fit: contain;
 }
 
-/* Mobile: no forced min width, keep full viewport fit */
+/* ── Internal embed wrapper (![[...]]) ────────────────────── */
+.markdown-preview-view .internal-embed,
+.markdown-rendered .internal-embed,
+.note .markdown-preview-view .internal-embed {
+  display: block;
+  width: 100%;
+  max-width: var(--content-max-width);
+  overflow-x: hidden;
+  margin: 10px 0 14px;
+}
+
+.markdown-preview-view .internal-embed .markdown-embed-content,
+.markdown-rendered .internal-embed .markdown-embed-content {
+  width: 100% !important;
+  max-width: var(--content-max-width) !important;
+}
+
+.markdown-preview-view .internal-embed svg,
+.markdown-rendered .internal-embed svg,
+.markdown-preview-view .internal-embed img,
+.markdown-rendered .internal-embed img,
+.markdown-preview-view .internal-embed canvas,
+.markdown-rendered .internal-embed canvas {
+  display: block !important;
+  width: 100% !important;
+  max-width: var(--content-max-width) !important;
+  height: auto !important;
+  max-height: none;
+  object-fit: contain;
+}
+
+/* ── Align Mermaid visual weight with images ───────────────
+   Both get the same background treatment so they look like
+   they belong to the same visual system.                    */
+.markdown-preview-view .mermaid svg,
+.markdown-rendered .mermaid svg {
+  background: transparent;
+  border-radius: 8px;
+}
+
+/* ── Mobile ─────────────────────────────────────────────────── */
 @media (max-width: 900px) {
   :root {
-    --diagram-min-width: 100%;
-    --excalidraw-min-width: 100%;
-    --excalidraw-max-height: 62vh;
-  }
-
-  .markdown-preview-view .mermaid svg,
-  .markdown-rendered .mermaid svg {
-    min-width: 100%;
+    --excalidraw-max-height: none;
   }
 }
