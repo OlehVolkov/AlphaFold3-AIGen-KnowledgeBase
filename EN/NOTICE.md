@@ -1,6 +1,6 @@
 # NOTICE — Formatting Fix Log
 
-Last updated: 2026-03-11
+Last updated: 2026-03-18
 Platform: Obsidian vault
 Obsidian compatibility (minimum): 1.12.0
 Note: `app.json` in this vault is empty (`{}`), so the exact app version is not pinned in-repo.
@@ -192,3 +192,46 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
 - Recorded rule: run/create `AUDIT.md` **only on explicit user request**.
 - Added operational requirement: the agent should **occasionally provide a lightweight reminder** to refresh the audit after major synchronization or mass edits.
 - Added `AUDIT.md` to the allowed root-file list in agent rules.
+
+## 18. New A3M resource note and UA↔EN synchronization (2026-03-18)
+
+- Added a new paired resource note:
+  - `UA/1. AlphaFold3/1.5. Ресурси/1.5.6. Робота з A3M файлами.md`
+  - `EN/1. AlphaFold3/1.5. Resources/1.5.6. Working with A3M Files.md`
+- Synchronized content across UA and EN:
+  - `A3M` syntax,
+  - difference between `A3M`, `FASTA`, and `Stockholm`,
+  - practical Python parsing,
+  - common CLI operations (`reformat.pl`, `hhfilter`, `hhmake`),
+  - role of `A3M` in `AF3` featurization.
+- Corrected an inaccurate `A3M` description in the `MSA` notes:
+  - lowercase in `A3M` means **insertions**, not deletions;
+  - `-` means a gap in an aligned column;
+  - `.` may act as a placeholder in insert-only columns.
+- Updated navigation in `Home.md` / `UA/Головна.md` and related links in resource notes.
+
+## 19. UA `Featurization` file rename and link synchronization (2026-03-18)
+
+- Renamed the UA file:
+  - `UA/1. AlphaFold3/1.2. Архітектура/1.2.6. Феатуризація.md`
+  - `UA/1. AlphaFold3/1.2. Архітектура/1.2.6. Featurization.md`
+- Synchronized supporting references and wiki-links after the rename:
+  - `AGENTS.md`
+  - `EN/AGENTS.md`
+  - `NOTICE.md`
+  - `EN/NOTICE.md`
+  - related UA/EN notes that link to `1.2.6`.
+- No folder rename was required because no directory names used the old term.
+
+## 20. Instruction refresh and vault audit (2026-03-18)
+
+- Updated `AGENTS.md` and `EN/AGENTS.md`:
+  - aligned the example vault tree with the actual structure (`AUDIT.md`, `1.5.5`, `1.5.6`, `2.2.5`, `2.2.6`),
+  - added an explicit terminology rule for English STEM terms inside `UA/` titles and file names.
+- Normalized the `## Related Notes` heading in two EN notes:
+  - `EN/1. AlphaFold3/1.2. Architecture/1.2.6. Featurization.md`
+  - `EN/2. Concepts/2.3. Structural-Bioinformatics/2.3.4. MSA.md`
+- Refreshed `AUDIT.md`:
+  - confirmed numbered UA↔EN note parity,
+  - checked absolute wiki-links (`0` missing targets),
+  - recorded current DOI coverage and remaining citation gaps.

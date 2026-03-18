@@ -60,6 +60,10 @@ Google DeepMind · *Nature* 2024 · [[UA/Головна|🇺🇦 Українс�
 >
 > 🗂️ <span class="link-teal">[[EN/1. AlphaFold3/1.5. Resources/1.5.4. Working with mmCIF Files|Working with mmCIF Files]]</span>
 >
+> ⚗️ <span class="link-teal">[[EN/1. AlphaFold3/1.5. Resources/1.5.5. Working with SMILES Files|Working with SMILES Files]]</span>
+>
+> 🧵 <span class="link-teal">[[EN/1. AlphaFold3/1.5. Resources/1.5.6. Working with A3M Files|Working with A3M Files]]</span>
+>
 > 🖼️ <span class="link-teal">[[EN/1. AlphaFold3/1.6. Illustrations/1.6.1. Illustration Gallery|Illustration Gallery]]</span>
 
 ---

@@ -5,95 +5,116 @@ tags: [audit, quality, confidence, references]
 
 # Knowledge Base Audit (AlphaFold3 Vault)
 
-Date: 2026-03-11  
-Scope: `UA/`, `EN/`, root navigation pages, bibliography consistency, DOI/reference quality.
+Date: 2026-03-18  
+Scope: `UA/`, `EN/`, root navigation pages, `AGENTS.md`, `AUDIT.md`, wiki-link integrity, DOI/source coverage, and mirror consistency spot-checks.
 
 ## 1. Method
 
-Audit was performed using:
-- structural checks (file/folder presence and numbering parity),
-- wiki-link integrity checks,
-- bibliography/DOI pattern checks,
-- UA↔EN mirror consistency review for core scientific notes,
-- cross-check against external primary sources (DOI links).
+Audit was performed using local vault checks:
+- markdown file inventory and root-file presence,
+- numbered note parity check across `UA/` and `EN/`,
+- absolute wiki-link target validation,
+- DOI-block presence scan (`DOI: [...]`),
+- targeted UA↔EN section-parity spot-checks for recently changed mirrored notes.
+
+Notes:
+- This audit cycle was local-only; no external web verification was performed.
+- Confidence levels below are based on source presence, mirror consistency, and prior curation state inside the vault.
 
 ## 2. Structural Integrity Results
 
 - Markdown files:
-  - `UA`: 41
-  - `EN`: 42
-  - `root`: 5
+  - `UA`: 45
+  - `EN`: 46
+  - `root`: 6
+  - `total`: 102
 - Numbered note parity (`1.x.x` to `4.x.x`) between `UA/` and `EN/`: **no mismatches**.
-- Critical entry/index pages present:
+- Critical entry and governance pages present:
   - `Home.md`
   - `UA/Головна.md`
   - `UA/Індекс.md`
   - `EN/Index.md`
   - `UA/Література та пріоритети.md`
   - `EN/Literature and Priorities.md`
+  - `AGENTS.md`
+  - `EN/AGENTS.md`
+  - `AUDIT.md`
+  - `NOTICE.md`
+  - `EN/NOTICE.md`
 
 Status: **PASS**
 
-## 3. Link and Citation Integrity
+## 3. Link and Mirror Integrity
 
-- Wiki-link target check: **0 missing targets** (for vault content links).
-- DOI coverage in `UA/` + `EN/` markdown files:
-  - files with DOI mentions: `36 / 83` (~43.4%)
-- Malformed known DOI typo fixed during audit:
-  - `10.48550/arXiv.2109.22paym` → `10.1101/2021.10.04.463034` (AlphaFold-Multimer preprint DOI).
+- Absolute wiki-link target check: **0 missing targets**.
+- Spot-checked mirrored section counts for recently edited note pairs:
+  - `Featurization`: `13 / 13` top-level `##` sections in UA/EN
+  - `A3M`: `10 / 10`
+  - `MSA`: `7 / 7`
+- `Related Notes` section naming normalized in EN mirrors where lowercase `notes` was still present.
 
-Status: **PASS with minor residual risk**  
-Residual risk: not every conceptual file has an explicit DOI block yet.
+Status: **PASS**
 
-## 4. Knowledge Consistency Corrections Applied
+## 4. DOI and Source Coverage
 
-During this audit cycle, the following were corrected/unified:
-- Bibliography expanded in UA/EN prioritized literature pages with additional high-citation core papers.
-- DOI blocks added/synchronized in EN mirrors for:
-  - `RMSD`,
-  - `lDDT`,
-  - `DockQ`,
-  - `Protein-Protein Interactions`.
-- PPI symmetry flowcharts aligned to the standardized Mermaid class scheme.
+- Markdown files with at least one DOI block: `50 / 102` (`49.0%`).
+- Residual files without DOI blocks include many non-scientific pages (navigation, notice, audit, gallery), but **36 content notes** still lack DOI-backed source blocks.
 
-## 5. Confidence Level Matrix
+Highest-priority content gaps:
+- AF3 architecture notes without DOI blocks:
+  - `Pairformer`
+  - `Diffusion Module`
+  - `Model Training`
+- AF3 results and limitations notes:
+  - `Accuracy Across Complex Types`
+  - `Confidence Scores`
+  - `Model Limitations`
+- Resource notes:
+  - `Working with FASTA Files`
+  - `Working with mmCIF Files`
+- Dataset pages:
+  - `PDB`
+  - `UniProt`
+  - `AlphaFoldDB`
+  - `CASP`
+- Concept pages still lacking DOI in at least one mirror:
+  - `Protein Folding`
+  - `Diffusion Models`
+  - `Geometric Deep Learning`
+
+Status: **PASS with medium residual risk**
+
+## 5. Corrections Applied During This Audit Cycle
+
+- Updated `AGENTS.md` and `EN/AGENTS.md` to reflect the current vault structure:
+  - added `AUDIT.md` to the root tree,
+  - added `1.5.5` / `1.5.6` resource notes,
+  - added `2.2.5` / `2.2.6` ML concept notes.
+- Added an explicit terminology policy for English STEM terms in `UA/` titles and file names.
+- Normalized `## Related Notes` capitalization in:
+  - `EN/1. AlphaFold3/1.2. Architecture/1.2.6. Featurization.md`
+  - `EN/2. Concepts/2.3. Structural-Bioinformatics/2.3.4. MSA.md`
+
+## 6. Confidence Level Matrix
 
 Scale:
-- `High` = strong agreement with primary sources and consistent UA/EN representation.
-- `Medium` = generally correct, but incomplete citation depth or narrower coverage.
-- `Low` = weakly sourced or potentially outdated/underspecified.
+- `High` = strong source presence and stable UA↔EN representation.
+- `Medium-High` = technically consistent, but source coverage is incomplete in part of the topic cluster.
+- `Medium` = useful and coherent, but still under-sourced or overview-heavy.
 
-| Domain | Confidence | Rationale | Key External Sources |
-|---|---|---|---|
-| AF3 core claims (architecture/results) | High | Backed by Nature AF3 + AF2 primary papers; mirrored across UA/EN | `10.1038/s41586-024-07487-w`, `10.1038/s41586-021-03819-2` |
-| Diffusion/transformer fundamentals | High | Canonical foundational papers are present and consistently referenced | `10.48550/arXiv.2006.11239`, `10.48550/arXiv.2011.13456`, `10.48550/arXiv.1706.03762` |
-| Structural metrics (RMSD, lDDT, DockQ) | High | Core metric references now present in UA and EN | `10.1107/S0567739476001873`, `10.1093/bioinformatics/btt473`, `10.1371/journal.pone.0161879` |
-| MSA and evolutionary signal | Medium-High | Core sources present; some practical sections rely on summary-level descriptions | `10.1016/0022-2836(70)90057-4`, `10.1016/S0022-2836(05)80360-2`, `10.1038/nbt.3988` |
-| Competing model comparisons (RoseTTAFold/ESMFold/DiffDock) | Medium-High | Good source coverage, but benchmark narratives may evolve with new releases | `10.1126/science.abj8754`, `10.1126/science.ade2574`, `10.48550/arXiv.2210.01776` |
-| Operational/practice guidance (pipelines, tooling) | Medium | Technically coherent, but implementation choices are context-dependent and may drift | `10.1038/s41592-022-01488-1`, `10.1038/s41586-021-03828-1` |
-
-## 6. External Sources Used for Confidence Anchoring
-
-Primary scientific sources (DOI links):
-- AlphaFold 3: https://doi.org/10.1038/s41586-024-07487-w
-- AlphaFold 2: https://doi.org/10.1038/s41586-021-03819-2
-- AF2 human proteome: https://doi.org/10.1038/s41586-021-03828-1
-- AlphaFold-Multimer: https://doi.org/10.1101/2021.10.04.463034
-- DDPM: https://doi.org/10.48550/arXiv.2006.11239
-- Score-SDE: https://doi.org/10.48550/arXiv.2011.13456
-- Attention Is All You Need: https://doi.org/10.48550/arXiv.1706.03762
-- DockQ: https://doi.org/10.1371/journal.pone.0161879
-- Kabsch alignment: https://doi.org/10.1107/S0567739476001873
-- lDDT: https://doi.org/10.1093/bioinformatics/btt473
-- TM-score: https://doi.org/10.1002/prot.20264
-- MMseqs2: https://doi.org/10.1038/nbt.3988
-- ColabFold: https://doi.org/10.1038/s41592-022-01488-1
-- RoseTTAFold: https://doi.org/10.1126/science.abj8754
-- ESMFold: https://doi.org/10.1126/science.ade2574
+| Domain | Confidence | Rationale |
+|---|---|---|
+| AF3 core architecture and Featurization | High | Core architecture/feature-building material is mirrored, structurally aligned, and anchored by primary AF3 sources in the central notes. |
+| MSA / A3M / sequence-alignment practice | Medium-High | Practical guidance is now richer and mirrored well, but some adjacent resource notes still lack DOI blocks. |
+| Diffusion and ML foundations | Medium-High | Topic coverage is broad and coherent, though `Diffusion Models` and `Geometric Deep Learning` still need stronger DOI coverage in the audited set. |
+| Model comparisons (AF2, AF3, RoseTTAFold, ESMFold, DiffDock) | High | Core model pages and overview pages are mirrored and generally source-backed. |
+| Dataset overviews and operational reference pages | Medium | Structurally complete, but the dataset cluster is still under-cited relative to the rest of the vault. |
 
 ## 7. Recommended Next Actions
 
-1. Raise DOI coverage from ~43% to >60% for conceptual notes by adding 1–2 canonical sources per file.
-2. Add a lightweight `references lint` check (regex + whitelist) to catch malformed DOI strings automatically.
-3. Introduce per-note `confidence` frontmatter (e.g., `confidence: high|medium|low`) for transparent evidence grading.
-
+1. Raise DOI coverage first in the 36 remaining content notes without source blocks, starting with `Pairformer`, `Diffusion Module`, `Model Training`, `PDB`, `UniProt`, `AlphaFoldDB`, and `CASP`.
+2. Add a lightweight local lint step for:
+   - missing DOI blocks in numbered notes,
+   - `## Related Notes` capitalization consistency,
+   - missing mirrored `## Related Notes / ## Пов'язані нотатки` sections.
+3. Re-run `AUDIT.md` after the next major EN↔UA synchronization or mass terminology rename.

@@ -15,6 +15,7 @@ AlphaFold3/
 ├── Home.md
 ├── Summary.md                  ← optional technical implementation summary/blueprint
 ├── AGENTS.md
+├── AUDIT.md
 ├── NOTICE.md
 ├── README.md
 ├── UA/
@@ -29,14 +30,26 @@ AlphaFold3/
 │   │   │   ├── 1.2.3. Diffusion Module.md
 │   │   │   ├── 1.2.4. Diffusion Models — Theory and Applications.md
 │   │   │   ├── 1.2.5. Model Training.md
-│   │   │   └── 1.2.6. Феатуризація.md
+│   │   │   └── 1.2.6. Featurization.md
 │   │   ├── 1.3. Результати/
 │   │   ├── 1.4. Обмеження/
 │   │   ├── 1.5. Ресурси/
+│   │   │   ├── 1.5.1. Ключові терміни.md
+│   │   │   ├── 1.5.2. Порівняння з попередниками.md
+│   │   │   ├── 1.5.3. Робота з FASTA файлами.md
+│   │   │   ├── 1.5.4. Робота з mmCIF файлами.md
+│   │   │   ├── 1.5.5. Робота з SMILES файлами.md
+│   │   │   └── 1.5.6. Робота з A3M файлами.md
 │   │   └── 1.6. Ілюстрації/
 │   ├── 2. Концепції/
 │   │   ├── 2.1. Біологія/
 │   │   ├── 2.2. Машинне-Навчання/
+│   │   │   ├── 2.2.1. Трансформери.md
+│   │   │   ├── 2.2.2. Дифузійні моделі.md
+│   │   │   ├── 2.2.3. Білкові мовні моделі.md
+│   │   │   ├── 2.2.4. Геометричне глибоке навчання.md
+│   │   │   ├── 2.2.5. ResNet.md
+│   │   │   └── 2.2.6. U-Net.md
 │   │   └── 2.3. Структурна-Біоінформатика/
 │   ├── 3. Моделі/
 │   │   ├── 3.0. Огляд моделей.md
@@ -108,6 +121,15 @@ AlphaFold3/
   - `## Related Notes / ## Пов'язані нотатки` section.
 - Differences are allowed only in language localization and phrasing style; technical content must remain equivalent.
 - Before finishing, the agent must verify that neither UA nor EN is a shortened version of the same topic.
+
+### 1.3 Terminology and naming
+
+- Inside `UA/`, English STEM terms may remain in titles and file/folder names when the Ukrainian analogue is non-standard, awkward, or weaker than the domain-standard term.
+- Typical examples: `Featurization`, `recycling`, `Pairformer`, `Template Embedder`.
+- If a natural Ukrainian analogue exists, use a paired first mention:
+  - `English term` (Ukrainian equivalent), or
+  - Ukrainian equivalent (`English term`).
+- Once a term choice is made, keep it consistent across the file name, title, breadcrumb, `Related Notes`, and wiki-links.
 
 ---
 
@@ -277,5 +299,6 @@ Note `1.2.6. Featurization` contains sections 10 and 11 with Python code.
 - Reply in Ukrainian by default unless user asks for English.
 - Never use Russian.
 - Code examples, code comments, and identifiers in English.
-- Technical terms format: `English term` — Ukrainian equivalent.
+- Keep an English technical term when it is more natural than the Ukrainian alternative.
+- If a good Ukrainian equivalent exists, use a paired first mention: `English term` (Ukrainian equivalent) or Ukrainian equivalent (`English term`).
 - Default programming language is Python if unspecified.
