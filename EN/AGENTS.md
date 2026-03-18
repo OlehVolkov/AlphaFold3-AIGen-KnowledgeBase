@@ -145,6 +145,19 @@ tags: [topic_name, domain_name]    # snake_case
 - Inside markdown tables: use only `[[path]]` — no alias.
 - `[[path|alias]]` breaks table parsing due to the `|` character.
 
+### 2.5 New Content Sections (required)
+
+- When adding a new content section or a new conceptual note, do not stop at a short definition.
+- By default, gather **expanded** material in the style of a deeper overview unless the user explicitly asks for a short version.
+- Minimum expected structure of a new section:
+  - `why it is possible / why it matters`;
+  - main approaches or architecture variants;
+  - key properties;
+  - limitations;
+  - examples of related methods, models, or practical applications.
+- For technical topics, also prefer adding formulas, Mermaid diagrams, comparison tables, practical code blocks, or short case studies where appropriate.
+- If a topic already has a short note, do not leave it in a "collapsed" form after expansion: the updated UA/EN versions should both remain sufficiently complete.
+
 ---
 
 ## 3. Visualization

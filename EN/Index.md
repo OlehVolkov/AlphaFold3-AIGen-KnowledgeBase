@@ -26,6 +26,8 @@ Reference map of core biology, machine learning, and structural bioinformatics c
 | [[EN/2. Concepts/2.2. Machine-Learning/2.2.2. Diffusion Models]] | Denoising from noise to data | Diffusion module |
 | [[EN/2. Concepts/2.2. Machine-Learning/2.2.3. Protein Language Models]] | Sequence embeddings | Input representations |
 | [[EN/2. Concepts/2.2. Machine-Learning/2.2.4. Geometric Deep Learning]] | Equivariance and geometry | 3D-aware updates |
+| [[EN/2. Concepts/2.2. Machine-Learning/2.2.5. ResNet]] | Residual blocks, skip paths, bottlenecks | Residual updates are a general optimization pattern for deep trunks |
+| [[EN/2. Concepts/2.2. Machine-Learning/2.2.6. U-Net]] | Encoder-decoder, skip fusion, dense prediction | U-Net is a core template for segmentation and many diffusion denoisers |
 
 ## Structural Bioinformatics
 
