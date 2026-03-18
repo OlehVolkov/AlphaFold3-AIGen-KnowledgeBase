@@ -5,14 +5,14 @@ tags: [audit, quality, confidence, references]
 
 # Knowledge Base Audit (AlphaFold3 Vault)
 
-Date: 2026-03-18  
-Scope: `UA/`, `EN/`, root navigation pages, `AGENTS.md`, `AUDIT.md`, wiki-link integrity, DOI/source coverage, and mirror consistency spot-checks.
+Date: 2026-03-18
+Scope: `UA/`, `EN/`, root navigation pages, `AGENTS.md`, `UA/AGENTS.md`, `AUDIT.md`, wiki-link integrity, DOI/source coverage, and mirror consistency spot-checks.
 
 ## 1. Method
 
 Audit was performed using local vault checks:
 - markdown file inventory and root-file presence,
-- numbered note parity check across `UA/` and `EN/`,
+- numbered note parity check across `UA/` and the `EN/` note tree,
 - absolute wiki-link target validation,
 - DOI-block presence scan (`DOI: [...]`),
 - targeted UA↔EN section-parity spot-checks for recently changed mirrored notes.
@@ -28,7 +28,7 @@ Notes:
   - `EN`: 46
   - `root`: 6
   - `total`: 102
-- Numbered note parity (`1.x.x` to `4.x.x`) between `UA/` and `EN/`: **no mismatches**.
+- Numbered note parity (`1.x.x` to `4.x.x`) between `UA/` and the `EN/` note tree: **no mismatches**.
 - Critical entry and governance pages present:
   - `Home.md`
   - `UA/Головна.md`
@@ -37,10 +37,10 @@ Notes:
   - `UA/Література та пріоритети.md`
   - `EN/Literature and Priorities.md`
   - `AGENTS.md`
-  - `EN/AGENTS.md`
+  - `UA/AGENTS.md`
   - `AUDIT.md`
   - `NOTICE.md`
-  - `EN/NOTICE.md`
+  - `UA/NOTICE.md`
 
 Status: **PASS**
 
@@ -86,7 +86,7 @@ Status: **PASS with medium residual risk**
 
 ## 5. Corrections Applied During This Audit Cycle
 
-- Updated `AGENTS.md` and `EN/AGENTS.md` to reflect the current vault structure:
+- Updated `AGENTS.md` and `UA/AGENTS.md` to reflect the current vault structure:
   - added `AUDIT.md` to the root tree,
   - added `1.5.5` / `1.5.6` resource notes,
   - added `2.2.5` / `2.2.6` ML concept notes.

@@ -1,32 +1,67 @@
-# AlphaFold3 AI-Generated Knowledge Base
+# AlphaFold3 Knowledge Base
 
-Bilingual Obsidian vault for AlphaFold 3 and related STEM concepts.
+Bilingual Obsidian vault for AlphaFold 3 and related STEM topics.
 
-## What This Vault Contains
+## Repository Purpose
+
+This repository is an Obsidian knowledge base with:
+
+- a stable bilingual note tree where `UA/` stores Ukrainian notes and `EN/` stores English notes
+- vault governance and editing rules in `AGENTS.md`, `UA/AGENTS.md`, and `BRAIN.md`
+- local research helpers in `/.brain`
+- generated indexing data in `/.brain/.index`
+- local PDF storage in `/PDF`
+
+The existing bilingual layout is the source of truth: `UA/` is the Ukrainian branch, while `EN/` is the English branch.
+
+## Root Layout
 
 - `Home.md`: main English landing page
 - `UA/Головна.md`: main Ukrainian landing page
 - `EN/`: English notes
 - `UA/`: Ukrainian notes
-- `AGENTS.md`: agent operating rules (UA)
-- `EN/AGENTS.md`: agent operating rules (EN)
-- `NOTICE.md` and `EN/NOTICE.md`: formatting/rendering fix logs
+- `AGENTS.md`: English repository rules
+- `UA/AGENTS.md`: Ukrainian mirror of repository rules
+- `BRAIN.md`: research-agent and retrieval workflow rules
+- `AUDIT.md`: audit snapshot and quality summary
+- `NOTICE.md`, `UA/NOTICE.md`: change log for structural and formatting refactors
+- `/.brain`: local BRAIN logic, scripts, prompts, utilities
+- `/.brain/.index`: generated index data, caches, manifests, embeddings
+- `/PDF`: local PDF storage
 
 ## Knowledge Base Structure
 
-- `1. AlphaFold3`: model-focused notes (overview, architecture, results, limitations, resources, illustrations)
-- `2. Concepts`: biology, machine learning, structural bioinformatics
-- `3. Models`: AlphaFold2, AlphaFold3, RoseTTAFold, ESMFold, DiffDock
-- `4. Datasets`: PDB, UniProt, AlphaFoldDB, CASP
+- `EN/1. AlphaFold3`: overview, architecture, results, limitations, resources, illustrations
+- `EN/2. Concepts`: biology, machine learning, structural bioinformatics
+- `EN/3. Models`: AlphaFold2, AlphaFold3, RoseTTAFold, ESMFold, DiffDock
+- `EN/4. Datasets`: PDB, UniProt, AlphaFoldDB, CASP
 
-## Agent Setup
+## Editing Rules
 
-1. Read `AGENTS.md` (or `EN/AGENTS.md`) before editing content.
-2. Follow absolute wiki-link policy from vault root.
-3. Keep language separation strict:
-- `UA/` only Ukrainian
-- `EN/` only English
-4. Update `NOTICE.md` and `EN/NOTICE.md` after any mass formatting/structure refactor.
+Before editing:
+
+1. Read `AGENTS.md` or `UA/AGENTS.md`.
+2. Read `BRAIN.md` if the task involves retrieval, indexing, automation, or research workflows.
+3. Preserve the existing bilingual layout: `UA/` for Ukrainian and `EN/` for English.
+4. Keep absolute wiki-links from vault root.
+5. Keep language separation strict:
+   - `UA/` only Ukrainian
+   - `EN/` only English
+6. Mirror substantive UA/EN content changes in both languages.
+7. Update `NOTICE.md` and `UA/NOTICE.md` after mass renames, moves, or structural refactors.
+
+## Local Research Directories
+
+- `/.brain`: place reusable local tooling here
+- `/.brain/.index`: place generated indexing data here
+- `/PDF`: place local PDFs here
+
+Rules:
+
+- `/PDF` is local storage for source files
+- PDF payload files in `/PDF` must not be committed
+- generated index data should stay in `/.brain/.index`, not in the note tree
+- do not expose secrets, `.env` values, credentials, or `PII` in notes, indexes, or governance files
 
 ## Required Obsidian Plugins
 
@@ -60,10 +95,11 @@ Enabled snippets (`.obsidian/appearance.json`):
 - `homepage`
 - `math-note`
 - `diagram-scale`
+- `content-width`
 
 ## Open the Vault
 
 1. Clone this repository.
 2. Open the folder as an Obsidian vault.
 3. Enable Community Plugins when prompted.
-4. Open `Home.md` (English) or `UA/Головна.md` (Ukrainian).
+4. Open `Home.md` or `UA/Головна.md`.

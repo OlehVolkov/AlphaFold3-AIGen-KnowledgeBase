@@ -1,116 +1,116 @@
-# NOTICE — Журнал виправлень форматування
+# NOTICE — Formatting Fix Log
 
-Останнє оновлення: 2026-03-18
-Платформа: Obsidian vault
-Сумісність Obsidian (мінімум): 1.12.0
-Примітка: `app.json` у vault порожній (`{}`), тому точна версія застосунку не зафіксована в репозиторії.
+Last updated: 2026-03-18
+Platform: Obsidian vault
+Obsidian compatibility (minimum): 1.12.0
+Note: `app.json` in this vault is empty (`{}`), so the exact app version is not pinned in-repo.
 
-Цей файл фіксує, які саме форматні проблеми вже виправлялися у vault, щоб не повторювати помилки.
+This file records formatting issues that were already fixed, to avoid regressions.
 
-## 1. Wiki-links у таблицях
+## 1. Wiki-links inside markdown tables
 
-- Проблема: посилання виду `[[path|label]]` ламали markdown-таблиці через символ `|`.
-- Рішення: у таблицях використовуємо тільки `[[path]]` (без alias).
-- Застосовано до:
+- Problem: links like `[[path|label]]` broke table parsing because `|` is a table delimiter.
+- Resolution: inside tables, use only `[[path]]` (no alias).
+- Applied to:
   - `UA/Індекс.md`
-  - `EN/Index.md`
+  - `Index.md`
   - `UA/3. Моделі/3.0. Огляд моделей.md`
   - `EN/3. Models/3.0. Models Overview.md`
   - `UA/4. Датасети/4.0. Огляд датасетів.md`
   - `EN/4. Datasets/4.0. Datasets Overview.md`
 
-## 2. Mermaid форматування
+## 2. Mermaid formatting
 
-- Проблема: `\n` у підписах вузлів інколи не рендерився коректно.
-- Рішення: замінено на `<br/>` у Mermaid-блоках.
-- Проблема: `quadrantChart` може падати на рядках `quadrant-1 ...`, `quadrant-2 ...`.
-- Рішення: прибрати `quadrant-1..4` підписи, залишити осі + точки.
+- Problem: `\n` in node labels was not rendered reliably.
+- Resolution: replaced with `<br/>` inside Mermaid blocks.
+- Problem: `quadrantChart` may fail on lines like `quadrant-1 ...`, `quadrant-2 ...`.
+- Resolution: remove `quadrant-1..4` labels and keep only axes + data points.
 
-## 3. Абсолютні посилання
+## 3. Absolute wiki-links
 
-- Правило: використовуємо абсолютні шляхи від кореня vault.
-- Виправлено масово після змін структури папок і файлів.
+- Rule: use absolute paths from vault root.
+- Applied in bulk after file/folder restructuring.
 
-## 4. Головні сторінки та навігація
+## 4. Home pages and navigation
 
-- Англійська home-сторінка винесена в корінь:
+- English home is at vault root:
   - `Home.md`
-- Українська home-сторінка переміщена в:
+- Ukrainian home moved to:
   - `UA/Головна.md`
-- Міжмовні переходи оновлені:
+- Cross-language navigation updated:
   - `Home.md` ↔ `UA/Головна.md`
 
-## 5. Індекси і література на верхньому рівні мовних папок
+## 5. Index and literature notes at language-root level
 
 - UA:
   - `UA/Індекс.md`
   - `UA/Література та пріоритети.md`
 - EN:
-  - `EN/Index.md`
-  - `EN/Literature and Priorities.md`
+  - `Index.md`
+  - `Literature and Priorities.md`
 
-## 6. Перевірка після змін
+## 6. Post-change validation checklist
 
-Після масових перейменувань/переносів завжди:
+After mass rename/move/refactor:
 
-1. Перевірити всі `[[...]]` посилання на існування цільових `.md`.
-2. Окремо перевірити індексні сторінки (`Concepts`, `Models`, `Datasets`).
-3. Перезавантажити Obsidian (за потреби), якщо видно кешовані артефакти рендеру.
-4. Для `.excalidraw` перевірити налаштування плагіна:
+1. Verify every `[[...]]` target `.md` exists.
+2. Re-check index pages (`Concepts`, `Models`, `Datasets`) first.
+3. Reload Obsidian if render cache artifacts appear.
+4. For `.excalidraw`, verify plugin settings:
    - `renderImageInMarkdownReadingMode: true`
-   - рекомендовано: `mdSVGwidth: 1200`, `mdSVGmaxHeight: 1600`
+   - recommended: `mdSVGwidth: 1200`, `mdSVGmaxHeight: 1600`
 
-## 7. Антипатерни (не робити)
+## 7. Anti-patterns (do not use)
 
-- Не використовувати `[[path|label]]` всередині markdown-таблиць.
-- Не використовувати відносні посилання.
-- Не вставляти HTML усередині `[[...]]`.
-- Не робити агресивний CSS-скейлінг для Excalidraw без перевірки Reading view (може зламати рендер).
+- Do not use `[[path|label]]` inside markdown tables.
+- Do not use relative links.
+- Do not put HTML inside `[[...]]`.
+- Do not apply aggressive Excalidraw CSS scaling without validating Reading view (it may break rendering).
 
-## 8. Масштабування діаграм та ілюстрацій (оновлено 2026-03-11)
+## 8. Diagram and image scaling fix (2026-03-11)
 
-Виявлено три одночасні причини невідповідності масштабів між Mermaid та зображеннями:
+Three simultaneous root causes were found for the scale mismatch between Mermaid and images:
 
-**Причина 1 — мертвий `.note` scope.**
-Усі нотатки мають `cssclasses: [note]`, але в `diagram-scale.css` не було жодного `.note`-scoped правила. Snippet застосовувався лише через глобальні `.markdown-preview-view` селектори, які GitHub Theme перебивав власними правилами вищої специфічності.
-- Рішення: додано `.note .markdown-preview-view` scope до всіх ключових правил.
+**Cause 1 — dead `.note` scope.**
+All notes have `cssclasses: [note]`, but `diagram-scale.css` had no `.note`-scoped rules. The snippet only applied via global `.markdown-preview-view` selectors, which GitHub Theme overrode with higher-specificity rules.
+- Fix: added `.note .markdown-preview-view` scope to all key rules.
 
-**Причина 2 — GitHub Theme обмежує `img`.**
-Тема має власний `max-width` для `.markdown-preview-section img`, який відрізнявся від ширини Mermaid контейнера.
-- Рішення: додано явний `img` selector + `.markdown-preview-section img` з `!important`.
+**Cause 2 — GitHub Theme constrains `img`.**
+The theme applies its own `max-width` to `.markdown-preview-section img`, which differed from the Mermaid container width.
+- Fix: added explicit `img` selector + `.markdown-preview-section img` with `!important`.
 
-**Причина 3 — `img:not([class])` пропускав зображення з класами.**
-GitHub Theme додає власні класи на `<img>` теги — такі зображення взагалі не потрапляли під правила snippet.
-- Рішення: `img:not([class])` → `img` (без фільтру по класу).
+**Cause 3 — `img:not([class])` missed images with classes.**
+GitHub Theme adds its own classes to `<img>` tags — those images were entirely outside the snippet's scope.
+- Fix: changed `img:not([class])` → `img` (no class filter).
 
-**Новий виняток:** `img[width]` — зображення з явно заданою шириною (іконки, badges) не розтягуються.
-**Нова змінна:** `--content-max-width: 100%` для централізованого контролю.
+**New exception:** `img[width]` — images with an explicit width attribute (icons, badges) are not stretched.
+**New variable:** `--content-max-width: 100%` for centralised control.
 
-- Використовуємо `.obsidian/snippets/diagram-scale.css`.
-- Ціль: Mermaid SVG та `<img>` рендеряться з однаковою шириною — 100% текстового контейнера.
-- Якщо після змін ілюстрації зникли: спершу перевірити Excalidraw plugin settings, потім CSS.
+- Snippet: `.obsidian/snippets/diagram-scale.css`.
+- Goal: Mermaid SVG and `<img>` render at the same width — 100% of the text container.
+- If illustrations disappear after CSS changes: check Excalidraw plugin settings first, then CSS.
 
-## 9. Підтримка файла
+## 9. File maintenance
 
-- Цей файл потрібно оновлювати після кожного масового рефакторингу структури або форматування.
-- Англійська версія: `EN/NOTICE.md`.
+- Keep this file updated after every major formatting or structure refactor.
+- Ukrainian counterpart: `UA/NOTICE.md`.
 
 ## 10. Obsidian Mermaid render fix (2026-03-11)
 
-Виявлено, що частина діаграм рендерилась гірше в Obsidian, ніж у VS Code/GitHub, через надто агресивні локальні стилі та вузький content mode.
+Some diagrams rendered worse in Obsidian than in VS Code/GitHub due to overly aggressive local CSS and narrow readable-width mode.
 
 - `.obsidian/app.json`:
-  - `readableLineLength: true` → `false` (щоб широкі Mermaid-діаграми не стискались контейнером читабельної ширини).
+  - `readableLineLength: true` → `false` (so wide Mermaid diagrams are not squeezed by the readable-width container).
 - `.obsidian/snippets/diagram-scale.css`:
-  - прибрано примусовий `font-size: ... !important` для `.mermaid svg` (він ламав авто-лейаут підписів у деяких типах Mermaid),
-  - `overflow-x: hidden` → `overflow-x: auto` для `.mermaid` контейнера (щоб уникати обрізання),
-  - знято `max-height` обмеження для Excalidraw/internal embed (`svg/img/canvas`), щоб уникнути вертикального "стискання" діаграм.
+  - removed forced `font-size: ... !important` on `.mermaid svg` (it could break label auto-layout for some Mermaid types),
+  - changed Mermaid container `overflow-x: hidden` → `overflow-x: auto` (to avoid clipping),
+  - removed `max-height` constraints for Excalidraw/internal embeds (`svg/img/canvas`) to avoid vertical compression.
 
-## 11. Масова синхронізація EN↔UA (2026-03-11)
+## 11. Mass EN↔UA synchronization (2026-03-11)
 
-Виконано вирівнювання неповних EN-нотаток до рівня UA-дзеркал (структура розділів, таблиці, формули, практичні приклади).
+Performed content parity sync where EN notes were shorter than UA mirrors (sections, tables, formulas, and practical examples).
 
-- Оновлено EN Concepts (розділи `2.1`, `2.2`, `2.3` для основних тем):
+- Updated EN Concepts core notes (`2.1`, `2.2`, `2.3`):
   - `2.1.1 Protein Folding`
   - `2.1.2 Protein-Protein Interactions`
   - `2.1.3 Ligands and Small Molecules`
@@ -122,114 +122,188 @@ GitHub Theme додає власні класи на `<img>` теги — так
   - `2.3.1 RMSD`
   - `2.3.2 lDDT`
   - `2.3.3 DockQ`
-- Суттєво розширено:
+- Substantially expanded:
   - `EN/1. AlphaFold3/1.5. Resources/1.5.4. Working with mmCIF Files.md`
     (metadata extraction, NumPy coordinates, interface analysis, AF3 output parsing, PDB download, write/modify workflow).
-- Перевірено wiki-links у змінених EN-файлах: битих посилань не виявлено.
+- Validated wiki-links in changed EN files: no broken targets detected.
 
-## 12. Уніфікація Mermaid-стилів (2026-03-11)
+## 12. Mermaid style unification (2026-03-11)
 
-Узгоджено єдиний стиль Mermaid-діаграм у нових/оновлених EN та UA нотатках (Concepts + mmCIF resource):
+Applied a single Mermaid styling standard across newly added/updated EN and UA notes (Concepts + mmCIF resource):
 
-- Стандартизовані класи вузлів:
+- Standard node classes:
   - `input`
   - `trunk`
   - `diffusion`
   - `confidence`
   - `output`
   - `neutral`
-- Для flowchart-блоків додано єдині `classDef` з палітрою з `AGENTS.md`.
-- Замінено локальні/старі назви класів (`root`, `sm`, `emb`, `clean`, `gen`, `model`, тощо) на уніфіковані.
-- Мета: передбачуваний вигляд діаграм у Obsidian Reading view та однакова семантика кольорів між EN/UA.
+- Added unified `classDef` palette (from `AGENTS.md`) to flowchart blocks.
+- Replaced local/legacy class names (`root`, `sm`, `emb`, `clean`, `gen`, `model`, etc.) with the unified set.
+- Goal: consistent semantics and visual rendering in Obsidian Reading view across EN/UA.
 
-## 13. Оновлення AGENTS/NOTICE (2026-03-11)
+## 13. AGENTS/NOTICE update (2026-03-11)
 
-- `AGENTS.md` та `EN/AGENTS.md` синхронізовано з актуальними правилами Mermaid.
-- Додано обов'язковий стандарт для `flowchart`: `input`, `trunk`, `diffusion`, `confidence`, `output`, `neutral`.
-- Додано явну вимогу: у кожному `flowchart` задавати `classDef` для всіх 6 класів.
-- Зафіксовано винятки для non-flowchart типів (`timeline`, `mindmap`, `xychart-beta`, `quadrantChart`).
+- Synchronized `AGENTS.md` and `AGENTS.md` with the current Mermaid rules.
+- Added mandatory `flowchart` class standard: `input`, `trunk`, `diffusion`, `confidence`, `output`, `neutral`.
+- Added explicit requirement: every `flowchart` must define `classDef` for all 6 classes.
+- Documented exceptions for non-flowchart types (`timeline`, `mindmap`, `xychart-beta`, `quadrantChart`).
 
-## 14. Адаптивна ширина тексту сторінок (2026-03-11)
+## 14. Adaptive page text width (2026-03-11)
 
-- Додано новий сніпет: `.obsidian/snippets/content-width.css`.
-- Мета: зробити текст **ширшим за default**, але **не на всю ширину екрана**.
-- Реалізація:
-  - адаптивна ширина через `clamp(860px, 86vw, 1180px)`,
-  - центрований контейнер контенту,
-  - однакова логіка для Reading view і Editing view (CM6),
-  - мобільний профіль через `@media (max-width: 900px)`.
-- Сніпет підключено в `.obsidian/appearance.json` як `content-width`.
+- Added new snippet: `.obsidian/snippets/content-width.css`.
+- Goal: make text **wider than default readable width** but **not full-width**.
+- Implementation:
+  - adaptive width via `clamp(860px, 86vw, 1180px)`,
+  - centered content container,
+  - same logic for Reading view and Editing view (CM6),
+  - mobile profile via `@media (max-width: 900px)`.
+- Snippet enabled in `.obsidian/appearance.json` as `content-width`.
 
-## 15. Аудит структури та синхронізація інструкцій (2026-03-11)
+## 15. Structure audit and instruction sync (2026-03-11)
 
-- Повторно перевірено структуру vault проти `AGENTS.md` / `EN/AGENTS.md`.
-- Перевірено критичні точки входу та індекси:
-  - `Home.md`, `UA/Головна.md`, `UA/Індекс.md`, `EN/Index.md`.
-- Перевірено парність нумерованих нотаток між `UA/` та `EN/` (ID `1.x.x`–`4.x.x`): розбіжностей не виявлено.
-- Оновлено інструкції `AGENTS`:
-  - додано системні root-елементи `.git/`, `.gitignore`, `.obsidian/`, `.smart-env/`,
-  - синхронізовано наявність `README.md` у прикладі структури,
-  - уточнено список дозволених root-файлів/папок.
+- Re-checked vault structure against `AGENTS.md` / `AGENTS.md`.
+- Verified critical entry/index pages:
+  - `Home.md`, `UA/Головна.md`, `UA/Індекс.md`, `Index.md`.
+- Verified parity of numbered note IDs between `UA/` and `EN/` (`1.x.x`–`4.x.x`): no mismatches found.
+- Updated AGENTS instructions:
+  - added system root entries `.git/`, `.gitignore`, `.obsidian/`, `.smart-env/`,
+  - synchronized `README.md` presence in the structure example,
+  - clarified allowed root files/directories list.
 
-## 16. Уніфікація бібліографії та корекція знань (2026-03-11)
+## 16. Bibliography unification and knowledge correction (2026-03-11)
 
-- Проведено ревізію списків літератури `UA/Література та пріоритети.md` та `EN/Literature and Priorities.md`.
-- Додано розділ з додатковими високоцитованими джерелами (AF-Multimer, lDDT, TM-score, MMseqs2, ColabFold, RoseTTAFold, ESMFold, AF2 proteome paper).
-- Виправлено помилковий DOI в PPI-нотатці:
+- Reviewed and synchronized the core literature lists:
+  - `UA/Література та пріоритети.md`
+  - `Literature and Priorities.md`
+- Added an extra high-citation block (AF-Multimer, lDDT, TM-score, MMseqs2, ColabFold, RoseTTAFold, ESMFold, AF2 human proteome paper).
+- Fixed an incorrect DOI in the UA PPI note:
   - `10.48550/arXiv.2109.22paym` → `10.1101/2021.10.04.463034`.
-- Додано відсутні DOI-блоки в EN-дзеркала:
+- Added missing DOI/source blocks to EN mirrors:
   - `EN/.../2.3.1. RMSD.md`,
   - `EN/.../2.3.2. lDDT.md`,
   - `EN/.../2.3.3. DockQ.md`,
   - `EN/.../2.1.2. Protein-Protein Interactions.md`.
-- Для PPI-схем у UA/EN застосовано стандартизовані Mermaid-класи (`input/trunk/diffusion/confidence/output/neutral`).
+- Applied standardized Mermaid node classes (`input/trunk/diffusion/confidence/output/neutral`) to PPI symmetry flowcharts in UA/EN.
 
-## 17. Правило для AUDIT.md в AGENTS (2026-03-11)
+## 17. AUDIT.md rule in AGENTS (2026-03-11)
 
-- Оновлено `AGENTS.md` та `EN/AGENTS.md`: додано окремий розділ про `AUDIT.md`.
-- Зафіксовано правило: аудит (`AUDIT.md`) виконувати **лише за явним запитом користувача**.
-- Додано операційну вимогу: агент має **періодично ненав'язливо нагадувати** про доцільність оновлення аудиту після великих синхронізацій/масових правок.
-- `AUDIT.md` додано до переліку дозволених root-файлів у правилах агента.
+- Updated `AGENTS.md` and `AGENTS.md` with a dedicated `AUDIT.md` section.
+- Recorded rule: run/create `AUDIT.md` **only on explicit user request**.
+- Added operational requirement: the agent should **occasionally provide a lightweight reminder** to refresh the audit after major synchronization or mass edits.
+- Added `AUDIT.md` to the allowed root-file list in agent rules.
 
-## 18. Нова ресурсна нотатка про A3M і синхронізація UA↔EN (2026-03-18)
+## 18. New A3M resource note and UA↔EN synchronization (2026-03-18)
 
-- Додано нову пару ресурсних нотаток:
+- Added a new paired resource note:
   - `UA/1. AlphaFold3/1.5. Ресурси/1.5.6. Робота з A3M файлами.md`
   - `EN/1. AlphaFold3/1.5. Resources/1.5.6. Working with A3M Files.md`
-- Зміст синхронізовано між UA та EN:
-  - синтаксис `A3M`,
-  - різниця між `A3M`, `FASTA`, `Stockholm`,
-  - практичний Python-парсинг,
-  - типові CLI-операції (`reformat.pl`, `hhfilter`, `hhmake`),
-  - роль `A3M` у `AF3 Featurization`.
-- Виправлено неточний опис `A3M` у нотатках `MSA`:
-  - lowercase в `A3M` означає **інсерції**, а не делеції;
-  - `-` означає gap у вирівняній колонці;
-  - `.` може виступати placeholder в insert-only колонках.
-- Оновлено навігацію в `Home.md` / `UA/Головна.md` та пов'язані посилання в ресурсних нотатках.
+- Synchronized content across UA and EN:
+  - `A3M` syntax,
+  - difference between `A3M`, `FASTA`, and `Stockholm`,
+  - practical Python parsing,
+  - common CLI operations (`reformat.pl`, `hhfilter`, `hhmake`),
+  - role of `A3M` in `AF3` featurization.
+- Corrected an inaccurate `A3M` description in the `MSA` notes:
+  - lowercase in `A3M` means **insertions**, not deletions;
+  - `-` means a gap in an aligned column;
+  - `.` may act as a placeholder in insert-only columns.
+- Updated navigation in `Home.md` / `UA/Головна.md` and related links in resource notes.
 
-## 19. Перейменування UA-файла `Featurization` і синхронізація посилань (2026-03-18)
+## 19. UA `Featurization` file rename and link synchronization (2026-03-18)
 
-- Перейменовано файл:
+- Renamed the UA file:
   - `UA/1. AlphaFold3/1.2. Архітектура/1.2.6. Феатуризація.md`
   - `UA/1. AlphaFold3/1.2. Архітектура/1.2.6. Featurization.md`
-- Синхронізовано службові згадки та wiki-links після перейменування:
+- Synchronized supporting references and wiki-links after the rename:
   - `AGENTS.md`
-  - `EN/AGENTS.md`
+  - `AGENTS.md`
   - `NOTICE.md`
-  - `EN/NOTICE.md`
-  - пов'язані UA/EN нотатки, що посилаються на `1.2.6`.
-- Окремих перейменувань папок не знадобилося: відповідних директорій зі старим терміном у структурі vault не було.
+  - `NOTICE.md`
+  - related UA/EN notes that link to `1.2.6`.
+- No folder rename was required because no directory names used the old term.
 
-## 20. Оновлення інструкцій і аудит vault (2026-03-18)
+## 20. Instruction refresh and vault audit (2026-03-18)
 
-- Оновлено `AGENTS.md` та `EN/AGENTS.md`:
-  - структура vault приведена до фактичного стану (`AUDIT.md`, `1.5.5`, `1.5.6`, `2.2.5`, `2.2.6`),
-  - додано правило для англомовних STEM-термінів у `UA/` назвах і заголовках.
-- Нормалізовано заголовок `## Related Notes` у двох EN-нотатках:
+- Updated `AGENTS.md` and `AGENTS.md`:
+  - aligned the example vault tree with the actual structure (`AUDIT.md`, `1.5.5`, `1.5.6`, `2.2.5`, `2.2.6`),
+  - added an explicit terminology rule for English STEM terms inside `UA/` titles and file names.
+- Normalized the `## Related Notes` heading in two EN notes:
   - `EN/1. AlphaFold3/1.2. Architecture/1.2.6. Featurization.md`
   - `EN/2. Concepts/2.3. Structural-Bioinformatics/2.3.4. MSA.md`
-- Оновлено `AUDIT.md`:
-  - підтверджено паритет нумерованих UA↔EN нотаток,
-  - перевірено абсолютні wiki-links (`0` битих цілей),
-  - зафіксовано поточне DOI-покриття та залишкові прогалини.
+- Refreshed `AUDIT.md`:
+  - confirmed numbered UA↔EN note parity,
+  - checked absolute wiki-links (`0` missing targets),
+  - recorded current DOI coverage and remaining citation gaps.
+
+## 21. BRAIN layout and local research directories (2026-03-18)
+
+- Updated `BRAIN.md` to match the actual repository layout:
+  - the existing `UA/` / `EN/` knowledge-base structure is explicitly preserved,
+  - all BRAIN logic is assigned to `/.brain`,
+  - all indexed and generated data is assigned to `/.index`,
+  - local PDF files are assigned to `/PDF`.
+- Updated `AGENTS.md` and `AGENTS.md`:
+  - added `BRAIN.md`, `/.brain`, `/.index`, and `/PDF` to the allowed root elements and example tree.
+- Created directories:
+  - `/.brain/`
+  - `/.index/`
+  - `/PDF/`
+
+## 22. Secrets and personal-data check rule (2026-03-18)
+
+- Updated `AGENTS.md`, `UA/AGENTS.md`, and `BRAIN.md`.
+- Added an explicit requirement to check, before creating, indexing, updating, or committing files, whether any of the following would be exposed:
+  - secrets (`API keys`, tokens, passwords, private keys, `.env` values),
+  - personal data (`PII`) and other sensitive local data.
+- Recorded the rule that such data must not be copied into versioned notes, governance files, `/.brain`, or `/.brain/.index`; redact or mask when needed.
+
+## 23. Index moved inside `/.brain` (2026-03-18)
+
+- Moved the index directory:
+  - `/.index/`
+  - `/.brain/.index/`
+- Updated `BRAIN.md`, `AGENTS.md`, and `UA/AGENTS.md` to use the new canonical path for indexed and generated data.
+- `/.index/` is no longer treated as a separate allowed root element; indexing is now part of `/.brain/`.
+
+## 24. English tree moved to root (2026-03-18)
+
+- Moved the English note tree out of `EN/` into the vault root:
+  - `EN/1. AlphaFold3/` → `1. AlphaFold3/`
+  - `EN/2. Concepts/` → `2. Concepts/`
+  - `EN/3. Models/` → `3. Models/`
+  - `EN/4. Datasets/` → `4. Datasets/`
+  - `EN/Index.md` → `Index.md`
+  - `EN/Literature and Priorities.md` → `Literature and Priorities.md`
+- Moved English governance files into root with distinct names:
+  - `EN/AGENTS.md` → `AGENTS.md`
+  - `EN/NOTICE.md` → `NOTICE.md`
+- Mass-updated absolute wiki-links to the new root paths.
+- `EN/` is no longer used as the container for the English branch of the vault.
+
+## 25. Ukrainian governance files moved into `UA/` (2026-03-18)
+
+- Moved Ukrainian governance files out of root:
+  - `AGENTS.md` → `UA/AGENTS.md`
+  - `NOTICE.md` → `UA/NOTICE.md`
+- Promoted the English governance files to the root canonical names:
+  - `AGENTS.md`
+  - `NOTICE.md`
+- Updated `README.md`, `BRAIN.md`, `AUDIT.md`, `UA/Головна.md`, and both `AGENTS` files to use:
+  - `AGENTS.md` for English
+  - `UA/AGENTS.md` for Ukrainian
+  - `NOTICE.md` for English
+  - `UA/NOTICE.md` for Ukrainian
+
+## 26. English note tree restored under `EN/` (2026-03-18)
+
+- The English note hierarchy is again stored in `EN/`:
+  - `EN/1. AlphaFold3/`
+  - `EN/2. Concepts/`
+  - `EN/3. Models/`
+  - `EN/4. Datasets/`
+  - `EN/Index.md`
+  - `EN/Literature and Priorities.md`
+  - `EN/Summary.md`
+- Re-synchronized absolute wiki-links so English mirrors now resolve to `EN/...` paths again.
+- Updated `Home.md`, `AGENTS.md`, `UA/AGENTS.md`, `README.md`, `BRAIN.md`, and `AUDIT.md` to treat `EN/` as the canonical English branch.

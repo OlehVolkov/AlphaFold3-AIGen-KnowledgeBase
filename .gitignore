@@ -16,3 +16,6 @@ Thumbs.db
 .obsidian/workspace-mobile.json
 .obsidian/snapshots/
 
+# Local PDF storage
+PDF/*
+!PDF/.gitkeep

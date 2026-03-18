@@ -1,185 +1,93 @@
-# AGENTS.md — Універсальні інструкції для AI-агентів
+# AGENTS.md — Universal Instructions for AI Agents
 
-> Правила побудови й підтримки двомовної STEM-бази знань в Obsidian.
+> Rules for building and maintaining a bilingual STEM knowledge base in Obsidian.
 
 ---
 
-## 1. Структура vault
+## 1. Vault Structure
 
 ```text
 AlphaFold3/
 ├── .git/
 ├── .gitignore
+├── .brain/
+│   └── .index/
 ├── .obsidian/
 ├── .smart-env/
-├── Home.md
+├── PDF/
 ├── AGENTS.md
+├── Home.md
 ├── AUDIT.md
+├── BRAIN.md
+├── EN/
+│   ├── 1. AlphaFold3/
+│   ├── 2. Concepts/
+│   ├── 3. Models/
+│   ├── 4. Datasets/
+│   ├── Index.md
+│   ├── Literature and Priorities.md
+│   └── Summary.md              ← optional technical implementation summary/blueprint
 ├── NOTICE.md
 ├── README.md
-├── Summary.md
-├── UA/
-│   ├── Головна.md
-│   ├── Індекс.md
-│   ├── Література та пріоритети.md
-│   ├── 1. AlphaFold3/
-│   │   ├── 1.1. Огляд/
-│   │   │   └── 1.1.1. Контекст і мотивація.md
-│   │   ├── 1.2. Архітектура/
-│   │   │   ├── 1.2.1. Загальна архітектура AF3.md
-│   │   │   ├── 1.2.2. Pairformer.md
-│   │   │   ├── 1.2.3. Дифузійний модуль.md
-│   │   │   ├── 1.2.4. Дифузійні моделі — теорія та застосування.md
-│   │   │   ├── 1.2.5. Навчання моделі.md
-│   │   │   └── 1.2.6. Featurization.md
-│   │   ├── 1.3. Результати/
-│   │   │   ├── 1.3.1. Точність по типах комплексів.md
-│   │   │   └── 1.3.2. Ступінь впевненості.md
-│   │   ├── 1.4. Обмеження/
-│   │   │   └── 1.4.1. Обмеження моделі.md
-│   │   ├── 1.5. Ресурси/
-│   │   │   ├── 1.5.1. Ключові терміни.md
-│   │   │   ├── 1.5.2. Порівняння з попередниками.md
-│   │   │   ├── 1.5.3. Робота з FASTA файлами.md
-│   │   │   ├── 1.5.4. Робота з mmCIF файлами.md
-│   │   │   ├── 1.5.5. Робота з SMILES файлами.md
-│   │   │   └── 1.5.6. Робота з A3M файлами.md
-│   │   └── 1.6. Ілюстрації/
-│   │       ├── 1.6.1. Галерея ілюстрацій.md
-│   │       ├── af3-diffusion-pipeline.excalidraw
-│   │       ├── diffusion-bio-landscape.excalidraw
-│   │       └── diffusion-forward-reverse.excalidraw
-│   ├── 2. Концепції/
-│   │   ├── 2.1. Біологія/
-│   │   │   ├── 2.1.1. Згортання білків.md
-│   │   │   ├── 2.1.2. Білок-білок взаємодії.md
-│   │   │   ├── 2.1.3. Ліганди та малі молекули.md
-│   │   │   └── 2.1.4. Нуклеїнові кислоти.md
-│   │   ├── 2.2. Машинне-Навчання/
-│   │   │   ├── 2.2.1. Трансформери.md
-│   │   │   ├── 2.2.2. Дифузійні моделі.md
-│   │   │   ├── 2.2.3. Білкові мовні моделі.md
-│   │   │   ├── 2.2.4. Геометричне глибоке навчання.md
-│   │   │   ├── 2.2.5. ResNet.md
-│   │   │   └── 2.2.6. U-Net.md
-│   │   └── 2.3. Структурна-Біоінформатика/
-│   │       ├── 2.3.1. RMSD.md
-│   │       ├── 2.3.2. lDDT.md
-│   │       ├── 2.3.3. DockQ.md
-│   │       └── 2.3.4. MSA.md
-│   ├── 3. Моделі/
-│   │   ├── 3.0. Огляд моделей.md
-│   │   ├── 3.1. AlphaFold2.md
-│   │   ├── 3.2. AlphaFold3.md
-│   │   ├── 3.3. RoseTTAFold.md
-│   │   ├── 3.4. ESMFold.md
-│   │   └── 3.5. DiffDock.md
-│   └── 4. Датасети/
-│       ├── 4.0. Огляд датасетів.md
-│       ├── 4.1. PDB.md
-│       ├── 4.2. UniProt.md
-│       ├── 4.3. AlphaFoldDB.md
-│       └── 4.4. CASP.md
-└── EN/
+└── UA/
     ├── AGENTS.md
-    ├── AUDIT.md
     ├── NOTICE.md
-    ├── Index.md
-    ├── Literature and Priorities.md
+    ├── Головна.md
+    ├── Індекс.md
+    ├── Література та пріоритети.md
     ├── 1. AlphaFold3/
-    │   ├── 1.1. Overview/
-    │   │   └── 1.1.1. Context and Motivation.md
-    │   ├── 1.2. Architecture/
-    │   │   ├── 1.2.1. AF3 Architecture Overview.md
-    │   │   ├── 1.2.2. Pairformer.md
-    │   │   ├── 1.2.3. Diffusion Module.md
-    │   │   ├── 1.2.4. Diffusion Models — Theory and Applications.md
-    │   │   ├── 1.2.5. Model Training.md
-    │   │   └── 1.2.6. Featurization.md
-    │   ├── 1.3. Results/
-    │   │   ├── 1.3.1. Accuracy Across Complex Types.md
-    │   │   └── 1.3.2. Confidence Scores.md
-    │   ├── 1.4. Limitations/
-    │   │   └── 1.4.1. Model Limitations.md
-    │   ├── 1.5. Resources/
-    │   │   ├── 1.5.1. Key Terms.md
-    │   │   ├── 1.5.2. Comparison with Predecessors.md
-    │   │   ├── 1.5.3. Working with FASTA Files.md
-    │   │   ├── 1.5.4. Working with mmCIF Files.md
-    │   │   ├── 1.5.5. Working with SMILES Files.md
-    │   │   └── 1.5.6. Working with A3M Files.md
-    │   └── 1.6. Illustrations/
-    │       ├── 1.6.1. Illustration Gallery.md
-    │       ├── af3-diffusion-pipeline.excalidraw
-    │       ├── diffusion-bio-landscape.excalidraw
-    │       └── diffusion-forward-reverse.excalidraw
-    ├── 2. Concepts/
-    │   ├── 2.1. Biology/
-    │   │   ├── 2.1.1. Protein Folding.md
-    │   │   ├── 2.1.2. Protein-Protein Interactions.md
-    │   │   ├── 2.1.3. Ligands and Small Molecules.md
-    │   │   └── 2.1.4. Nucleic Acids.md
-    │   ├── 2.2. Machine-Learning/
-    │   │   ├── 2.2.1. Transformers.md
-    │   │   ├── 2.2.2. Diffusion Models.md
-    │   │   ├── 2.2.3. Protein Language Models.md
-    │   │   ├── 2.2.4. Geometric Deep Learning.md
-    │   │   ├── 2.2.5. ResNet.md
-    │   │   └── 2.2.6. U-Net.md
-    │   └── 2.3. Structural-Bioinformatics/
-    │       ├── 2.3.1. RMSD.md
-    │       ├── 2.3.2. lDDT.md
-    │       ├── 2.3.3. DockQ.md
-    │       └── 2.3.4. MSA.md
-    ├── 3. Models/
-    │   ├── 3.0. Models Overview.md
-    │   ├── 3.1. AlphaFold2.md
-    │   ├── 3.2. AlphaFold3.md
-    │   ├── 3.3. RoseTTAFold.md
-    │   ├── 3.4. ESMFold.md
-    │   └── 3.5. DiffDock.md
-    └── 4. Datasets/
-        ├── 4.0. Datasets Overview.md
-        ├── 4.1. PDB.md
-        ├── 4.2. UniProt.md
-        ├── 4.3. AlphaFoldDB.md
-        └── 4.4. CASP.md
+    ├── 2. Концепції/
+    ├── 3. Моделі/
+    └── 4. Датасети/
 ```
 
+### 1.1 Rules
 
-### 1.1 Правила
+- `UA/` is Ukrainian-only, while `EN/` is English-only.
+- Hierarchical numbering: `1.`, `1.1.`, `1.1.1.`, and so on.
+- Use absolute links from vault root only.
+- Substantial UA notes must have EN mirrors.
+- `Home.md` is the main English entry point; `EN/Summary*.md` files are allowed for technical digests/implementation notes.
 
-- `UA/` — лише українська, `EN/` — лише англійська.
-- Ієрархічна нумерація: `1.`, `1.1.`, `1.1.1.` і далі.
-- Посилання лише абсолютні від кореня vault.
-- Суттєві UA-нотатки мають EN-дзеркало.
-- `Home.md` — головна точка входу; root-файли `Summary*.md` дозволені як технічні дайджести/implementation-нотатки.
+### 1.2 EN ↔ UA Synchronization (required)
 
-### 1.2 Синхронізація EN ↔ UA (обов'язково)
+- Any content change in `UA/` or in an `EN/` note must be mirrored in the corresponding note in the other language within the same PR/commit.
+- "Synchronization" means not only file existence but parity of:
+  - core `##` sections,
+  - formulas, tables, and Mermaid diagrams,
+  - practical code blocks,
+  - `## Related Notes / ## Пов'язані нотатки` section.
+- Differences are allowed only in language localization and phrasing style; technical content must remain equivalent.
+- Before finishing, the agent must verify that neither UA nor EN is a shortened version of the same topic.
 
-- Будь-яка зміна змісту в `UA/` або `EN/` має дзеркально оновлювати відповідник в іншій мові в межах цього ж PR/коміту.
-- Під "синхронізацією" мається на увазі не тільки наявність файлу, а й паритет по:
-  - ключових розділах `##`,
-  - формулах, таблицях, Mermaid-діаграмах,
-  - практичних блоках коду,
-  - секції `## Пов'язані нотатки / ## Related Notes`.
-- Допускається різниця лише в мовній локалізації та стилі формулювань; технічний зміст має бути еквівалентним.
-- Перед завершенням змін агент повинен перевірити, що обидві версії (UA/EN) не мають "скороченого" варіанту однієї теми.
+### 1.3 Terminology and naming
 
-### 1.3 Термінологія і назви
+- Inside `UA/`, English STEM terms may remain in titles and file/folder names when the Ukrainian analogue is non-standard, awkward, or weaker than the domain-standard term.
+- Typical examples: `Featurization`, `recycling`, `Pairformer`, `Template Embedder`.
+- If a natural Ukrainian analogue exists, use a paired first mention:
+  - `English term` (Ukrainian equivalent), or
+  - Ukrainian equivalent (`English term`).
+- Once a term choice is made, keep it consistent across the file name, title, breadcrumb, `Related Notes`, and wiki-links.
 
-- У `UA/` дозволено лишати англійські STEM-терміни в заголовках, назвах файлів і папок, якщо український відповідник неусталений, звучить неприродно або поступається domain standard.
-- Типові приклади таких термінів: `Featurization`, `recycling`, `Pairformer`, `Template Embedder`.
-- Якщо природний український відповідник існує, при першій змістовій згадці використовувати парну форму:
-  - `English term` (український відповідник), або
-  - український відповідник (`English term`).
-- Після вибору терміна використовувати його послідовно в назві файла, заголовку, breadcrumb, `Related Notes` і wiki-links.
+### 1.4 Secrets and personal data
+
+- Before creating, updating, indexing, or committing files, the agent must check whether any of the following would be exposed:
+  - secrets (`API keys`, tokens, passwords, private keys, session cookies, credentials, `.env` values),
+  - personal data (`PII`) or other sensitive local user data.
+- Such data must not be intentionally copied into:
+  - `UA/` notes / `EN/` notes,
+  - `NOTICE.md`, `UA/NOTICE.md`, `AUDIT.md`, `EN/Summary*.md`, `BRAIN.md`, `AGENTS.md`, `UA/AGENTS.md`,
+  - `/.brain/.index`, `/.brain`, `PDF/`, or other versioned files.
+- If the source material contains secrets or personal data, the agent must:
+  - avoid copying them verbatim into the repository,
+  - redact or mask them when possible,
+  - explicitly warn the user about the risk if safe continuation would otherwise be unclear.
 
 ---
 
-## 2. Формат нотаток
+## 2. Note Format
 
-### 2.1 Frontmatter (обов'язково)
+### 2.1 Frontmatter (required)
 
 ```yaml
 ---
@@ -191,10 +99,10 @@ tags: [topic_name, domain_name]    # snake_case
 ### 2.2 Breadcrumb
 
 ```markdown
-# Назва
+# Title
 
-[[UA/Головна]] > [[UA/Індекс|Концепції]] > Розділ
-🇬🇧 [[Home|Home]]
+[[Home|Home]] > [[EN/1. AlphaFold3/1.2. Architecture/1.2.1. AF3 Architecture Overview|Architecture]] > Topic
+🇺🇦 [[UA/1. AlphaFold3/1.2. Архітектура/1.2.2. Pairformer|Українська]]
 ```
 
 ### 2.3 Wiki-links
@@ -203,54 +111,54 @@ tags: [topic_name, domain_name]    # snake_case
 ✅ [[UA/1. AlphaFold3/1.2. Архітектура/1.2.2. Pairformer|Pairformer]]
 ✅ [[EN/1. AlphaFold3/1.2. Architecture/1.2.2. Pairformer|Pairformer]]
 ❌ `Pairformer`
-❌ `Архітектура/Pairformer`
+❌ `Architecture/Pairformer`
 ```
 
-### 2.4 Wiki-links у таблицях
+### 2.4 Wiki-links inside tables
 
-- Усередині markdown-таблиць: лише `[[path]]` — без alias.
-- `[[path|alias]]` ламає парсинг таблиці через символ `|`.
+- Inside markdown tables: use only `[[path]]` — no alias.
+- `[[path|alias]]` breaks table parsing due to the `|` character.
 
-### 2.5 Нові змістові секції (обов'язково)
+### 2.5 New Content Sections (required)
 
-- Під час додавання нової змістової секції або нової концептуальної нотатки не обмежуватися коротким визначенням.
-- За замовчуванням збирати **розширений** матеріал у стилі поглибленого overview, якщо користувач явно не просив коротку версію.
-- Мінімальний очікуваний склад нової секції:
-  - `чому це можливо / навіщо це потрібно`;
-  - основні підходи або варіанти архітектури;
-  - ключові властивості;
-  - обмеження;
-  - приклади споріднених методів, моделей або практичних застосувань.
-- Якщо тема технічна, бажано також додавати формули, Mermaid-діаграми, порівняльні таблиці, practical code blocks або короткі case studies там, де це доречно.
-- Якщо тема вже має коротку нотатку, при розширенні не залишати її у "згорнутому" вигляді: нова UA/EN-версія має бути достатньо повною в обох мовах.
+- When adding a new content section or a new conceptual note, do not stop at a short definition.
+- By default, gather **expanded** material in the style of a deeper overview unless the user explicitly asks for a short version.
+- Minimum expected structure of a new section:
+  - `why it is possible / why it matters`;
+  - main approaches or architecture variants;
+  - key properties;
+  - limitations;
+  - examples of related methods, models, or practical applications.
+- For technical topics, also prefer adding formulas, Mermaid diagrams, comparison tables, practical code blocks, or short case studies where appropriate.
+- If a topic already has a short note, do not leave it in a "collapsed" form after expansion: the updated UA/EN versions should both remain sufficiently complete.
 
 ---
 
-## 3. Візуалізація
+## 3. Visualization
 
-- ASCII-діаграми не використовувати, лише Mermaid.
-- `\n` у вузлах Mermaid замінюємо на `<br/>`.
-- `quadrantChart`: прибирати мітки `quadrant-1..4`, залишати осі + точки.
-- Для математичних нотаток: `cssclasses: [math-note]`.
+- Do not use ASCII diagrams; use Mermaid only.
+- Replace `\n` in Mermaid node labels with `<br/>`.
+- `quadrantChart`: remove `quadrant-1..4` labels, keep axes + data points only.
+- For math-heavy notes use `cssclasses: [math-note]`.
 
-### 3.1 Уніфікація Mermaid (flowchart)
+### 3.1 Mermaid unification (flowchart)
 
-- Для `flowchart` використовувати стандартизовані класи вузлів:
+- For `flowchart`, use standardized node classes:
   - `input`
   - `trunk`
   - `diffusion`
   - `confidence`
   - `output`
   - `neutral`
-- У кожному `flowchart`-блоці задавати `classDef` для всіх 6 класів із єдиною палітрою.
-- Не використовувати локальні/довільні назви класів (`root`, `emb`, `model`, `clean`, `gen` тощо).
-- Виняток: `timeline`, `mindmap`, `xychart-beta`, `quadrantChart` можуть бути без `classDef`, якщо це не погіршує читабельність.
+- In each `flowchart` block, define `classDef` for all 6 classes using the shared palette.
+- Do not use local/custom class names (`root`, `emb`, `model`, `clean`, `gen`, etc.).
+- Exception: `timeline`, `mindmap`, `xychart-beta`, `quadrantChart` may omit `classDef` when readability is not reduced.
 
 ---
 
-## 4. Джерела
+## 4. Sources
 
-Для технічних/наукових тверджень обов'язково додавати джерела:
+All scientific/technical claims require sources:
 
 ```markdown
 > Author et al. (Year). *Title*. Venue.
@@ -261,86 +169,89 @@ tags: [topic_name, domain_name]    # snake_case
 
 ## 5. Obsidian UI Hacks
 
-- HTML може огортати wiki-link: `<span>[[Note]]</span>`.
-- HTML усередині `[[...]]` заборонено.
-- Для навігації пріоритетно callouts.
+- HTML may wrap wiki-links: `<span>[[Note]]</span>`.
+- HTML inside `[[...]]` is forbidden.
+- Prefer callouts for navigation blocks.
 
 ---
 
-## 6. Заборони
+## 6. Prohibitions
 
-- Не використовувати відносні шляхи.
-- Не змішувати мови в межах мовної папки.
-- Не додавати несистемні файли в корінь vault.
-- Дозволені root-файли/папки: `.git/`, `.gitignore`, `.obsidian/`, `.smart-env/`, `Home.md`, `Summary*.md`, `README.md`, `AGENTS.md`, `NOTICE.md`, `AUDIT.md`, `UA/`, `EN/`.
-
-## 7. NOTICE-файли
-
-- Вести журнал форматних змін у `NOTICE.md` (UA) та `EN/NOTICE.md` (EN).
-- Оновлювати ці файли після кожного масового перейменування, переносу або форматного рефакторингу.
-- Якщо виконувалась масова синхронізація EN↔UA, зафіксувати це окремим пунктом у двох NOTICE-файлах.
+- No relative links.
+- No mixed languages inside one language folder.
+- Do not add non-system files to vault root.
+- Do not commit secrets, `PII`, or other sensitive local data.
+- Allowed root files/directories: `.git/`, `.gitignore`, `.brain/`, `.obsidian/`, `.smart-env/`, `PDF/`, `Home.md`, `README.md`, `AGENTS.md`, `BRAIN.md`, `NOTICE.md`, `AUDIT.md`, `EN/`, `UA/`.
 
 ---
 
-## 8. AUDIT-файл
+## 7. NOTICE files
 
-- `AUDIT.md` створювати/оновлювати лише за явним запитом користувача.
-- Стандартний аудит включає:
-  - структурну цілісність (наявність ключових сторінок, паритет UA↔EN),
-  - перевірку wiki-links,
-  - перевірку DOI/джерел,
-  - матрицю `Confidence Level` по ключових доменах.
-- Після аудиту коротко фіксувати важливі зміни у `NOTICE.md` і `EN/NOTICE.md` (за наявності змін).
-- Навіть без запуску аудиту, агент має час від часу ненав'язливо нагадувати про доцільність оновлення `AUDIT.md` (особливо після великих синхронізацій або масових правок).
+- Maintain formatting-change logs in `UA/NOTICE.md` (UA) and `NOTICE.md` (EN).
+- Update these files after each mass rename, move, or formatting refactor.
+- If a mass EN↔UA synchronization was performed, record it as a dedicated entry in both NOTICE files.
 
 ---
 
-## 9. CSS та масштабування
+## 8. AUDIT file
 
-- Активні сніпети: `homepage`, `math-note`, `diagram-scale`, `content-width`.
-- Тема: **GitHub Theme** — має власні `max-width` для `img`, тому сніпети пишуться з явним `!important`.
-- `diagram-scale.css` — відповідає за рівне масштабування Mermaid та зображень:
-  - Mermaid SVG → `width: 100%` через `.mermaid svg`
-  - Зображення → `width: 100%` через `img` (без `:not([class])`) + `.markdown-preview-section img`
-  - `img[width]` — виняток: зображення з явно заданою шириною не розтягуються (іконки, badges)
-  - `.note` scope додано до всіх ключових правил для сумісності з `cssclasses: [note]`
-- `content-width.css` — адаптивна ширина текстового контейнера:
-  - текст ширший за default readable width, але не full-width,
-  - `clamp(860px, 86vw, 1180px)` для desktop/tablet,
-  - окреме вирівнювання для Reading + Editing (CM6).
-- Якщо після змін ілюстрації зникли: перевірити Excalidraw plugin → потім CSS.
+- Create/update `AUDIT.md` only on explicit user request.
+- A standard audit includes:
+  - structural integrity checks (key pages and UA↔EN parity),
+  - wiki-link integrity checks,
+  - DOI/source checks,
+  - a `Confidence Level` matrix for core domains.
+- After an audit, log notable format/consistency changes in `UA/NOTICE.md` and `NOTICE.md` (if changes were applied).
+- Even when no audit is executed, the agent should occasionally provide a lightweight reminder to refresh `AUDIT.md` (especially after major synchronization or mass edits).
 
 ---
 
-## 10. Python-секції в нотатках (1.2.6)
+## 9. CSS and scaling
 
-Нотатка `1.2.6. Featurization` містить розділи 10 і 11 з Python-кодом.
+- Active snippets: `homepage`, `math-note`, `diagram-scale`, `content-width`.
+- Theme: **GitHub Theme** — has its own `max-width` for `img`; snippets use explicit `!important` to override.
+- `diagram-scale.css` — governs uniform scaling of Mermaid diagrams and images:
+  - Mermaid SVG → `width: 100%` via `.mermaid svg`
+  - Images → `width: 100%` via `img` (no `:not([class])`) + `.markdown-preview-section img`
+  - `img[width]` exception: images with an explicit width attribute are not stretched (icons, badges)
+  - `.note` scope added to all key rules for compatibility with `cssclasses: [note]`
+- `content-width.css` — adaptive text container width:
+  - wider than default readable width but not full-width,
+  - `clamp(860px, 86vw, 1180px)` on desktop/tablet,
+  - dedicated alignment for Reading + Editing (CM6).
+- If illustrations disappear after CSS changes: check Excalidraw plugin settings first, then CSS.
 
-| Розділ | Зміст |
+---
+
+## 10. Python sections in notes (1.2.6)
+
+Note `1.2.6. Featurization` contains sections 10 and 11 with Python code.
+
+| Section | Content |
 |---|---|
-| 10.1 | Встановлення залежностей (`numpy`, `rdkit`, `gemmi`, `biopython`) |
-| 10.2 | Токенізація білка → one-hot `(L, 22)` |
-| 10.3 | Токенізація ліганду зі SMILES → атоми + bond graph |
-| 10.4 | Парсинг A3M + кодування MSA |
-| 10.5 | Cβ дистограма шаблону `(L, L, 39)` |
-| 10.6 | Відносне позиційне кодування `(L, L, 65)` |
-| 10.7 | `build_feature_dict()` — повний словник ознак |
-| 11.0 | Таблиця: що можливо лише з FASTA + mmCIF |
+| 10.1 | Dependencies (`numpy`, `rdkit`, `gemmi`, `biopython`) |
+| 10.2 | Protein tokenization → one-hot `(L, 22)` |
+| 10.3 | Ligand tokenization from SMILES → atoms + bond graph |
+| 10.4 | A3M parsing + MSA encoding |
+| 10.5 | Cβ distogram `(L, L, 39)` |
+| 10.6 | Relative position encoding `(L, L, 65)` |
+| 10.7 | `build_feature_dict()` — full feature dictionary |
+| 11.0 | Table: what is possible with FASTA + mmCIF only |
 | 11.1 | `parse_fasta()` |
-| 11.2 | `sequence_from_mmcif()` + крос-перевірка |
+| 11.2 | `sequence_from_mmcif()` + cross-check |
 | 11.3 | `extract_ligand_features_from_mmcif()` |
 | 11.4 | `backbone_unit_vectors()` + `plddt_from_mmcif()` |
-| 11.5 | `featurize_from_fasta_and_mmcif()` — повний пайплайн |
-| 11.6 | Таблиця відсутніх ознак у no_msa режимі |
-| 11.7 | Бази даних + інструменти для повного MSA режиму |
+| 11.5 | `featurize_from_fasta_and_mmcif()` — full pipeline |
+| 11.6 | Table of features absent in no_msa mode |
+| 11.7 | Databases + tools required for full MSA mode |
 
 ---
 
-## 11. Комунікація агента
+## 11. Agent Communication
 
-- За замовчуванням відповідати українською.
-- Російську не використовувати.
-- Код, коментарі в коді та ідентифікатори — англійською.
-- Якщо англійський технічний термін природніший за український, лишати його англійською.
-- Якщо є добрий український аналог, при першій згадці давати парну форму: `English term` (український відповідник) або український відповідник (`English term`).
-- Якщо мову програмування не вказано, використовувати Python.
+- Reply in Ukrainian by default unless user asks for English.
+- Never use Russian.
+- Code examples, code comments, and identifiers in English.
+- Keep an English technical term when it is more natural than the Ukrainian alternative.
+- If a good Ukrainian equivalent exists, use a paired first mention: `English term` (Ukrainian equivalent) or Ukrainian equivalent (`English term`).
+- Default programming language is Python if unspecified.
