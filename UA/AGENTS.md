@@ -32,6 +32,7 @@ AlphaFold3/
 └── UA/
     ├── AGENTS.md
     ├── NOTICE.md
+    ├── README.md
     ├── Головна.md
     ├── Індекс.md
     ├── Література та пріоритети.md
@@ -49,6 +50,7 @@ AlphaFold3/
 - Посилання лише абсолютні від кореня vault.
 - Суттєві UA-нотатки мають EN-дзеркало.
 - `Home.md` — головна англомовна точка входу; `EN/Summary*.md` дозволені як технічні дайджести/implementation-нотатки.
+- `README.md` і `UA/README.md` описують використання репозиторію та мають лишатися синхронними на рівні політик.
 
 ### 1.2 Синхронізація EN ↔ UA (обов'язково)
 
@@ -83,6 +85,119 @@ AlphaFold3/
   - не копіювати їх дослівно в репозиторій,
   - за можливості редагувати або маскувати їх,
   - явно попередити користувача про ризик, якщо без цього не можна коректно продовжити.
+
+### 1.4.1 Доступ Codex у чаті
+
+- Коли цей репозиторій використовується з `Codex` у чаті, пріоритетно надавати режим Full Access замість restricted sandbox.
+- Це особливо важливо для задач, пов'язаних із `/.brain`, indexing, retrieval, `Ollama`, `LanceDB`, health-check або runtime-перевіркою.
+- Запуски в restricted sandbox можуть давати хибні негативні результати, зокрема `LanceDB` hangs/timeouts або failed index checks, навіть коли активний fallback-індекс валідний.
+- Якщо задача залежить від перевірки реальної локальної runtime-поведінки, очікуваний default це Full Access.
+
+### 1.5 Python tooling
+
+- `uv` є основним інструментом для Python-оточень, керування залежностями й запуску скриптів.
+- Приклади встановлення `uv`:
+  - macOS / Linux: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+  - Windows PowerShell: `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+- Приклади встановлення Python через `uv`:
+  - встановити найновіший доступний Python: `uv python install`
+  - встановити Python 3.12 для цього репозиторію: `uv python install 3.12`
+- Пріоритетні команди:
+  - `uv venv` замість `python -m venv`,
+  - `uv add` замість прямого `pip install`,
+  - `uv run` для запуску Python entry points і скриптів.
+- Не вводити паралельні Python-workflows (`requirements.txt` + довільний `pip install`, ручне керування virtualenv, змішані package managers), якщо цього явно не вимагає сам репозиторій або запит користувача.
+- Якщо Python-автоматизація додається в `/.brain`, `uv`-workflow має бути явно відображений у локальній документації та прикладах команд.
+- Для `/.brain` вважати і `pytest`, і `flake8` стандартними verification-кроками після Python-змін.
+
+Приклади:
+
+```bash
+UV_CACHE_DIR=/tmp/uv-cache uv venv .brain/.venv
+```
+
+```bash
+UV_CACHE_DIR=/tmp/uv-cache uv python install 3.12
+```
+
+```bash
+UV_CACHE_DIR=/tmp/uv-cache uv add --project .brain requests
+```
+
+```bash
+UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain python .brain/main.py
+```
+
+```bash
+UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain pytest .brain/tests -q
+```
+
+```bash
+UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain flake8 .brain/brain .brain/tests
+```
+
+### 1.6 WSL і Ollama
+
+- Якщо локальна робота з моделями використовує Windows-екземпляр `Ollama` з `WSL`, пріоритетно використовувати mirrored networking на `Windows 11 22H2+`.
+- Глобальну конфігурацію WSL тримати в `%UserProfile%\\.wslconfig`:
+
+```ini
+[wsl2]
+networkingMode=mirrored
+dnsTunneling=true
+autoProxy=true
+firewall=true
+```
+
+- Після зміни `.wslconfig` перезапускати `WSL` командою:
+
+```powershell
+wsl --shutdown
+```
+
+- У mirrored mode перевіряти доступ до Windows-екземпляра `Ollama` з `WSL` через:
+
+```bash
+curl http://127.0.0.1:11434/api/tags
+```
+
+- Якщо mirrored mode недоступний або вимкнений, запускати Windows `Ollama` зі змінною `OLLAMA_HOST=0.0.0.0:11434` у користувацьких змінних середовища Windows і звертатися до неї з `WSL` через IP Windows-хоста:
+
+```bash
+WIN_HOST=$(ip route show | awk '/default/ {print $3}')
+curl "http://$WIN_HOST:11434/api/tags"
+```
+
+- Ніколи не копіювати секрети, токени, credentials, приватні prompts або персональні дані в `Ollama` prompts, shell history, note-файли чи versioned configuration files.
+
+### 1.7 WSL і LanceDB
+
+- Якщо `/.brain` запускається всередині `WSL`, а сам репозиторій лежить на `/mnt/c/...`, `LanceDB` може падати на стандартному шляху `/.brain/.index/...` з `I/O` або `metadata`-помилками під час створення чи перезапису таблиць.
+- Канонічний default при цьому все одно лишається `/.brain/.index/...`.
+- Коли стається саме цей збій `WSL + /mnt/c + LanceDB`, використовувати fallback index root у Linux-native файловій системі:
+
+```bash
+cd .brain
+UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run python -m brain index --index-root /tmp/alphafold3-pdf-index
+```
+
+- У fallback-режимі PDF-індекс зберігається тут:
+  - `/tmp/alphafold3-pdf-index/manifest.json`
+  - `/tmp/alphafold3-pdf-index/lancedb`
+- Також треба записувати pointer на активний fallback-шлях у:
+  - `/.brain/.index/pdf_search/active_index.json`
+- Таку саму pointer-схему треба використовувати і для fallback markdown-індексу vault через:
+  - `/.brain/.index/vault_search/active_index.json`
+- Треба явно фіксувати, що використовується fallback-шлях, щоб наступні запуски не припускали, ніби активний індекс лежить у `/.brain/.index/pdf_search`.
+- У restricted sandbox-середовищах `LanceDB` може також зависати на `connect()` або `open_table()`, навіть коли fallback-індекс у `/tmp/...` валідний.
+- Перш ніж вважати індекс пошкодженим, перевіряти його поза sandbox через:
+
+```bash
+cd .brain
+UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run python -m brain check-index --target vault
+```
+
+- `brain check-index` має читати `active_index.json`, якщо він є, і перевіряти саме активний fallback-індекс, а не лише canonical-шлях `/.brain/.index/...`.
 
 ---
 

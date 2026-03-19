@@ -13,7 +13,7 @@ This file records formatting issues that were already fixed, to avoid regression
 - Resolution: inside tables, use only `[[path]]` (no alias).
 - Applied to:
   - `UA/Індекс.md`
-  - `Index.md`
+  - `EN/Index.md`
   - `UA/3. Моделі/3.0. Огляд моделей.md`
   - `EN/3. Models/3.0. Models Overview.md`
   - `UA/4. Датасети/4.0. Огляд датасетів.md`
@@ -46,8 +46,8 @@ This file records formatting issues that were already fixed, to avoid regression
   - `UA/Індекс.md`
   - `UA/Література та пріоритети.md`
 - EN:
-  - `Index.md`
-  - `Literature and Priorities.md`
+  - `EN/Index.md`
+  - `EN/Literature and Priorities.md`
 
 ## 6. Post-change validation checklist
 
@@ -144,7 +144,7 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
 
 ## 13. AGENTS/NOTICE update (2026-03-11)
 
-- Synchronized `AGENTS.md` and `AGENTS.md` with the current Mermaid rules.
+- Synchronized `AGENTS.md` and `UA/AGENTS.md` with the current Mermaid rules.
 - Added mandatory `flowchart` class standard: `input`, `trunk`, `diffusion`, `confidence`, `output`, `neutral`.
 - Added explicit requirement: every `flowchart` must define `classDef` for all 6 classes.
 - Documented exceptions for non-flowchart types (`timeline`, `mindmap`, `xychart-beta`, `quadrantChart`).
@@ -162,9 +162,9 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
 
 ## 15. Structure audit and instruction sync (2026-03-11)
 
-- Re-checked vault structure against `AGENTS.md` / `AGENTS.md`.
+- Re-checked vault structure against `AGENTS.md` / `UA/AGENTS.md`.
 - Verified critical entry/index pages:
-  - `Home.md`, `UA/Головна.md`, `UA/Індекс.md`, `Index.md`.
+  - `Home.md`, `UA/Головна.md`, `UA/Індекс.md`, `EN/Index.md`.
 - Verified parity of numbered note IDs between `UA/` and `EN/` (`1.x.x`–`4.x.x`): no mismatches found.
 - Updated AGENTS instructions:
   - added system root entries `.git/`, `.gitignore`, `.obsidian/`, `.smart-env/`,
@@ -175,7 +175,7 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
 
 - Reviewed and synchronized the core literature lists:
   - `UA/Література та пріоритети.md`
-  - `Literature and Priorities.md`
+  - `EN/Literature and Priorities.md`
 - Added an extra high-citation block (AF-Multimer, lDDT, TM-score, MMseqs2, ColabFold, RoseTTAFold, ESMFold, AF2 human proteome paper).
 - Fixed an incorrect DOI in the UA PPI note:
   - `10.48550/arXiv.2109.22paym` → `10.1101/2021.10.04.463034`.
@@ -188,7 +188,7 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
 
 ## 17. AUDIT.md rule in AGENTS (2026-03-11)
 
-- Updated `AGENTS.md` and `AGENTS.md` with a dedicated `AUDIT.md` section.
+- Updated `AGENTS.md` and `UA/AGENTS.md` with a dedicated `AUDIT.md` section.
 - Recorded rule: run/create `AUDIT.md` **only on explicit user request**.
 - Added operational requirement: the agent should **occasionally provide a lightweight reminder** to refresh the audit after major synchronization or mass edits.
 - Added `AUDIT.md` to the allowed root-file list in agent rules.
@@ -217,15 +217,15 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
   - `UA/1. AlphaFold3/1.2. Архітектура/1.2.6. Featurization.md`
 - Synchronized supporting references and wiki-links after the rename:
   - `AGENTS.md`
-  - `AGENTS.md`
+  - `UA/AGENTS.md`
   - `NOTICE.md`
-  - `NOTICE.md`
+  - `UA/NOTICE.md`
   - related UA/EN notes that link to `1.2.6`.
 - No folder rename was required because no directory names used the old term.
 
 ## 20. Instruction refresh and vault audit (2026-03-18)
 
-- Updated `AGENTS.md` and `AGENTS.md`:
+- Updated `AGENTS.md` and `UA/AGENTS.md`:
   - aligned the example vault tree with the actual structure (`AUDIT.md`, `1.5.5`, `1.5.6`, `2.2.5`, `2.2.6`),
   - added an explicit terminology rule for English STEM terms inside `UA/` titles and file names.
 - Normalized the `## Related Notes` heading in two EN notes:
@@ -243,7 +243,7 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
   - all BRAIN logic is assigned to `/.brain`,
   - all indexed and generated data is assigned to `/.index`,
   - local PDF files are assigned to `/PDF`.
-- Updated `AGENTS.md` and `AGENTS.md`:
+- Updated `AGENTS.md` and `UA/AGENTS.md`:
   - added `BRAIN.md`, `/.brain`, `/.index`, and `/PDF` to the allowed root elements and example tree.
 - Created directories:
   - `/.brain/`
@@ -307,3 +307,62 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
   - `EN/Summary.md`
 - Re-synchronized absolute wiki-links so English mirrors now resolve to `EN/...` paths again.
 - Updated `Home.md`, `AGENTS.md`, `UA/AGENTS.md`, `README.md`, `BRAIN.md`, and `AUDIT.md` to treat `EN/` as the canonical English branch.
+
+## 27. Instruction refresh, `UA/README.md`, and audit rerun (2026-03-18)
+
+- Refreshed instruction files to match the current repository state:
+  - `AGENTS.md`
+  - `UA/AGENTS.md`
+  - `BRAIN.md`
+- Added `UA/README.md` to the documented `UA/` structure and treated `README.md` / `UA/README.md` as aligned repository-usage guides.
+- Corrected remaining current-governance wording in `NOTICE.md` / `UA/NOTICE.md`:
+  - duplicated `AGENTS.md` / `NOTICE.md` references normalized to `UA/AGENTS.md` / `UA/NOTICE.md` where applicable,
+  - current-path references aligned with `/.brain/.index/` where the text was describing the active canonical layout.
+- Re-ran the local vault audit and refreshed `AUDIT.md` with the current counts, parity checks, and wiki-link / DOI coverage status.
+
+## 28. `uv` adopted as the primary Python workflow (2026-03-18)
+
+- Updated repository instructions to make `uv` the default tool for Python environments, dependency management, and script execution.
+- Synchronized this rule across:
+  - `AGENTS.md`
+  - `UA/AGENTS.md`
+  - `BRAIN.md`
+  - `README.md`
+  - `UA/README.md`
+  - `/.brain/AGENTS.md`
+  - `/.brain/README.md`
+- Recorded the preferred command model:
+  - `uv venv`
+  - `uv add`
+  - `uv run`
+- Clarified that ad hoc `pip install` / manual `venv` workflows should be avoided unless explicitly required.
+
+## 29. Added executable `uv` examples to instructions and READMEs (2026-03-19)
+
+- Expanded the Python-tooling sections with concrete command examples.
+- Updated:
+  - `AGENTS.md`
+  - `UA/AGENTS.md`
+  - `README.md`
+  - `UA/README.md`
+  - `/.brain/AGENTS.md`
+  - `/.brain/README.md`
+- Added example commands for:
+  - creating a virtual environment with `uv venv`,
+  - adding a dependency with `uv add`,
+  - running a script or module with `uv run`.
+
+## 30. Added `uv` and Python installation instructions (2026-03-19)
+
+- Extended the Python-tooling documentation with installation steps for `uv` and managed Python.
+- Updated:
+  - `AGENTS.md`
+  - `UA/AGENTS.md`
+  - `README.md`
+  - `UA/README.md`
+  - `/.brain/AGENTS.md`
+  - `/.brain/README.md`
+- Added examples for:
+  - installing `uv` on macOS / Linux and Windows,
+  - installing Python with `uv python install`,
+  - pinning the repository workflow to Python `3.12`.

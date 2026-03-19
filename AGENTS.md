@@ -32,6 +32,7 @@ AlphaFold3/
 └── UA/
     ├── AGENTS.md
     ├── NOTICE.md
+    ├── README.md
     ├── Головна.md
     ├── Індекс.md
     ├── Література та пріоритети.md
@@ -48,6 +49,7 @@ AlphaFold3/
 - Use absolute links from vault root only.
 - Substantial UA notes must have EN mirrors.
 - `Home.md` is the main English entry point; `EN/Summary*.md` files are allowed for technical digests/implementation notes.
+- `README.md` and `UA/README.md` describe repository usage and should stay aligned at the policy level.
 
 ### 1.2 EN ↔ UA Synchronization (required)
 
@@ -82,6 +84,133 @@ AlphaFold3/
   - avoid copying them verbatim into the repository,
   - redact or mask them when possible,
   - explicitly warn the user about the risk if safe continuation would otherwise be unclear.
+
+### 1.4.1 Codex Chat Access
+
+- When this repository is used with Codex in chat, prefer Full Access mode over a restricted sandbox.
+- This is especially important for tasks involving `/.brain`, indexing, retrieval, `Ollama`, `LanceDB`, health-checks, or runtime verification.
+- Restricted sandbox runs may produce false negatives such as `LanceDB` hangs/timeouts or failed index checks even when the active fallback index is valid.
+- If the task depends on confirming real local runtime behavior, the expected default is Full Access.
+
+### 1.5 Python tooling
+
+- Use `uv` as the primary tool for Python environments, dependency management, and script execution.
+- `uv` installation examples:
+  - macOS / Linux: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+  - Windows PowerShell: `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+- Python installation examples with `uv`:
+  - install the latest available Python: `uv python install`
+  - install Python 3.12 for this repository: `uv python install 3.12`
+- Prefer:
+  - `uv venv` instead of `python -m venv`,
+  - `uv add` instead of direct `pip install`,
+  - `uv run` for Python entry points and scripts.
+- Avoid introducing parallel Python workflow conventions (`requirements.txt` + ad hoc `pip install`, manual virtualenv handling, mixed package managers) unless the repository or the user explicitly requires them.
+- When adding Python automation under `/.brain`, keep the `uv` workflow explicit in local documentation and commands.
+
+Examples:
+
+```bash
+UV_CACHE_DIR=/tmp/uv-cache uv venv .brain/.venv
+```
+
+```bash
+UV_CACHE_DIR=/tmp/uv-cache uv python install 3.12
+```
+
+```bash
+UV_CACHE_DIR=/tmp/uv-cache uv add --project .brain requests
+```
+
+```bash
+UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain python -m brain
+```
+
+- For local automation under `/.brain`, preserve the modular package layout:
+  - `brain/settings/`
+  - `brain/common/`
+  - `brain/pdf/`
+  - `brain/pdf/backends/`
+  - `brain/research/`
+  - `brain/vault/`
+  - `brain/commands/`
+- Prefer extending those packages over adding flat compatibility wrappers or oversized mixed-responsibility files.
+- When maintaining `/.brain`, verify direct Python dependencies against actual imports/usages after refactors.
+- Remove unused direct dependencies from `/.brain/pyproject.toml`, refresh `/.brain/uv.lock`, and rerun `/.brain` tests when cleanup is safe.
+- For `/.brain`, treat both `pytest` and `flake8` as standard verification steps after Python changes.
+
+Verification examples:
+
+```bash
+UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain pytest .brain/tests -q
+```
+
+```bash
+UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain flake8 .brain/brain .brain/tests
+```
+
+### 1.6 WSL and Ollama
+
+- If local model work uses Windows-hosted `Ollama` from `WSL`, prefer mirrored networking on `Windows 11 22H2+`.
+- Keep the global WSL config in `%UserProfile%\\.wslconfig`:
+
+```ini
+[wsl2]
+networkingMode=mirrored
+dnsTunneling=true
+autoProxy=true
+firewall=true
+```
+
+- After editing `.wslconfig`, restart WSL with:
+
+```powershell
+wsl --shutdown
+```
+
+- In mirrored mode, verify Windows-side `Ollama` from `WSL` via:
+
+```bash
+curl http://127.0.0.1:11434/api/tags
+```
+
+- If mirrored mode is unavailable or disabled, run Windows `Ollama` with `OLLAMA_HOST=0.0.0.0:11434` in the Windows user environment variables and access it from `WSL` through the Windows host IP:
+
+```bash
+WIN_HOST=$(ip route show | awk '/default/ {print $3}')
+curl "http://$WIN_HOST:11434/api/tags"
+```
+
+- Never copy secrets, tokens, credentials, private prompts, or personal data into `Ollama` prompts, shell history, note files, or versioned configuration files.
+
+### 1.7 WSL and LanceDB
+
+- If `/.brain` runs inside `WSL` while the repository lives on `/mnt/c/...`, `LanceDB` may fail on the default `/.brain/.index/...` path with I/O or metadata errors during table creation/overwrite.
+- The canonical default still remains `/.brain/.index/...`.
+- When that specific `WSL + /mnt/c + LanceDB` failure happens, use a Linux-native fallback index root:
+
+```bash
+cd .brain
+UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run python -m brain index --index-root /tmp/alphafold3-pdf-index
+```
+
+- In this fallback mode, store the PDF index at:
+  - `/tmp/alphafold3-pdf-index/manifest.json`
+  - `/tmp/alphafold3-pdf-index/lancedb`
+- Also write the active fallback pointer into:
+  - `/.brain/.index/pdf_search/active_index.json`
+- Use the same pointer pattern for a fallback vault index via:
+  - `/.brain/.index/vault_search/active_index.json`
+- Record clearly when the fallback path is being used so future runs do not assume that the active index is under `/.brain/.index/pdf_search`.
+- Under restricted sandbox environments, `LanceDB` may also hang during `connect()` or `open_table()` even when the fallback index in `/tmp/...` is valid.
+- Before concluding that an index is corrupted, verify it outside the sandbox with:
+
+```bash
+cd .brain
+UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run python -m brain check-index --target vault
+```
+
+- `brain check-index` must read `active_index.json` when present and validate the currently active fallback index, not only the canonical `/.brain/.index/...` path.
 
 ---
 

@@ -82,8 +82,44 @@ Prioritized reading list for AF3. Rank `1` means highest importance.
 | 21 | Lin et al. (2023), *Evolutionary-scale prediction of atomic-level protein structure with a language model* | Landmark `ESMFold` / pLM paradigm reference | `[3.4 ESMFold]` `[2.2.3 Protein Language Models]` |
 |    | DOI: [10.1126/science.ade2574](https://doi.org/10.1126/science.ade2574) |  |  |
 
+## G. Open Ecosystem and Coverage Gaps (recommended next)
+
+| Rank | Source | Importance | Critical sections |
+|---|---|---|---|
+| 22 | Ahdritz et al. (2024), *OpenFold: retraining AlphaFold2 yields new insights into its learning mechanisms and capacity for generalization* | Best open training reference for `AF2`-class systems | `[3.6 OpenFold]` `[EN/Summary]` |
+|    | DOI: [10.1038/s41592-024-02272-z](https://doi.org/10.1038/s41592-024-02272-z) |  |  |
+| 23 | Wohlwend et al. (2024), *Boltz-1: Democratizing Biomolecular Interaction Modeling* | Open `AF3`-adjacent biomolecular interaction model | `[3.7 Boltz-1]` `[1.5.2 Comparison]` |
+|    | DOI: [10.1101/2024.11.19.624167](https://doi.org/10.1101/2024.11.19.624167) |  |  |
+| 24 | Chai Discovery (2024), *Chai-1: Decoding the molecular interactions of life* | Practical open multi-modal complex modeling stack | `[3.8 Chai-1]` `[1.5.2 Comparison]` |
+|    | DOI: [10.1101/2024.10.10.615955](https://doi.org/10.1101/2024.10.10.615955) |  |  |
+| 25 | Baek et al. (2024), *Accurate prediction of protein–nucleic acid complexes using RoseTTAFoldNA* | Best direct coverage gap for `protein–DNA/RNA` complexes | `[3.9 RoseTTAFoldNA]` `[2.1.4 Nucleic Acids]` |
+|    | DOI: [10.1038/s41592-023-02086-5](https://doi.org/10.1038/s41592-023-02086-5) |  |  |
+| 26 | van Kempen et al. (2024), *Fast and accurate protein structure search with Foldseek* | Key practical tool for searching predicted and experimental structures | `[1.5.7 Foldseek and Structure Search]` `[4.1 PDB]` |
+|    | DOI: [10.1038/s41587-023-01773-0](https://doi.org/10.1038/s41587-023-01773-0) |  |  |
+| 27 | Cheng et al. (2023), *Accurate proteome-wide missense variant effect prediction with AlphaMissense* | Strong downstream use-case bridging structure and variant interpretation | `[3.2 AlphaFold3]` `[1.5.2 Comparison]` |
+|    | DOI: [10.1126/science.adg7492](https://doi.org/10.1126/science.adg7492) |  |  |
+| 28 | Shen et al. (2024), *Accurate RNA 3D structure prediction using a language model-based deep learning approach* | Strong RNA-focused complement to AF3 and RoseTTAFoldNA | `[2.1.4 Nucleic Acids]` `[1.5.2 Comparison]` |
+|    | DOI: [10.1038/s41592-024-02487-0](https://doi.org/10.1038/s41592-024-02487-0) |  |  |
+
+## H. Official Repositories and Portals
+
+| Resource | Why it matters |
+|---|---|
+| [OpenFold GitHub](https://github.com/aqlaboratory/openfold) | Trainable PyTorch reproduction of `AlphaFold2`; useful for engineering and retraining |
+| [Boltz GitHub](https://github.com/jwohlwend/boltz) | Official open repository for `Boltz` biomolecular interaction models |
+| [Chai-1 GitHub](https://github.com/chaidiscovery/chai-lab) | Official open implementation and technical report for `Chai-1` |
+| [Foldseek GitHub](https://github.com/steineggerlab/foldseek) | Practical CLI for large-scale structure search, clustering, and multimer search |
+| [AlphaFold / AlphaFold Server](https://deepmind.google/science/alphafold/) | Official DeepMind landing page for `AFDB`, `AlphaFold 3`, and `AlphaFold Server` |
+| [RCSB Computed Structure Models](https://www.rcsb.org/docs/general-help/computed-structure-models-and-rcsborg) | Official access point for computed models integrated alongside experimental PDB structures |
+| [PDBx/mmCIF Dictionary Resources](https://mmcif.wwpdb.org/) | Official format and dictionary reference for structural data interchange |
+
 ## Related Notes
 
 - [[EN/1. AlphaFold3/1.5. Resources/1.5.1. Key Terms|Key Terms]]
 - [[EN/1. AlphaFold3/1.5. Resources/1.5.2. Comparison with Predecessors|Comparison with Predecessors]]
+- [[EN/1. AlphaFold3/1.5. Resources/1.5.7. Foldseek and Structure Search|Foldseek and Structure Search]]
+- [[EN/3. Models/3.6. OpenFold|OpenFold]]
+- [[EN/3. Models/3.7. Boltz-1|Boltz-1]]
+- [[EN/3. Models/3.8. Chai-1|Chai-1]]
+- [[EN/3. Models/3.9. RoseTTAFoldNA|RoseTTAFoldNA]]
 - [[EN/Index|Concepts Index]]

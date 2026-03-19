@@ -7,8 +7,20 @@ Thumbs.db
 *.swo
 *~
 
+# Python/test caches
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+
 # Local environment
 .smart-env/
+.venv/
+venv/
 
 # Obsidian transient files
 .obsidian/cache/
