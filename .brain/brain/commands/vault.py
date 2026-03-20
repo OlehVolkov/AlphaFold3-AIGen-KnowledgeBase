@@ -5,11 +5,11 @@ from typing import Annotated
 
 import typer
 
-from brain.common import logger, print_json, print_text
-from brain.common.formatting import format_index_summary
-from brain.settings import get_config, resolve_vault_paths
-from brain.vault import format_vault_search_results, index_vault, search_vault
-from brain.vault.models import VaultIndexConfig, VaultSearchConfig
+from brain.shared import logger, print_json, print_text
+from brain.shared.formatting import format_index_summary
+from brain.config import get_config, resolve_vault_paths
+from brain.sources.vault import format_vault_search_results, index_vault, search_vault
+from brain.sources.vault.models import VaultIndexConfig, VaultSearchConfig
 
 
 class SearchMode(StrEnum):

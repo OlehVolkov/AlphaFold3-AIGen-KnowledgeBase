@@ -10,7 +10,7 @@ from brain.commands import health as health_commands
 from brain.commands import pdf as pdf_commands
 from brain.commands import research as research_commands
 from brain.commands import vault as vault_commands
-from brain.settings import BrainPaths, ResearchPaths
+from brain.config import BrainPaths, ResearchPaths
 
 
 def make_dummy_paths() -> BrainPaths:
@@ -35,6 +35,7 @@ def test_main_help_shows_commands() -> None:
     assert "index" in result.output
     assert "check-index" in result.output
     assert "fetch-pdfs" in result.output
+    assert "mcp" in result.output
     assert "search" in result.output
     assert "think" in result.output
     assert "index-vault" in result.output
@@ -201,6 +202,37 @@ def test_index_vault_command_json_output(monkeypatch) -> None:
     assert captured["resolve_kwargs"] == {
         "index_root": None,
         "table_name": "vault_markdown_chunks",
+    }
+
+
+def test_mcp_command_starts_server(monkeypatch) -> None:
+    captured: dict[str, object] = {}
+
+    class DummyServer:
+        def run(self, *, transport: str) -> None:
+            captured["transport"] = transport
+
+    def fake_build_mcp_server(**kwargs):
+        captured["kwargs"] = kwargs
+        return DummyServer()
+
+    from brain.commands import mcp as mcp_commands
+
+    monkeypatch.setattr(mcp_commands, "build_mcp_server", fake_build_mcp_server)
+
+    runner = CliRunner()
+    result = runner.invoke(
+        cli.main,
+        ["mcp", "--transport", "streamable-http", "--host", "0.0.0.0", "--port", "9000"],
+    )
+
+    assert result.exit_code == 0
+    assert captured["transport"] == "streamable-http"
+    assert captured["kwargs"] == {
+        "host": "0.0.0.0",
+        "port": 9000,
+        "debug": False,
+        "log_level": "INFO",
     }
 
 

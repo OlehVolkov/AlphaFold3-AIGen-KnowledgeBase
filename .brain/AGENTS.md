@@ -9,6 +9,30 @@ Local instructions for agents working inside `/.brain`.
 - The Obsidian knowledge base itself stays in `UA/`, `EN/`, and root governance files.
 - Prefer the current modular package layout in `/.brain/brain`; do not collapse logic back into a few oversized files.
 
+## Target Structure
+
+- The preferred long-term package hierarchy inside `/.brain/brain` is:
+  - `brain/config/`
+  - `brain/shared/`
+  - `brain/sources/pdf/`
+  - `brain/sources/pdf/backends/`
+  - `brain/sources/vault/`
+  - `brain/research/`
+  - `brain/mcp/tools/`
+  - `brain/commands/`
+- Use that hierarchy as the architectural reference even if the current repository is still mid-refactor.
+
+## Why This Structure
+
+- Organize packages by the nature of the logic, not by temporary implementation patterns.
+- `config` is for settings models, settings sources, and path resolution only.
+- `shared` is for reusable infrastructure such as logging, text helpers, retrieval helpers, and health checks.
+- `sources/pdf` and `sources/vault` are the two primary knowledge-source domains, so parsing, indexing, search, and source-specific helpers should live there.
+- `research` is a workflow/orchestration layer over retrieval and memory; it should not be treated as a datasource adapter.
+- `mcp/tools` is an interface surface over internal services and should stay thin.
+- `commands` is the CLI surface and should remain separate from domain logic.
+- Avoid treating `RAG` as the top-level filesystem category. `RAG` is a capability, while package names should reflect stable domain boundaries.
+
 ## Ecosystem Overview
 
 - Scientific PDF indexing is usually best designed as four layers:
@@ -28,7 +52,7 @@ Local instructions for agents working inside `/.brain`.
   - `LangChain` for chunking
   - `LanceDB` for vector + FTS + hybrid retrieval
   - `Ollama` for local embeddings and optional reranking
-  - `brain/vault/` modules for markdown indexing over `UA/`, `EN/`, and root knowledge files
+  - `brain/sources/vault/` modules for markdown indexing over `UA/`, `EN/`, and root knowledge files
 - This is the preferred default for the vault unless the task clearly needs:
   - better scientific-paper structure extraction (`Grobid`, `Docling`),
   - stronger scientific embedding models (`SPECTER2`, `SciBERT`),
@@ -43,12 +67,21 @@ Local instructions for agents working inside `/.brain`.
 - Install Python with `uv` when a managed interpreter is needed:
   - `uv python install`
   - `uv python install 3.12`
-- Use the local virtual environment at `/.brain/.venv`.
+- Use the Windows virtual environment at `/.brain/.venv` as the single canonical local environment.
+- Even when the agent is currently running from `WSL`, create, recreate, and sync `/.brain/.venv` through Windows `cmd.exe` with `uv`.
+- Do not introduce or keep parallel canonical environments such as `/.brain/.venvx`.
+- In `cmd.exe`, call `uv` directly from `PATH`; do not hardcode an absolute path to `uv.exe`.
+- When Docker is needed for local services or tooling, invoke it through Windows `cmd.exe` too.
+- Do not hardcode the repository path in commands, docs, scripts, tests, or examples.
+- Treat portable path usage as a must-have: prefer `%CD%`, relative paths from the current working directory, or placeholders like `<REPO_ROOT>`.
 - Use `BaseSettings`-driven `pydantic` config under `/.brain/config` and `/.brain/.env`.
 - Keep the CLI on `Typer`; use `Rich` for user-facing output and `Loguru` for runtime logging.
 - Virtual environments are local-only artifacts and must never be committed.
-- Prefer running Python through `uv`:
-  - `UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run ...`
+- Prefer running Python for `/.brain` through the Windows project environment:
+  - `cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run ..."`
+  - `cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv ..."`
+- Prefer running Docker in the same style:
+  - `cmd.exe /c "docker ..."`
 - Prefer `uv add` over direct `pip install`.
 - Prefer `uv venv` over manual `python -m venv`.
 - Keep code changes in `/.brain` small, local, and automation-focused.
@@ -56,12 +89,13 @@ Local instructions for agents working inside `/.brain`.
 - Prefer checking this explicitly via import search / usage search instead of assuming a package is still needed after refactors.
 - If a direct dependency is no longer used, remove it from `pyproject.toml`, refresh `uv.lock`, and rerun tests.
 - Prefer adding code to the existing package slices:
-  - `brain/settings/`
-  - `brain/common/`
-  - `brain/pdf/`
-  - `brain/pdf/backends/`
+  - `brain/config/`
+  - `brain/shared/`
+  - `brain/sources/pdf/`
+  - `brain/sources/pdf/backends/`
+  - `brain/sources/vault/`
   - `brain/research/`
-  - `brain/vault/`
+  - `brain/mcp/tools/`
   - `brain/commands/`
 - Do not reintroduce compatibility facades such as flat re-export modules when the canonical package API is already clear.
 - Do not write generated index data into notes or governance files.
@@ -72,45 +106,51 @@ Local instructions for agents working inside `/.brain`.
 Examples:
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv venv .brain/.venv
+cmd.exe /c "cd /d %CD% && uv python install 3.12"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv python install 3.12
+cmd.exe /c "cd /d %CD% && uv venv .venv --python 3.12"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv add --project .brain typer
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv sync --all-groups"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv add --project .brain pydantic
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run pytest tests -q"
+```
+
+```bash
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run flake8 brain tests"
 ```
 
 ## File Layout
 
 - `pyproject.toml` defines the local `brain` project.
-- Run the CLI via `uv run --project .brain python -m brain ...`.
+- Run the CLI through the Windows project interpreter at `/.brain/.venv/Scripts/python.exe`.
 - `config/brain.toml` holds committed defaults.
 - `config/local.toml` is an optional ignored local override file.
 - `/.brain/.env` is an optional ignored dotenv override file.
 - `brain/cli.py` is a thin Typer facade that registers commands from `brain/commands/`.
-- `brain/settings/` is the canonical `BaseSettings` configuration loader and path resolver package.
+- `brain/config/` is the canonical configuration package for `BaseSettings`, settings sources, and path resolution.
 - `brain/commands/` holds Typer command registration code.
-- `brain/common/` holds shared utilities used by both PDF and vault indexing/search, including `Rich`/`Loguru` runtime helpers.
+- `brain/shared/` holds shared utilities used by multiple domains, including runtime helpers, retrieval helpers, formatting, and text utilities.
 - Environment overrides should use nested names such as `BRAIN_OLLAMA__EMBED_MODEL`.
-- `brain/pdf/` contains parser routing, indexing, retrieval, and reranking logic.
-- `brain/pdf/backends/` contains isolated parser backends (`PyMuPDF`, `pdfplumber`, optional `Grobid`, optional `marker`).
-- `brain/research/` contains the multi-role research loop, memory handling, reflection steps, and report formatting.
-- `brain/vault/` contains markdown file discovery, section splitting, indexing, retrieval, and reranking logic.
+- `brain/sources/pdf/` contains parser routing, fetch, indexing, retrieval, and reranking logic for PDFs.
+- `brain/sources/pdf/backends/` contains isolated parser backends (`PyMuPDF`, `pdfplumber`, optional `Grobid`, optional `marker`).
+- `brain/sources/vault/` contains markdown file discovery, section splitting, indexing, retrieval, and related-note logic.
+- `brain/research/` contains the multi-role research loop, memory handling, reflection steps, report formatting, and run models.
+- `brain/mcp/tools/` is the canonical home for MCP note, search, and experiment handlers.
 - Keep files readable: prefer extracting cohesive submodules before a file becomes long or mixed-responsibility.
 - `README.md` explains how to use the local project.
-- `.venv/` is local-only and must never be committed.
-- `.index/` is for generated data, not hand-authored documentation.
+- `.venv/` is local-only, canonical for `/.brain`, and must never be committed.
+- `.index/` is for runtime-generated indexes, manifests, pointers, and search artifacts only.
+- Do not store exported dependency snapshots or packaging artifacts there, such as `requirements.txt`, `constraints.txt`, lockfile copies, or similar temporary install files.
 
 ## Working Style
 
@@ -134,3 +174,19 @@ UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python 
 - Under restricted sandbox environments, `LanceDB` may also hang during `connect()` or `open_table()` even when the fallback index under `/tmp/...` is valid.
 - Use `brain check-index` to validate the active PDF or vault index, and make sure the command follows `active_index.json` when present.
 - If `brain check-index` reports `status: timeout`, rerun it outside the sandbox before treating the index as corrupted.
+
+## MCP Roadmap
+
+- Treat the current `search-vault` capability as `MCP Stage 1`:
+  - `RAG`
+  - vault search over indexed markdown content
+- Treat the next tool surface as `MCP Stage 2`:
+  - `read_note`
+  - `write_note`
+  - `list_notes`
+  - `run_experiment`
+- The baseline `Stage 2` tool surface is now implemented.
+- When extending `/.brain`, prefer building additional `Stage 2` behavior on top of the existing retrieval/index foundations instead of bypassing them.
+- `read_note` and `list_notes` should preserve the canonical vault structure and avoid introducing a parallel note abstraction.
+- `write_note` must preserve bilingual mirror rules, explicit target paths, and reviewable updates.
+- `run_experiment` should produce reproducible outputs, explicit manifests, and repository-safe artifacts under `/.brain/.index` when applicable.

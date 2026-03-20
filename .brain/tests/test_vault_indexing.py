@@ -3,9 +3,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from brain.settings import BrainPaths
-from brain.vault.indexing import pointer_manifest_path, write_active_index_pointer
-from brain.vault.models import VaultIndexConfig
+from brain.config import BrainPaths
+from brain.sources.vault.indexing import pointer_manifest_path, write_active_index_pointer
+from brain.sources.vault.models import VaultIndexConfig
 
 
 def make_paths(tmp_path: Path) -> BrainPaths:

@@ -96,36 +96,36 @@ uv python install 3.12
 - Для залежностей пріоритетно використовувати `uv add`.
 - Для запуску Python-скриптів і entry points пріоритетно використовувати `uv run`.
 - Не змішувати `uv` з довільними `pip install` / ручними `venv`-workflow, якщо задача явно не вимагає такого сумісного режиму.
+- Для `/.brain` використовувати Windows project environment у `/.brain/.venv` як єдиний canonical env.
+- Навіть із `WSL` створювати та синхронізувати `/.brain/.venv` через `cmd.exe` і `uv`.
+- У `cmd.exe` викликати `uv` напряму через `PATH`; не використовувати повний файловий шлях до `uv.exe`.
+- Для цього репозиторію при роботі з `WSL` Docker теж слід викликати через Windows `cmd.exe`.
 - Для `/.brain` перед завершенням локальних Python-змін запускати і тести, і `flake8`.
 
 Приклади:
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv venv .brain/.venv
+cmd.exe /c "cd /d %CD%\.brain && uv python install 3.12"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv python install 3.12
+cmd.exe /c "cd /d %CD%\.brain && uv venv .venv --python 3.12"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv add --project .brain rich
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv sync --all-groups"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain python .brain/main.py
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain python -m your_module
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run pytest tests -q"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain pytest .brain/tests -q
-```
-
-```bash
-UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain flake8 .brain/brain .brain/tests
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run flake8 brain tests"
 ```
 
 ## WSL і Ollama
@@ -190,7 +190,7 @@ curl http://127.0.0.1:11434/api/generate \
 
 ```bash
 cd .brain
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run python -m brain index --index-root /tmp/alphafold3-pdf-index
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
 ```
 
 У fallback-режимі індекс зберігається тут:
@@ -213,7 +213,7 @@ UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run python -m brain index --
 
 ```bash
 cd .brain
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run python -m brain check-index --target vault
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain check-index --target vault"
 ```
 
 - команда автоматично читає `active_index.json` і перевіряє активний fallback-індекс, якщо pointer присутній

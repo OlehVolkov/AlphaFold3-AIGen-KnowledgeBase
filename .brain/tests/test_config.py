@@ -2,15 +2,15 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from brain.settings import (
+from brain.config import (
     load_config,
     resolve_pdf_paths,
     resolve_research_paths,
     resolve_vault_paths,
 )
-from brain.pdf.models import IndexConfig
+from brain.sources.pdf.models import IndexConfig
 from brain.research.models import ResearchRunConfig
-from brain.vault.models import VaultIndexConfig
+from brain.sources.vault.models import VaultIndexConfig
 
 
 def test_load_config_merges_base_local_and_env(monkeypatch, tmp_path: Path) -> None:

@@ -20,6 +20,8 @@ htmlcov/
 # Local environment
 .smart-env/
 .venv/
+.brain/.venv/
+.brain/.venvx/
 venv/
 
 # Obsidian transient files

@@ -4,8 +4,8 @@ import json
 import re
 from typing import Any, Iterable
 
-from brain.common import logger
-from brain.settings import ResearchPaths
+from brain.shared import logger
+from brain.config import ResearchPaths
 
 
 def _tokenize(text: str) -> set[str]:

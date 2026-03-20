@@ -15,12 +15,131 @@ This project exists to hold local automation and research helpers for the vault:
 
 Generated data belongs in `/.brain/.index`. Knowledge-base content belongs in `UA/`, `EN/`, and root governance files.
 
+## MCP Stages
+
+The current `/.brain` roadmap is split into two practical `MCP` stages:
+
+### Stage 1
+
+Implemented:
+
+- `RAG` over indexed vault content
+- vault retrieval through `search-vault`
+
+This is the current retrieval-first layer and is already usable.
+
+### Stage 2
+
+Implemented baseline MCP tools:
+
+- `read_note`
+- `write_note`
+- `list_notes`
+- `run_experiment`
+
+This stage should extend the current retrieval layer into a stable tool interface for:
+
+- reading canonical notes from the vault
+- writing note updates in explicit target paths
+- enumerating notes for planning and linking
+- executing experiment workflows instead of only describing them
+
+Current gap above the baseline:
+
+- automatic bilingual mirroring
+- automatic `[[wiki-links]]` maintenance
+- full `ACT/LINK` execution planning
+
 ## Design Preference
 
 - The preferred code style for `/.brain` is modular and package-oriented.
-- Core logic should stay in focused packages such as `brain/settings/`, `brain/common/`, `brain/pdf/`, `brain/pdf/backends/`, `brain/vault/`, and `brain/commands/`.
+- The preferred long-term package hierarchy is:
+  - `brain/config/` for configuration loading and settings models
+  - `brain/shared/` for reusable infrastructure used across domains
+  - `brain/sources/pdf/` for PDF-specific logic
+  - `brain/sources/pdf/backends/` for PDF parser backends
+  - `brain/sources/vault/` for vault-specific indexing and search logic
+  - `brain/research/` for orchestration, memory, and report generation
+  - `brain/mcp/tools/` for MCP tool handlers
+  - `brain/commands/` for CLI entrypoints only
 - Avoid bringing back flat compatibility facades when the canonical package API is already readable.
 - If a file starts accumulating unrelated responsibilities, split it into smaller package-local modules.
+
+## Structure Rationale
+
+- The filesystem should reflect the nature of the logic, not the history of refactors.
+- `config` is only for configuration loading, settings models, and path resolution.
+- `shared` is for reusable infrastructure such as logging, text helpers, retrieval helpers, formatting, and health checks.
+- `sources/pdf` and `sources/vault` are the two primary knowledge-source domains, so parsing, indexing, search, and source-specific helpers should live there.
+- `research` is a workflow/orchestration layer over retrieval and memory, not a datasource adapter.
+- `mcp/tools` is an interface layer over internal services and should stay thin.
+- `commands` is the CLI surface and should remain separate from domain logic.
+- Avoid using `rag` as the top-level home for everything. `RAG` is a capability, while package names should reflect stable domain boundaries.
+
+## Target Layout
+
+```text
+.brain/
+├── config/
+│   ├── brain.toml
+│   └── local.example.toml
+├── scripts/
+├── tests/
+├── brain/
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── cli.py
+│   ├── config/
+│   │   ├── __init__.py
+│   │   ├── loader.py
+│   │   ├── models.py
+│   │   └── sources.py
+│   ├── shared/
+│   │   ├── __init__.py
+│   │   ├── runtime.py
+│   │   ├── text.py
+│   │   ├── formatting.py
+│   │   ├── langchain.py
+│   │   ├── retrieval.py
+│   │   └── health.py
+│   ├── sources/
+│   │   ├── pdf/
+│   │   │   ├── __init__.py
+│   │   │   ├── models.py
+│   │   │   ├── fetch.py
+│   │   │   ├── parsers.py
+│   │   │   ├── indexing.py
+│   │   │   ├── search.py
+│   │   │   └── backends/
+│   │   └── vault/
+│   │       ├── __init__.py
+│   │       ├── models.py
+│   │       ├── markdown.py
+│   │       ├── indexing.py
+│   │       ├── search.py
+│   │       └── related.py
+│   ├── research/
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   ├── memory.py
+│   │   ├── formatting.py
+│   │   └── orchestration.py
+│   ├── mcp/
+│   │   ├── __init__.py
+│   │   ├── server.py
+│   │   └── tools/
+│   │       ├── __init__.py
+│   │       ├── notes.py
+│   │       ├── search.py
+│   │       └── experiments.py
+│   └── commands/
+│       ├── __init__.py
+│       ├── pdf.py
+│       ├── vault.py
+│       ├── research.py
+│       ├── mcp.py
+│       └── health.py
+```
 
 ## Environment
 
@@ -28,6 +147,7 @@ Generated data belongs in `/.brain/.index`. Knowledge-base content belongs in `U
 - Virtual environment: `/.brain/.venv`
 - Python: `3.12`
 - Tooling: `uv` (primary and required for package management and Python execution)
+- Docker commands: invoke through Windows `cmd.exe` when needed from `WSL`
 - CLI framework: `Typer`
 - CLI output: `Rich`
 - Logging: `Loguru`
@@ -44,57 +164,61 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv python install 3.12
+cmd.exe /c "cd /d %CD% && uv python install 3.12"
 ```
 
 ## Common Commands
 
 ```bash
-source .brain/.venv/bin/activate
+cmd.exe /c "cd /d %CD% && .venv\Scripts\activate.bat"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain
+cmd.exe /c "cd /d %CD% && uv venv .venv --python 3.12"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python your_script.py
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv sync --all-groups"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv add --project .brain typer
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv add --project .brain pydantic
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python your_script.py"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m your_module
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run pytest tests -q"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain index
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run flake8 brain tests"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain index --parser pymupdf
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain index --parser pdfplumber
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --parser pymupdf"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain index --parser grobid --grobid-url http://127.0.0.1:8070
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --parser pdfplumber"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain index --parser marker --marker-command marker_single
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --parser grobid --grobid-url http://127.0.0.1:8070"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain fetch-pdfs --reindex
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --parser marker --marker-command marker_single"
+```
+
+```bash
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain fetch-pdfs --reindex"
 ```
 
 ```bash
@@ -102,31 +226,39 @@ bash .brain/scripts/fetch_literature_pdfs.sh
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain search "alphafold diffusion" --mode hybrid --reranker cross-encoder
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain search \"alphafold diffusion\" --mode hybrid --reranker cross-encoder"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain search "protein ligand docking" --mode hybrid --reranker ollama --ollama-rerank-model llama3.2:3b
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain search \"protein ligand docking\" --mode hybrid --reranker ollama --ollama-rerank-model llama3.2:3b"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain index-vault
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index-vault"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain search-vault "pairformer recycling" --mode hybrid --reranker cross-encoder
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain search-vault \"pairformer recycling\" --mode hybrid --reranker cross-encoder"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain think "pairformer implementation ideas"
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain think \"pairformer implementation ideas\""
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain pytest .brain/tests -q
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain mcp --transport stdio"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain flake8 .brain/brain .brain/tests
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain mcp --transport streamable-http --host 127.0.0.1 --port 8000"
+```
+
+```bash
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run pytest tests -q"
+```
+
+```bash
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run flake8 brain tests"
 ```
 
 ## Configuration
@@ -156,7 +288,7 @@ Preferred nested environment variable examples:
 - `BRAIN_OLLAMA__BASE_URL`
 - `BRAIN_OLLAMA__RERANK_MODEL`
 - `BRAIN_RERANKER__CROSS_ENCODER_MODEL`
-- `BRAIN_PDF__DIR`
+- `BRAIN_PDF__PDF_DIR`
 - `BRAIN_PDF__INDEX_ROOT`
 - `BRAIN_PDF__TABLE_NAME`
 - `BRAIN_RESEARCH__INDEX_ROOT`
@@ -191,6 +323,11 @@ The `think` command implements a practical BRAIN-style loop on top of the local 
 - save session artifacts under `/.brain/.index/research/sessions/`
 
 If Ollama is unavailable, the loop falls back to deterministic heuristic outputs instead of failing hard.
+
+Current limitation:
+
+- the implemented loop is still mostly a synthesis layer
+- `Stage 2` MCP tools now exist, but higher-level `ACT/LINK` automation is still not implemented yet
 
 ## Ecosystem Overview
 
@@ -269,7 +406,7 @@ WSL note:
 
 ```bash
 cd .brain
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run python -m brain index --index-root /tmp/alphafold3-pdf-index
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
 ```
 
 - fallback artifacts live at:
@@ -281,8 +418,8 @@ UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run python -m brain index --
 - use the built-in health-check to validate the active index:
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain check-index --target pdf
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain check-index --target vault
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain check-index --target pdf"
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain check-index --target vault"
 ```
 
 - `check-index` automatically follows `active_index.json` when a fallback pointer exists
@@ -300,15 +437,15 @@ Default scan targets:
 Typical usage:
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain fetch-pdfs --reindex
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain fetch-pdfs --reindex"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain fetch-pdfs --dry-run
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain fetch-pdfs --dry-run"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run --project .brain python -m brain fetch-pdfs --notes-glob "EN/*.md" --limit 20
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain fetch-pdfs --notes-glob \"EN/*.md\" --limit 20"
 ```
 
 ```bash
@@ -352,21 +489,17 @@ ollama pull llama3.2:3b
 - `config/brain.toml` — committed default configuration
 - `config/local.example.toml` — optional local override example
 - `brain/cli.py` — thin Typer app facade
-- `brain/settings/` — `BaseSettings` models, settings sources, and path resolution
-- `brain/common/` — shared text, LangChain, retrieval, and formatting helpers
-- `brain/common/runtime.py` — shared `Rich` output helpers and `Loguru` logging setup
-- `brain/pdf/` — PDF configs, parser routing, indexing, and retrieval modules
-- `brain/pdf/backends/` — isolated parser backends for `PyMuPDF`, `pdfplumber`, `Grobid`, and `marker`
-- `brain/research/` — multi-role orchestration, memory, reflection, and report formatting
-- `brain/vault/` — markdown discovery, indexing, and retrieval modules
-- `brain/commands/` — Typer command registration for PDF and vault workflows
+- The current repository now follows the target layout above and new code should keep using it.
+- `brain/commands/` should stay as Typer registration and command entrypoints, not business logic.
+- `brain/mcp/tools/` is the canonical home for MCP tool handlers; do not reintroduce flat `*_tools.py` modules under `brain/mcp/`.
 - `AGENTS.md` — local agent instructions for `/.brain`
-- `.index/` — generated indexes and derived artifacts
+- `.index/` — runtime-generated indexes, manifests, pointers, and derived search artifacts
+- Do not store exported dependency snapshots there, such as `requirements.txt`, `constraints.txt`, or copied lockfiles
 
 Canonical entrypoints:
 
-- `uv run --project .brain python -m brain`
-- `uv run --project .brain brain`
+- `cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain"`
+- `cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run brain"`
 
 ## Notes
 

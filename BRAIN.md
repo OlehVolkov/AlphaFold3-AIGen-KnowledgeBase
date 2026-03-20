@@ -131,6 +131,37 @@ You MUST:
 - treat `/.brain/.index` as generated data, not hand-authored knowledge
 - verify that summaries, extracted snippets, and indexed artifacts do not expose secrets or personal data
 
+Current `MCP Stage 1` in this repository is:
+
+- `RAG` over the vault via local vault search
+- repository-grounded retrieval before synthesis
+
+## Operational Protocol
+
+When `/.brain` capabilities exist for the task, the agent should use them as the default working path.
+
+Preferred order:
+
+1. Run local retrieval first:
+   - `search-vault` for markdown knowledge
+   - `search_pdfs` for indexed papers and PDF notes
+2. Read the exact target notes before editing:
+   - use `read_note` or the equivalent local Python/CLI path
+3. Perform synthesis only after retrieval:
+   - use `think` or `run_experiment` for multi-step reasoning, idea generation, or experiment planning
+4. Edit files only after retrieval has confirmed the relevant notes, paths, and context
+5. Rebuild or validate indexes only through the `/.brain` tooling so active pointer files and fallback paths stay consistent
+
+Operational rules:
+
+- Prefer `/.brain` retrieval over manual vault scanning when indexed search is available.
+- Prefer direct local execution over transport indirection when working inside this repository:
+  - `cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain ..."`
+  - direct imports from `brain/...`
+- Treat the `MCP` tools as the canonical contract for note operations and retrieval behavior even when the same code is called directly.
+- Do not bypass `/.brain` when the task depends on active index pointers, fallback index roots, repository-specific search logic, or grounded note selection.
+- Manual file traversal is still acceptable for very small targeted edits, but retrieval-first remains the default for research and knowledge-maintenance work.
+
 ---
 
 ## Automation Tasks
@@ -146,6 +177,13 @@ When applicable, you should:
 - place reusable scripts and helpers in `/.brain`
 - use the local `think` workflow in `/.brain` when a multi-step research synthesis is useful
 
+`MCP Stage 2` tool surface:
+
+- `read_note`
+- `write_note`
+- `list_notes`
+- `run_experiment`
+
 ---
 
 ## Code Generation Rules
@@ -153,9 +191,13 @@ When applicable, you should:
 - Use Python by default
 - Use `uv` as the primary tool for Python environments, dependencies, and execution
 - Prefer `uv venv`, `uv add`, and `uv run` over manual `venv` / `pip` workflows
+- For `/.brain`, treat the Windows virtual environment at `/.brain/.venv` as canonical and create or sync it through Windows `cmd.exe` with `uv`
+- When Docker is needed from `WSL`, invoke it through Windows `cmd.exe`
+- Do not hardcode the repository path in operational commands or examples; portability is a must-have
 - Prefer minimal, runnable scripts
 - Place BRAIN logic in `/.brain`
-- Place generated indices, caches, and manifests in `/.brain/.index`
+- Place generated indices, caches, manifests, pointers, and search artifacts in `/.brain/.index`
+- Do not place exported dependency snapshots there, such as `requirements.txt`, `constraints.txt`, or copied lockfiles
 - Do not place generated indexing data in the note tree
 - Redact or mask secrets and `PII` before saving derived artifacts
 

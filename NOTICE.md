@@ -1,6 +1,6 @@
 # NOTICE — Formatting Fix Log
 
-Last updated: 2026-03-18
+Last updated: 2026-03-20
 Platform: Obsidian vault
 Obsidian compatibility (minimum): 1.12.0
 Note: `app.json` in this vault is empty (`{}`), so the exact app version is not pinned in-repo.
@@ -73,14 +73,17 @@ Three simultaneous root causes were found for the scale mismatch between Mermaid
 
 **Cause 1 — dead `.note` scope.**
 All notes have `cssclasses: [note]`, but `diagram-scale.css` had no `.note`-scoped rules. The snippet only applied via global `.markdown-preview-view` selectors, which GitHub Theme overrode with higher-specificity rules.
+
 - Fix: added `.note .markdown-preview-view` scope to all key rules.
 
 **Cause 2 — GitHub Theme constrains `img`.**
 The theme applies its own `max-width` to `.markdown-preview-section img`, which differed from the Mermaid container width.
+
 - Fix: added explicit `img` selector + `.markdown-preview-section img` with `!important`.
 
 **Cause 3 — `img:not([class])` missed images with classes.**
 GitHub Theme adds its own classes to `<img>` tags — those images were entirely outside the snippet's scope.
+
 - Fix: changed `img:not([class])` → `img` (no class filter).
 
 **New exception:** `img[width]` — images with an explicit width attribute (icons, badges) are not stretched.
@@ -220,6 +223,31 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
   - `UA/AGENTS.md`
   - `NOTICE.md`
   - `UA/NOTICE.md`
+
+## 31. Windows `/.brain/.venv`, `cmd.exe` workflow, and portable command patterns (2026-03-20)
+
+- Synchronized operational guidance across:
+  - `AGENTS.md`
+  - `UA/AGENTS.md`
+  - `README.md`
+  - `UA/README.md`
+  - `.brain/AGENTS.md`
+  - `.brain/README.md`
+  - `BRAIN.md`
+- Canonical local environment for `/.brain` is now explicitly the Windows virtual environment:
+  - `/.brain/.venv`
+- Recorded the required workflow:
+  - create and sync `/.brain/.venv` through Windows `cmd.exe` with `uv`,
+  - invoke `uv` directly from `PATH` in `cmd.exe`,
+  - invoke Docker from `WSL` through `cmd.exe` as well when needed.
+- Removed machine-specific command examples that hardcoded the local repository path.
+- Replaced such examples with portable patterns:
+  - `%CD%`
+  - relative paths from the current working directory
+  - placeholders such as `<REPO_ROOT>` when needed
+- Recorded path portability as a must-have requirement for operational examples and automation snippets.
+- Corrected the documented nested environment variable name:
+  - `BRAIN_PDF__DIR` → `BRAIN_PDF__PDF_DIR`
   - related UA/EN notes that link to `1.2.6`.
 - No folder rename was required because no directory names used the old term.
 

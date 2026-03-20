@@ -42,7 +42,6 @@ AlphaFold3/
     └── 4. Датасети/
 ```
 
-
 ### 1.1 Правила
 
 - `UA/` — лише українська, `EN/` — лише англійська.
@@ -109,32 +108,44 @@ AlphaFold3/
 - Не вводити паралельні Python-workflows (`requirements.txt` + довільний `pip install`, ручне керування virtualenv, змішані package managers), якщо цього явно не вимагає сам репозиторій або запит користувача.
 - Якщо Python-автоматизація додається в `/.brain`, `uv`-workflow має бути явно відображений у локальній документації та прикладах команд.
 - Для `/.brain` вважати і `pytest`, і `flake8` стандартними verification-кроками після Python-змін.
+- Для `/.brain` canonical environment це Windows virtual environment у `/.brain/.venv`.
+- Навіть якщо агент працює з `WSL`, `/.brain/.venv` треба створювати, перестворювати і синхронізувати через Windows `cmd.exe` з `uv`, а не через Linux-layout `venv`.
+- Не тримати паралельні canonical environments на кшталт `/.brain/.venvx`; для локальної роботи з `brain` має використовуватися один проєктний env `/.brain/.venv`.
+- У `cmd.exe` викликати `uv` напряму через `PATH`; не використовувати absolute path до `uv.exe`.
+- Якщо для цього репозиторію з `WSL` потрібен Docker, його теж слід викликати через Windows `cmd.exe`.
+- Для цього workflow пріоритетно використовувати `cmd.exe /c "docker ..."` замість прямого виклику Docker із Linux shell.
+- Не можна жорстко прошивати локальний шлях репозиторію в командах, документації, скриптах чи прикладах.
+- Пріоритетно використовувати переносимі шаблони на кшталт `%CD%`, відносні шляхи від поточного каталогу або явні placeholders типу `<REPO_ROOT>` замість machine-specific absolute paths.
 
 Приклади:
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv venv .brain/.venv
+cmd.exe /c "cd /d %CD%\.brain && uv python install 3.12"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv python install 3.12
+cmd.exe /c "cd /d %CD%\.brain && uv venv .venv --python 3.12"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv add --project .brain requests
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv sync --all-groups"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain python .brain/main.py
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain pytest .brain/tests -q
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run pytest tests -q"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain flake8 .brain/brain .brain/tests
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run flake8 brain tests"
 ```
+
+### 1.5.1 Переносимість шляхів
+
+- Переносимість шляхів для operational examples та automation snippets вважати must-have вимогою.
 
 ### 1.6 WSL і Ollama
 
@@ -178,7 +189,7 @@ curl "http://$WIN_HOST:11434/api/tags"
 
 ```bash
 cd .brain
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run python -m brain index --index-root /tmp/alphafold3-pdf-index
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
 ```
 
 - У fallback-режимі PDF-індекс зберігається тут:
@@ -194,7 +205,7 @@ UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run python -m brain index --
 
 ```bash
 cd .brain
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run python -m brain check-index --target vault
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain check-index --target vault"
 ```
 
 - `brain check-index` має читати `active_index.json`, якщо він є, і перевіряти саме активний fallback-індекс, а не лише canonical-шлях `/.brain/.index/...`.

@@ -3,8 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from brain.common.health import check_index_health, resolve_active_index_paths
-from brain.settings import BrainPaths
+from brain.shared.health import check_index_health, resolve_active_index_paths
+from brain.config import BrainPaths
 
 
 def make_paths(tmp_path: Path) -> BrainPaths:

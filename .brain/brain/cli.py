@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import typer
 
-from brain.common import configure_logging
+from brain.shared import configure_logging
 from brain.commands import (
     register_health_commands,
+    register_mcp_commands,
     register_pdf_commands,
     register_research_commands,
     register_vault_commands,
@@ -22,6 +23,7 @@ main = app
 configure_logging()
 
 register_health_commands(app)
+register_mcp_commands(app)
 register_pdf_commands(app)
 register_research_commands(app)
 register_vault_commands(app)

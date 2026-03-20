@@ -107,32 +107,40 @@ AlphaFold3/
   - `uv run` for Python entry points and scripts.
 - Avoid introducing parallel Python workflow conventions (`requirements.txt` + ad hoc `pip install`, manual virtualenv handling, mixed package managers) unless the repository or the user explicitly requires them.
 - When adding Python automation under `/.brain`, keep the `uv` workflow explicit in local documentation and commands.
+- For `/.brain`, the canonical environment is the Windows virtual environment at `/.brain/.venv`.
+- Even when the agent is working from `WSL`, create, recreate, and sync `/.brain/.venv` through Windows `cmd.exe` with `uv`, not through a Linux `venv` layout.
+- Do not keep parallel canonical environments such as `/.brain/.venvx`; `/.brain/.venv` is the single project environment for local `brain` work.
+- When Docker is needed from `WSL` for this repository, invoke it through Windows `cmd.exe` as well.
+- Prefer `cmd.exe /c "docker ..."` over calling Docker directly from the Linux shell in this repository workflow.
+- Must not hardcode the local repository path in commands, docs, scripts, or examples.
+- Prefer portable command patterns such as `%CD%`, relative paths from the current working directory, or explicit placeholders like `<REPO_ROOT>` instead of machine-specific absolute paths.
 
 Examples:
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv venv .brain/.venv
+cmd.exe /c "cd /d %CD%\.brain && uv python install 3.12"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv python install 3.12
+cmd.exe /c "cd /d %CD%\.brain && uv venv .venv --python 3.12"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv add --project .brain requests
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv sync --all-groups"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain python -m brain
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain"
 ```
 
 - For local automation under `/.brain`, preserve the modular package layout:
-  - `brain/settings/`
-  - `brain/common/`
-  - `brain/pdf/`
-  - `brain/pdf/backends/`
+  - `brain/config/`
+  - `brain/shared/`
+  - `brain/sources/pdf/`
+  - `brain/sources/pdf/backends/`
+  - `brain/sources/vault/`
   - `brain/research/`
-  - `brain/vault/`
+  - `brain/mcp/tools/`
   - `brain/commands/`
 - Prefer extending those packages over adding flat compatibility wrappers or oversized mixed-responsibility files.
 - When maintaining `/.brain`, verify direct Python dependencies against actual imports/usages after refactors.
@@ -142,12 +150,41 @@ UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain python -m brain
 Verification examples:
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain pytest .brain/tests -q
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run pytest tests -q"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain flake8 .brain/brain .brain/tests
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run flake8 brain tests"
 ```
+
+### 1.5.1 BRAIN environment workflow
+
+- Treat `/.brain/.venv` as the canonical local interpreter for `brain`.
+- When invoking `brain` commands, ensure the underlying project environment is the Windows `/.venv`.
+- If the agent is currently in `WSL`, prefer invoking Windows `uv` / Python through `cmd.exe /c "cd /d %CD%\.brain && ..."` for environment creation, dependency sync, and direct interpreter checks.
+- In `cmd.exe`, call `uv` directly from `PATH`; do not use an absolute filesystem path to `uv.exe`.
+- Apply the same rule to Docker commands needed for local tooling or services: invoke them through `cmd.exe`.
+- Treat path portability as a must-have for all operational examples and automation snippets.
+
+### 1.5.2 BRAIN-first workflow
+
+- When `/.brain` provides retrieval or tool support for the current task, use it first instead of manually browsing the vault.
+- Treat `/.brain` as the default operational layer for:
+  - vault search,
+  - PDF search,
+  - note reads before edits,
+  - experiment planning,
+  - index health checks.
+- Preferred execution order for knowledge-work tasks:
+  1. `search-vault` or `search_pdfs` to gather grounded context.
+  2. `read_note` for the specific notes that will be updated or compared.
+  3. direct file edits only after retrieval confirms the target paths and context.
+  4. `run_experiment` or `think` when the task needs multi-step synthesis instead of a single lookup.
+- Prefer direct module or CLI usage over transport overhead when working locally in this repository:
+  - `cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain ..."`
+  - local Python imports from `brain/...`
+- Treat the `MCP` surface as the canonical tool contract for note and retrieval operations even when the same logic is invoked directly through Python.
+- Do not bypass `/.brain` for convenience when the task depends on grounded retrieval, active index pointers, or repository-specific search logic.
 
 ### 1.6 WSL and Ollama
 
@@ -191,7 +228,7 @@ curl "http://$WIN_HOST:11434/api/tags"
 
 ```bash
 cd .brain
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run python -m brain index --index-root /tmp/alphafold3-pdf-index
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
 ```
 
 - In this fallback mode, store the PDF index at:
@@ -207,7 +244,7 @@ UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run python -m brain index --
 
 ```bash
 cd .brain
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run python -m brain check-index --target vault
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain check-index --target vault"
 ```
 
 - `brain check-index` must read `active_index.json` when present and validate the currently active fallback index, not only the canonical `/.brain/.index/...` path.

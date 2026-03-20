@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from brain.settings import resolve_vault_paths
-from brain.vault import (
+from brain.config import resolve_vault_paths
+from brain.sources.vault import (
     VaultSearchConfig,
     format_vault_search_results,
     list_markdown_paths,
@@ -52,7 +52,7 @@ Details here.
 def test_search_vault_falls_back_to_fts_when_embeddings_fail(monkeypatch, tmp_path: Path) -> None:
     paths = resolve_vault_paths(index_root=tmp_path / "index")
 
-    monkeypatch.setattr("brain.vault.search.open_table", lambda paths_arg: object())
+    monkeypatch.setattr("brain.sources.vault.search.open_table", lambda paths_arg: object())
 
     def fail_embed(*args, **kwargs):
         raise RuntimeError("ollama unavailable")
@@ -68,9 +68,9 @@ def test_search_vault_falls_back_to_fts_when_embeddings_fail(monkeypatch, tmp_pa
             }
         ]
 
-    monkeypatch.setattr("brain.vault.search.embed_query_text", fail_embed)
+    monkeypatch.setattr("brain.sources.vault.search.embed_query_text", fail_embed)
     monkeypatch.setattr(
-        "brain.vault.search.run_fts_search",
+        "brain.sources.vault.search.run_fts_search",
         lambda table, **kwargs: fake_fts_search(**kwargs),
     )
 

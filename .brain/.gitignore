@@ -4,6 +4,7 @@
 
 # Python environments and local overrides
 .venv/
+.venvx/
 .env
 .python-version
 config/local.toml

@@ -4,10 +4,10 @@ import io
 import json
 from pathlib import Path
 
-from brain.pdf import fetch as pdf_fetch
-from brain.pdf.indexing import pointer_manifest_path, write_active_index_pointer
-from brain.pdf.models import IndexConfig
-from brain.settings import BrainPaths
+from brain.sources.pdf import fetch as pdf_fetch
+from brain.sources.pdf.indexing import pointer_manifest_path, write_active_index_pointer
+from brain.sources.pdf.models import IndexConfig
+from brain.config import BrainPaths
 
 
 class FakeResponse(io.BytesIO):

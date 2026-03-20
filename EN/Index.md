@@ -9,6 +9,16 @@ tags: [index, concepts]
 
 Reference map of core biology, machine learning, and structural bioinformatics concepts used in AlphaFold 3.
 
+## Cross-Domain Navigation
+
+| Area | Entry point | Why it matters |
+|---|---|---|
+| AlphaFold 3 core | [[EN/1. AlphaFold3/1.2. Architecture/1.2.1. AF3 Architecture Overview]] | Main architecture, training, confidence, and limitations |
+| Models | [[EN/3. Models/3.0. Models Overview]] | Compare `AF2`, `AF3`, `RoseTTAFold`, `ESMFold`, `DiffDock`, `OpenFold`, `Boltz-1`, `Chai-1`, `RoseTTAFoldNA` |
+| Datasets | [[EN/4. Datasets/4.0. Datasets Overview]] | Understand training data, sequence resources, and evaluation benchmarks |
+| Literature | [[EN/Literature and Priorities]] | Current reading list and coverage gaps |
+| Technical digest | [[EN/Summary]] | Compact engineering and implementation-oriented recap |
+
 ## Biology
 
 | Topic | Core idea | AF3 link |
@@ -37,3 +47,13 @@ Reference map of core biology, machine learning, and structural bioinformatics c
 | [[EN/2. Concepts/2.3. Structural-Bioinformatics/2.3.2. lDDT]] | Local distance consistency | Confidence |
 | [[EN/2. Concepts/2.3. Structural-Bioinformatics/2.3.3. DockQ]] | Interface quality | Complex evaluation |
 | [[EN/2. Concepts/2.3. Structural-Bioinformatics/2.3.4. MSA]] | Evolutionary alignment depth | Sequence signal |
+
+## From Concepts To Practice
+
+| Practical topic | Most relevant concept layer | Main notes |
+|---|---|---|
+| General multimolecular prediction | Transformers + diffusion + nucleic acids | [[EN/3. Models/3.2. AlphaFold3]], [[EN/2. Concepts/2.2. Machine-Learning/2.2.1. Transformers]], [[EN/2. Concepts/2.2. Machine-Learning/2.2.2. Diffusion Models]] |
+| Open `AF2` engineering | Transformers + MSA | [[EN/3. Models/3.6. OpenFold]], [[EN/2. Concepts/2.3. Structural-Bioinformatics/2.3.4. MSA]] |
+| Open `AF3`-like local workflows | Protein LMs + diffusion + complex evaluation | [[EN/3. Models/3.7. Boltz-1]], [[EN/3. Models/3.8. Chai-1]], [[EN/2. Concepts/2.2. Machine-Learning/2.2.3. Protein Language Models]], [[EN/2. Concepts/2.3. Structural-Bioinformatics/2.3.3. DockQ]] |
+| Protein–DNA / protein–RNA complexes | Nucleic acids + interface metrics | [[EN/3. Models/3.9. RoseTTAFoldNA]], [[EN/2. Concepts/2.1. Biology/2.1.4. Nucleic Acids]], [[EN/2. Concepts/2.3. Structural-Bioinformatics/2.3.2. lDDT]] |
+| Structure search after prediction | Structural bioinformatics metrics | [[EN/1. AlphaFold3/1.5. Resources/1.5.7. Foldseek and Structure Search]], [[EN/2. Concepts/2.3. Structural-Bioinformatics/2.3.1. RMSD]], [[EN/2. Concepts/2.3. Structural-Bioinformatics/2.3.2. lDDT]] |

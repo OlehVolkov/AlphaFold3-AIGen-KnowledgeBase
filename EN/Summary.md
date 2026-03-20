@@ -10,6 +10,7 @@ tags: [alphafold3, implementation, python, diffusion, pairformer]
 ## What matters before you start
 
 `AlphaFold 3` is not just one `model.py` file, but a full stack:
+
 - data preparation (FASTA/mmCIF/MSA/templates/ligands),
 - featureization,
 - trunk model (`Pairformer`),

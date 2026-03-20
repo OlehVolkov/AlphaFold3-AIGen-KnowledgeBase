@@ -3,12 +3,11 @@ from __future__ import annotations
 import re
 from datetime import UTC, datetime
 
-from brain.common import logger, snippet
-from brain.pdf import SearchConfig, search_pdfs
+from brain.shared import logger, snippet
+from brain.sources.pdf.search import search_pdf_corpus
 from brain.research.memory import MemoryStore
 from brain.research.models import ResearchRunConfig
-from brain.settings import resolve_pdf_paths, resolve_vault_paths
-from brain.vault import VaultSearchConfig, search_vault
+from brain.sources.vault.search import search_vault_knowledge
 
 
 def _slugify(value: str) -> str:
@@ -179,16 +178,13 @@ def run_think_loop(config: ResearchRunConfig) -> dict:
 
     vault_results: list[dict] = []
     try:
-        vault_payload = search_vault(
-            VaultSearchConfig.from_settings(
-                paths=resolve_vault_paths(),
-                query=config.query,
-                mode="hybrid",
-                reranker="none",
-                k=config.vault_k,
-                fetch_k=max(config.vault_k, 10),
-                snippet_chars=240,
-            )
+        vault_payload = search_vault_knowledge(
+            query=config.query,
+            mode="hybrid",
+            reranker="none",
+            k=config.vault_k,
+            fetch_k=max(config.vault_k, 10),
+            snippet_chars=240,
         )
         vault_results = vault_payload.get("results", [])
         warnings.extend(vault_payload.get("warnings", []))
@@ -198,16 +194,13 @@ def run_think_loop(config: ResearchRunConfig) -> dict:
 
     pdf_results: list[dict] = []
     try:
-        pdf_payload = search_pdfs(
-            SearchConfig.from_settings(
-                paths=resolve_pdf_paths(),
-                query=config.query,
-                mode="hybrid",
-                reranker="none",
-                k=config.pdf_k,
-                fetch_k=max(config.pdf_k, 10),
-                snippet_chars=240,
-            )
+        pdf_payload = search_pdf_corpus(
+            query=config.query,
+            mode="hybrid",
+            reranker="none",
+            k=config.pdf_k,
+            fetch_k=max(config.pdf_k, 10),
+            snippet_chars=240,
         )
         pdf_results = pdf_payload.get("results", [])
         warnings.extend(pdf_payload.get("warnings", []))
@@ -266,26 +259,28 @@ def run_think_loop(config: ResearchRunConfig) -> dict:
         "created_at": datetime.now(UTC).isoformat(),
         "query": config.query,
         "model": config.model,
+        "warnings": warnings,
         "vault_results": vault_results,
         "pdf_results": pdf_results,
         "memory_results": memory_results,
         "roles": roles,
         "reflections": reflections,
         "final_answer": final_answer,
-        "warnings": warnings,
     }
+
     if config.save_memory:
-        memory_row = {
-            "session_id": session_id,
-            "created_at": payload["created_at"],
-            "query": config.query,
-            "summary": snippet(roles["researcher"]["content"], 400),
-            "final_answer": snippet(final_answer, 500),
-        }
-        store.append(memory_row)
-        session_path = store.save_session(session_id, payload)
-        payload["session_path"] = str(session_path)
-        payload["memory_path"] = str(config.paths.memory_path)
+        summary = roles["researcher"]["content"]
+        store.append(
+            {
+                "session_id": session_id,
+                "created_at": payload["created_at"],
+                "query": config.query,
+                "summary": summary,
+                "final_answer": final_answer,
+            }
+        )
+        store.save_session(session_id, payload)
         logger.info("Saved research session artifacts for session {}", session_id)
+
     logger.info("Finished research loop for query: {}", config.query)
     return payload

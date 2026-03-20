@@ -2,8 +2,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from brain.research import MemoryStore, ResearchRunConfig, format_think_report, rank_memories, run_think_loop
-from brain.settings import ResearchPaths
+from brain.research import (
+    MemoryStore,
+    ResearchRunConfig,
+    format_think_report,
+    rank_memories,
+    run_think_loop,
+)
+from brain.config import ResearchPaths
 
 
 def make_research_paths(tmp_path: Path) -> ResearchPaths:
@@ -45,15 +51,15 @@ def test_run_think_loop_falls_back_and_saves_memory(monkeypatch, tmp_path: Path)
     paths = make_research_paths(tmp_path)
 
     monkeypatch.setattr(
-        "brain.research.orchestration.search_vault",
-        lambda config: {
+        "brain.research.orchestration.search_vault_knowledge",
+        lambda **kwargs: {
             "results": [{"source_path": "EN/Index.md", "snippet": "vault hit"}],
             "warnings": [],
         },
     )
     monkeypatch.setattr(
-        "brain.research.orchestration.search_pdfs",
-        lambda config: {
+        "brain.research.orchestration.search_pdf_corpus",
+        lambda **kwargs: {
             "results": [{"source_path": "PDF/paper.pdf", "snippet": "pdf hit"}],
             "warnings": [],
         },

@@ -5,9 +5,9 @@ from typing import Annotated
 
 import typer
 
-from brain.common import logger, print_json, print_text
-from brain.common.formatting import format_index_summary
-from brain.pdf import (
+from brain.shared import logger, print_json, print_text
+from brain.shared.formatting import format_index_summary
+from brain.sources.pdf import (
     DEFAULT_NOTE_GLOBS,
     PARSER_CHOICES,
     fetch_pdfs_from_notes,
@@ -15,8 +15,8 @@ from brain.pdf import (
     index_pdfs,
     search_pdfs,
 )
-from brain.pdf.models import IndexConfig, SearchConfig
-from brain.settings import get_config, resolve_pdf_paths
+from brain.sources.pdf.models import IndexConfig, SearchConfig
+from brain.config import get_config, resolve_pdf_paths
 
 
 class ParserChoice(StrEnum):

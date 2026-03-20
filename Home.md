@@ -17,6 +17,7 @@ Google DeepMind · *Nature* 2024 · [[UA/Головна|🇺🇦 Українс�
 - [[EN/Index|Concepts Index]]
 - [[EN/3. Models/3.0. Models Overview|Models Index]]
 - [[EN/4. Datasets/4.0. Datasets Overview|Datasets Index]]
+- [[EN/Summary|Technical Summary]]
 
 ## 📚 Literature
 
@@ -64,6 +65,8 @@ Google DeepMind · *Nature* 2024 · [[UA/Головна|🇺🇦 Українс�
 >
 > 🧵 <span class="link-teal">[[EN/1. AlphaFold3/1.5. Resources/1.5.6. Working with A3M Files|Working with A3M Files]]</span>
 >
+> 🔎 <span class="link-teal">[[EN/1. AlphaFold3/1.5. Resources/1.5.7. Foldseek and Structure Search|Foldseek and Structure Search]]</span>
+>
 > 🖼️ <span class="link-teal">[[EN/1. AlphaFold3/1.6. Illustrations/1.6.1. Illustration Gallery|Illustration Gallery]]</span>
 
 ---
@@ -91,6 +94,10 @@ Google DeepMind · *Nature* 2024 · [[UA/Головна|🇺🇦 Українс�
 > [!example] Comparative models
 >
 > [[EN/3. Models/3.1. AlphaFold2|AlphaFold2]] · [[EN/3. Models/3.2. AlphaFold3|AlphaFold3]] · [[EN/3. Models/3.3. RoseTTAFold|RoseTTAFold]] · [[EN/3. Models/3.4. ESMFold|ESMFold]] · [[EN/3. Models/3.5. DiffDock|DiffDock]]
+
+> [!example] Open and specialized extensions
+>
+> [[EN/3. Models/3.6. OpenFold|OpenFold]] · [[EN/3. Models/3.7. Boltz-1|Boltz-1]] · [[EN/3. Models/3.8. Chai-1|Chai-1]] · [[EN/3. Models/3.9. RoseTTAFoldNA|RoseTTAFoldNA]]
 
 ---
 

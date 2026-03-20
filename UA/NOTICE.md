@@ -1,6 +1,6 @@
 # NOTICE — Журнал виправлень форматування
 
-Останнє оновлення: 2026-03-18
+Останнє оновлення: 2026-03-20
 Платформа: Obsidian vault
 Сумісність Obsidian (мінімум): 1.12.0
 Примітка: `app.json` у vault порожній (`{}`), тому точна версія застосунку не зафіксована в репозиторії.
@@ -73,14 +73,17 @@
 
 **Причина 1 — мертвий `.note` scope.**
 Усі нотатки мають `cssclasses: [note]`, але в `diagram-scale.css` не було жодного `.note`-scoped правила. Snippet застосовувався лише через глобальні `.markdown-preview-view` селектори, які GitHub Theme перебивав власними правилами вищої специфічності.
+
 - Рішення: додано `.note .markdown-preview-view` scope до всіх ключових правил.
 
 **Причина 2 — GitHub Theme обмежує `img`.**
 Тема має власний `max-width` для `.markdown-preview-section img`, який відрізнявся від ширини Mermaid контейнера.
+
 - Рішення: додано явний `img` selector + `.markdown-preview-section img` з `!important`.
 
 **Причина 3 — `img:not([class])` пропускав зображення з класами.**
 GitHub Theme додає власні класи на `<img>` теги — такі зображення взагалі не потрапляли під правила snippet.
+
 - Рішення: `img:not([class])` → `img` (без фільтру по класу).
 
 **Новий виняток:** `img[width]` — зображення з явно заданою шириною (іконки, badges) не розтягуються.
@@ -218,6 +221,31 @@ GitHub Theme додає власні класи на `<img>` теги — так
   - `UA/AGENTS.md`
   - `NOTICE.md`
   - `UA/NOTICE.md`
+
+## 31. Windows `/.brain/.venv`, workflow через `cmd.exe` і переносимі шаблони команд (2026-03-20)
+
+- Синхронізовано operational guidance у:
+  - `AGENTS.md`
+  - `UA/AGENTS.md`
+  - `README.md`
+  - `UA/README.md`
+  - `.brain/AGENTS.md`
+  - `.brain/README.md`
+  - `BRAIN.md`
+- Явно зафіксовано, що canonical local environment для `/.brain` це Windows virtual environment:
+  - `/.brain/.venv`
+- Зафіксовано обов'язковий workflow:
+  - створювати й синхронізувати `/.brain/.venv` через Windows `cmd.exe` з `uv`,
+  - у `cmd.exe` викликати `uv` напряму через `PATH`,
+  - за потреби викликати Docker з `WSL` теж через `cmd.exe`.
+- Прибрано machine-specific examples з жорстко прошитим локальним шляхом репозиторію.
+- Такі приклади замінено на переносимі шаблони:
+  - `%CD%`
+  - відносні шляхи від поточного каталогу
+  - placeholders на кшталт `<REPO_ROOT>` за потреби
+- Переносимість шляхів зафіксовано як must-have вимогу для operational examples та automation snippets.
+- Виправлено documented nested environment variable name:
+  - `BRAIN_PDF__DIR` → `BRAIN_PDF__PDF_DIR`
   - пов'язані UA/EN нотатки, що посилаються на `1.2.6`.
 - Окремих перейменувань папок не знадобилося: відповідних директорій зі старим терміном у структурі vault не було.
 

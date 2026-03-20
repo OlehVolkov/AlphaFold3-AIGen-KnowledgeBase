@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from brain.settings import ResearchPaths, get_config
+from brain.config import ResearchPaths, get_config
 
 
 class ResearchRunConfig(BaseModel):

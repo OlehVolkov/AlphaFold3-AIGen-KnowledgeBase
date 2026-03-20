@@ -4,10 +4,11 @@ from typing import Annotated
 
 import typer
 
-from brain.common import logger, print_json, print_text
-from brain.research import format_think_report, run_think_loop
+from brain.shared import logger, print_json, print_text
+from brain.research.formatting import format_think_report
 from brain.research.models import ResearchRunConfig
-from brain.settings import resolve_research_paths
+from brain.research.orchestration import run_think_loop
+from brain.config import resolve_research_paths
 
 
 def _emit(payload: dict, *, json_output: bool) -> None:

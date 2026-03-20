@@ -6,8 +6,8 @@ from typing import Annotated
 
 import typer
 
-from brain.common import check_index_health, logger, print_json, print_text
-from brain.settings import get_config, resolve_pdf_paths, resolve_vault_paths
+from brain.shared import check_index_health, logger, print_json, print_text
+from brain.config import get_config, resolve_pdf_paths, resolve_vault_paths
 
 
 class IndexTarget(StrEnum):

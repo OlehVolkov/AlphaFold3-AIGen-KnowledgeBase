@@ -98,39 +98,39 @@ uv python install 3.12
 - Prefer `uv add` for dependencies.
 - Prefer `uv run` for Python scripts and entry points.
 - Avoid mixing `uv` with ad hoc `pip install` / manual `venv` workflows unless a task explicitly requires that compatibility path.
+- For `/.brain`, use the Windows project environment at `/.brain/.venv` as the single canonical environment.
+- Even from `WSL`, create and sync `/.brain/.venv` through `cmd.exe` and `uv`.
+- In `cmd.exe`, call `uv` directly from `PATH`; do not use a full filesystem path to `uv.exe`.
+- For this repository, invoke Docker through Windows `cmd.exe` as well when working from `WSL`.
 - Keep `/.brain` code modular; prefer extending the existing package layout instead of adding flat compatibility files.
 - For `/.brain`, periodically audit direct dependencies against actual imports and remove stale packages when they are no longer used.
 - For `/.brain`, run both tests and `flake8` before considering local Python changes complete.
-- Use `uv run --project .brain python -m brain think "your query"` for the local multi-role research loop with memory and reflection.
+- Use `cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain think \"your query\""` for the local multi-role research loop with memory and reflection.
 
 Examples:
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv venv .brain/.venv
+cmd.exe /c "cd /d %CD%\.brain && uv python install 3.12"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv python install 3.12
+cmd.exe /c "cd /d %CD%\.brain && uv venv .venv --python 3.12"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv add --project .brain rich
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv sync --all-groups"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain python -m brain
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain python -m your_module
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run pytest tests -q"
 ```
 
 ```bash
-UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain pytest .brain/tests -q
-```
-
-```bash
-UV_CACHE_DIR=/tmp/uv-cache uv run --project .brain flake8 .brain/brain .brain/tests
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run flake8 brain tests"
 ```
 
 ## WSL and Ollama
@@ -195,7 +195,7 @@ If PDF indexing fails in this `WSL + /mnt/c + LanceDB` scenario, use a Linux-nat
 
 ```bash
 cd .brain
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run python -m brain index --index-root /tmp/alphafold3-pdf-index
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
 ```
 
 In that fallback mode, the index is stored at:
@@ -218,7 +218,7 @@ Important runtime note:
 
 ```bash
 cd .brain
-UV_CACHE_DIR=/tmp/uv-cache /home/oleh/.local/bin/uv run python -m brain check-index --target vault
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain check-index --target vault"
 ```
 
 - the command reads `active_index.json` automatically and checks the active fallback index when a pointer is present
