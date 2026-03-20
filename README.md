@@ -108,8 +108,10 @@ uv python install 3.12
 - In `/.brain` Ruff configuration, use `known-first-party = ["brain"]` for import sorting; do not keep template placeholders such as `your_package`.
 - Keep `/.brain` code modular; prefer extending the existing package layout instead of adding flat compatibility files.
 - For `/.brain`, periodically audit direct dependencies against actual imports and remove stale packages when they are no longer used.
-- For `/.brain`, run `pytest`, `ruff`, and `mypy` before considering local Python changes complete.
-- Use `cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain think \"your query\""` for the local multi-role research loop with memory and reflection.
+- For `/.brain`, use `pytest`, `ruff`, and `mypy` as the verification toolbox.
+- By default, run `ruff` and `mypy` plus targeted pytest files related to the changed code.
+- Run the full `pytest tests -q` suite only for broad refactors, cross-cutting changes, or when you explicitly want the whole suite.
+- Use `cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain think \"your query\""` for the local multi-role research loop with memory and reflection.
 
 Examples:
 
@@ -122,23 +124,27 @@ cmd.exe /c "cd /d %CD%\.brain && uv venv .venv --python 3.12"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv sync --all-groups"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv sync --all-groups"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run pytest tests -q"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests/test_cli.py -q"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run ruff check brain tests"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brain tests"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run mypy brain"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brain"
+```
+
+```bash
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests -q"
 ```
 
 ```bash
@@ -211,7 +217,7 @@ If PDF indexing fails in this `WSL + /mnt/c + LanceDB` scenario, use a Linux-nat
 
 ```bash
 cd .brain
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
 ```
 
 In that fallback mode, the index is stored at:
@@ -234,7 +240,7 @@ Important runtime note:
 
 ```bash
 cd .brain
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain check-index --target vault"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain check-index --target vault"
 ```
 
 - the command reads `active_index.json` automatically and checks the active fallback index when a pointer is present

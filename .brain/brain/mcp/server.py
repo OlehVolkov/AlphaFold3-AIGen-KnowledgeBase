@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Literal
 
 from mcp.server.fastmcp import FastMCP
 
@@ -15,6 +16,13 @@ from brain.mcp.tools.notes import (
 from brain.mcp.tools.search import find_related_notes_tool, search_pdfs_tool, search_vault_tool
 from brain.config.loader import repo_root
 
+LogLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+ListNotesBranch = Literal["EN", "UA", "root", "all"]
+SearchMode = Literal["vector", "fts", "hybrid"]
+Reranker = Literal["none", "rrf", "cross-encoder", "ollama"]
+RelatedBranch = Literal["same", "all"]
+WriteMode = Literal["overwrite", "append", "prepend"]
+
 
 def build_mcp_server(
     *,
@@ -22,7 +30,7 @@ def build_mcp_server(
     host: str = "127.0.0.1",
     port: int = 8000,
     debug: bool = False,
-    log_level: str = "INFO",
+    log_level: LogLevel = "INFO",
     workspace_root: Path | None = None,
 ) -> FastMCP:
     active_repo_root = workspace_root or repo_root()
@@ -43,7 +51,7 @@ def build_mcp_server(
         description="List markdown notes from the canonical vault structure.",
     )
     def list_notes(
-        branch: str = "all",
+        branch: ListNotesBranch = "all",
         contains: str | None = None,
         limit: int = 200,
     ) -> dict[str, object]:
@@ -67,8 +75,8 @@ def build_mcp_server(
     )
     def search_vault_mcp(
         query: str,
-        mode: str = "hybrid",
-        reranker: str = "none",
+        mode: SearchMode = "hybrid",
+        reranker: Reranker = "none",
         k: int = 5,
         fetch_k: int = 20,
         snippet_chars: int = 320,
@@ -90,8 +98,8 @@ def build_mcp_server(
     )
     def search_pdfs_mcp(
         query: str,
-        mode: str = "hybrid",
-        reranker: str = "none",
+        mode: SearchMode = "hybrid",
+        reranker: Reranker = "none",
         k: int = 5,
         fetch_k: int = 20,
         snippet_chars: int = 320,
@@ -114,7 +122,7 @@ def build_mcp_server(
     def find_related_notes(
         path: str,
         query: str | None = None,
-        branch: str = "same",
+        branch: RelatedBranch = "same",
         k: int = 5,
         fetch_k: int = 20,
         snippet_chars: int = 240,
@@ -138,7 +146,7 @@ def build_mcp_server(
     def write_note(
         path: str,
         content: str,
-        mode: str = "overwrite",
+        mode: WriteMode = "overwrite",
         create: bool = False,
     ) -> dict[str, object]:
         return write_note_tool(

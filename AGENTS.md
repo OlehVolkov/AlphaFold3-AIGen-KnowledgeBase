@@ -131,11 +131,11 @@ cmd.exe /c "cd /d %CD%\.brain && uv venv .venv --python 3.12"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv sync --all-groups"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv sync --all-groups"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain"
 ```
 
 - For local automation under `/.brain`, preserve the modular package layout:
@@ -150,21 +150,30 @@ cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run pyth
 - Prefer extending those packages over adding flat compatibility wrappers or oversized mixed-responsibility files.
 - When maintaining `/.brain`, verify direct Python dependencies against actual imports/usages after refactors.
 - Remove unused direct dependencies from `/.brain/pyproject.toml`, refresh `/.brain/uv.lock`, and rerun `/.brain` tests when cleanup is safe.
-- For `/.brain`, treat `pytest`, `ruff`, and `mypy` as standard verification steps after Python changes.
+- For `/.brain`, treat `pytest`, `ruff`, and `mypy` as the standard verification toolbox after Python changes.
+- Do not run the full `pytest tests -q` suite by default after every small change.
+- By default:
+  - run `ruff` and `mypy` separately,
+  - run only targeted pytest files or targeted tests related to the changed code,
+  - run the full pytest suite only for broad refactors, cross-cutting changes, or when explicitly requested.
 - In `/.brain` Ruff configuration, keep `known-first-party = ["brain"]`; do not leave template placeholders such as `your_package`.
 
 Verification examples:
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run pytest tests -q"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests/test_cli.py -q"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run ruff check brain tests"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brain tests"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run mypy brain"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brain"
+```
+
+```bash
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests -q"
 ```
 
 ### 1.5.1 BRAIN environment workflow
@@ -191,7 +200,7 @@ cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run mypy
   3. direct file edits only after retrieval confirms the target paths and context.
   4. `run_experiment` or `think` when the task needs multi-step synthesis instead of a single lookup.
 - Prefer direct module or CLI usage over transport overhead when working locally in this repository:
-  - `cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain ..."`
+  - `cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain ..."`
   - local Python imports from `brain/...`
 - Treat the `MCP` surface as the canonical tool contract for note and retrieval operations even when the same logic is invoked directly through Python.
 - Do not bypass `/.brain` for convenience when the task depends on grounded retrieval, active index pointers, or repository-specific search logic.
@@ -238,7 +247,7 @@ curl "http://$WIN_HOST:11434/api/tags"
 
 ```bash
 cd .brain
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
 ```
 
 - In this fallback mode, store the PDF index at:
@@ -254,7 +263,7 @@ cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run pyth
 
 ```bash
 cd .brain
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain check-index --target vault"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain check-index --target vault"
 ```
 
 - `brain check-index` must read `active_index.json` when present and validate the currently active fallback index, not only the canonical `/.brain/.index/...` path.

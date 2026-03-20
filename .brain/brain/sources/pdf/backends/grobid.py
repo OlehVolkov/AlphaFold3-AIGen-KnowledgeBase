@@ -3,11 +3,15 @@ from __future__ import annotations
 import mimetypes
 from io import BytesIO
 from pathlib import Path
+from typing import TYPE_CHECKING
 from urllib import request
 from xml.etree import ElementTree
 
 from brain.shared.text import normalize_text
 from brain.sources.pdf.backends.factory import make_document
+
+if TYPE_CHECKING:
+    from langchain_core.documents import Document
 
 
 def load_pdf_with_grobid(pdf_path: Path, repo_root: Path, grobid_url: str):
@@ -15,19 +19,19 @@ def load_pdf_with_grobid(pdf_path: Path, repo_root: Path, grobid_url: str):
     boundary = "brain-grobid-boundary"
     content_type = mimetypes.guess_type(pdf_path.name)[0] or "application/pdf"
     pdf_bytes = pdf_path.read_bytes()
-    body = BytesIO()
-    body.write(f"--{boundary}\r\n".encode("utf-8"))
-    body.write(
+    request_body = BytesIO()
+    request_body.write(f"--{boundary}\r\n".encode("utf-8"))
+    request_body.write(
         (
             f'Content-Disposition: form-data; name="input"; filename="{pdf_path.name}"\r\n'
             f"Content-Type: {content_type}\r\n\r\n"
         ).encode("utf-8")
     )
-    body.write(pdf_bytes)
-    body.write(f"\r\n--{boundary}--\r\n".encode("utf-8"))
+    request_body.write(pdf_bytes)
+    request_body.write(f"\r\n--{boundary}--\r\n".encode("utf-8"))
     req = request.Request(
         endpoint,
-        data=body.getvalue(),
+        data=request_body.getvalue(),
         headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
         method="POST",
     )
@@ -36,13 +40,13 @@ def load_pdf_with_grobid(pdf_path: Path, repo_root: Path, grobid_url: str):
 
     root = ElementTree.fromstring(response_text)
     ns = {"tei": "http://www.tei-c.org/ns/1.0"}
-    documents = []
-    body = root.find(".//tei:text/tei:body", ns)
-    if body is None:
+    documents: list[Document] = []
+    body_element = root.find(".//tei:text/tei:body", ns)
+    if body_element is None:
         return documents
 
     page_index = 1
-    for div in body.findall(".//tei:div", ns):
+    for div in body_element.findall(".//tei:div", ns):
         chunks: list[str] = []
         head = div.find("tei:head", ns)
         if head is not None and head.text:

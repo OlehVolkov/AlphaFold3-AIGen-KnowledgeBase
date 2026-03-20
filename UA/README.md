@@ -104,7 +104,9 @@ uv python install 3.12
 - У `cmd.exe` викликати `uv` напряму через `PATH`; не використовувати повний файловий шлях до `uv.exe`.
 - Для цього репозиторію при роботі з `WSL` Docker теж слід викликати через Windows `cmd.exe`.
 - У Ruff-конфігу для `/.brain` використовувати `known-first-party = ["brain"]` для сортування імпортів; не залишати шаблонні placeholders на кшталт `your_package`.
-- Для `/.brain` перед завершенням локальних Python-змін запускати `pytest`, `ruff` і `mypy`.
+- Для `/.brain` використовувати `pytest`, `ruff` і `mypy` як verification-toolbox.
+- За замовчуванням запускати `ruff`, `mypy` і лише targeted pytest-файли, пов'язані зі зміненим кодом.
+- Повний `pytest tests -q` запускати лише для широких refactor-ів, cross-cutting changes або коли потрібен весь suite.
 
 Приклади:
 
@@ -117,23 +119,27 @@ cmd.exe /c "cd /d %CD%\.brain && uv venv .venv --python 3.12"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv sync --all-groups"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv sync --all-groups"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run pytest tests -q"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests/test_cli.py -q"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run ruff check brain tests"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brain tests"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run mypy brain"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brain"
+```
+
+```bash
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests -q"
 ```
 
 ```bash
@@ -206,7 +212,7 @@ curl http://127.0.0.1:11434/api/generate \
 
 ```bash
 cd .brain
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
 ```
 
 У fallback-режимі індекс зберігається тут:
@@ -229,7 +235,7 @@ cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run pyth
 
 ```bash
 cd .brain
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain check-index --target vault"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain check-index --target vault"
 ```
 
 - команда автоматично читає `active_index.json` і перевіряє активний fallback-індекс, якщо pointer присутній

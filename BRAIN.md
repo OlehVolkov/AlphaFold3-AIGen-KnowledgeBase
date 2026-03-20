@@ -156,11 +156,15 @@ Operational rules:
 
 - Prefer `/.brain` retrieval over manual vault scanning when indexed search is available.
 - Prefer direct local execution over transport indirection when working inside this repository:
-  - `cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain ..."`
+  - `cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain ..."`
   - direct imports from `brain/...`
 - Treat the `MCP` tools as the canonical contract for note operations and retrieval behavior even when the same code is called directly.
 - Do not bypass `/.brain` when the task depends on active index pointers, fallback index roots, repository-specific search logic, or grounded note selection.
 - Manual file traversal is still acceptable for very small targeted edits, but retrieval-first remains the default for research and knowledge-maintenance work.
+- Keep lint/type checks separate from pytest:
+  - run `ruff` and `mypy` directly,
+  - run targeted pytest files by default,
+  - run full `pytest tests -q` only when the whole suite is actually needed.
 
 ---
 

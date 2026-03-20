@@ -183,27 +183,27 @@ cmd.exe /c "cd /d %CD% && uv venv .venv --python 3.12"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv sync --all-groups"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv sync --all-groups"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python your_script.py"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python your_script.py"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run pytest tests -q"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests/test_cli.py -q"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run ruff check brain tests"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brain tests"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run mypy brain"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brain"
 ```
 
 ```bash
@@ -215,27 +215,27 @@ npx --yes markdownlint-cli@0.39.0 '**/*.md' --ignore node_modules --ignore .git 
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --parser pymupdf"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --parser pymupdf"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --parser pdfplumber"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --parser pdfplumber"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --parser grobid --grobid-url http://127.0.0.1:8070"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --parser grobid --grobid-url http://127.0.0.1:8070"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --parser marker --marker-command marker_single"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --parser marker --marker-command marker_single"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain fetch-pdfs --reindex"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain fetch-pdfs --reindex"
 ```
 
 ```bash
@@ -243,43 +243,43 @@ bash .brain/scripts/fetch_literature_pdfs.sh
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain search \"alphafold diffusion\" --mode hybrid --reranker cross-encoder"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain search \"alphafold diffusion\" --mode hybrid --reranker cross-encoder"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain search \"protein ligand docking\" --mode hybrid --reranker ollama --ollama-rerank-model llama3.2:3b"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain search \"protein ligand docking\" --mode hybrid --reranker ollama --ollama-rerank-model llama3.2:3b"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index-vault"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index-vault"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain search-vault \"pairformer recycling\" --mode hybrid --reranker cross-encoder"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain search-vault \"pairformer recycling\" --mode hybrid --reranker cross-encoder"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain think \"pairformer implementation ideas\""
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain think \"pairformer implementation ideas\""
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain mcp --transport stdio"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain mcp --transport stdio"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain mcp --transport streamable-http --host 127.0.0.1 --port 8000"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain mcp --transport streamable-http --host 127.0.0.1 --port 8000"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run pytest tests -q"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests -q"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run ruff check brain tests"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brain tests"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run mypy brain"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brain"
 ```
 
 ## Configuration
@@ -427,7 +427,7 @@ WSL note:
 
 ```bash
 cd .brain
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
 ```
 
 - fallback artifacts live at:
@@ -439,8 +439,8 @@ cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m b
 - use the built-in health-check to validate the active index:
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain check-index --target pdf"
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain check-index --target vault"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain check-index --target pdf"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain check-index --target vault"
 ```
 
 - `check-index` automatically follows `active_index.json` when a fallback pointer exists
@@ -458,15 +458,15 @@ Default scan targets:
 Typical usage:
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain fetch-pdfs --reindex"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain fetch-pdfs --reindex"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain fetch-pdfs --dry-run"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain fetch-pdfs --dry-run"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain fetch-pdfs --notes-glob \"EN/*.md\" --limit 20"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain fetch-pdfs --notes-glob \"EN/*.md\" --limit 20"
 ```
 
 ```bash
@@ -519,8 +519,8 @@ ollama pull llama3.2:3b
 
 Canonical entrypoints:
 
-- `cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain"`
-- `cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run brain"`
+- `cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain"`
+- `cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run brain"`
 
 ## Notes
 

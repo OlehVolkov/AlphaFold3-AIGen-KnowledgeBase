@@ -78,8 +78,8 @@ Local instructions for agents working inside `/.brain`.
 - Keep the CLI on `Typer`; use `Rich` for user-facing output and `Loguru` for runtime logging.
 - Virtual environments are local-only artifacts and must never be committed.
 - Prefer running Python for `/.brain` through the Windows project environment:
-  - `cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run ..."`
-  - `cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv ..."`
+  - `cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ..."`
+  - `cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv ..."`
 - Prefer running Docker in the same style:
   - `cmd.exe /c "docker ..."`
 - Prefer `uv add` over direct `pip install`.
@@ -92,6 +92,12 @@ Local instructions for agents working inside `/.brain`.
 - Prefer checking this explicitly via import search / usage search instead of assuming a package is still needed after refactors.
 - If a direct dependency is no longer used, remove it from `pyproject.toml`, refresh `uv.lock`, and rerun tests.
 - In Ruff `isort` settings, keep `known-first-party = ["brain"]`; do not leave template placeholders such as `your_package`.
+- Do not make `pytest` re-run `ruff` or `mypy` indirectly; keep lint/type checks separate from the pytest suite.
+- Default verification should be:
+  - `uv run ruff check brain tests`
+  - `uv run mypy brain`
+  - targeted `uv run pytest ...`
+- Use full `uv run pytest tests -q` only when the whole suite is needed.
 - Prefer adding code to the existing package slices:
   - `brain/config/`
   - `brain/shared/`
@@ -118,23 +124,27 @@ cmd.exe /c "cd /d %CD% && uv venv .venv --python 3.12"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv sync --all-groups"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv sync --all-groups"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run pytest tests -q"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests/test_cli.py -q"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run ruff check brain tests"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brain tests"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run mypy brain"
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brain"
+```
+
+```bash
+cmd.exe /c "cd /d %CD% && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests -q"
 ```
 
 ## File Layout

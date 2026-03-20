@@ -9,6 +9,8 @@ from loguru import logger
 from rich.console import Console
 from rich.text import Text
 
+_LOGGING_CONFIGURED = False
+
 
 def get_console(*, stderr: bool = False) -> Console:
     return Console(
@@ -23,7 +25,8 @@ def _rich_log_sink(message) -> None:
 
 
 def configure_logging() -> None:
-    if getattr(configure_logging, "_configured", False):
+    global _LOGGING_CONFIGURED
+    if _LOGGING_CONFIGURED:
         return
     logger.add(
         _rich_log_sink,
@@ -38,7 +41,7 @@ def configure_logging() -> None:
             "<level>{message}</level>"
         ),
     )
-    configure_logging._configured = True
+    _LOGGING_CONFIGURED = True
 
 
 def print_json(payload: dict[str, Any]) -> None:

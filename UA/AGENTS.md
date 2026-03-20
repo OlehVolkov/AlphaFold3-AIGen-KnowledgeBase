@@ -112,7 +112,12 @@ AlphaFold3/
   - Для non-Python tools на кшталт `markdownlint-cli` використовувати `npx`, а не `uvx`.
 - Не вводити паралельні Python-workflows (`requirements.txt` + довільний `pip install`, ручне керування virtualenv, змішані package managers), якщо цього явно не вимагає сам репозиторій або запит користувача.
 - Якщо Python-автоматизація додається в `/.brain`, `uv`-workflow має бути явно відображений у локальній документації та прикладах команд.
-- Для `/.brain` вважати `pytest`, `ruff` і `mypy` стандартними verification-кроками після Python-змін.
+- Для `/.brain` вважати `pytest`, `ruff` і `mypy` стандартним verification-toolbox після Python-змін.
+- Не проганяти повний `pytest tests -q` за замовчуванням після кожної дрібної зміни.
+- За замовчуванням:
+  - запускати `ruff` і `mypy` окремо,
+  - запускати лише targeted pytest-файли або конкретні тести, пов'язані зі зміненим кодом,
+  - повний pytest-suite запускати лише для широких refactor-ів, cross-cutting changes або за явним запитом.
 - У Ruff-конфігу для `/.brain` тримати `known-first-party = ["brain"]`; не залишати шаблонні placeholders на кшталт `your_package`.
 - Для `/.brain` canonical environment це Windows virtual environment у `/.brain/.venv`.
 - Навіть якщо агент працює з `WSL`, `/.brain/.venv` треба створювати, перестворювати і синхронізувати через Windows `cmd.exe` з `uv`, а не через Linux-layout `venv`.
@@ -134,23 +139,27 @@ cmd.exe /c "cd /d %CD%\.brain && uv venv .venv --python 3.12"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv sync --all-groups"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv sync --all-groups"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run pytest tests -q"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests/test_cli.py -q"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run ruff check brain tests"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brain tests"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run mypy brain"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brain"
+```
+
+```bash
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests -q"
 ```
 
 ### 1.5.1 Переносимість шляхів
@@ -199,7 +208,7 @@ curl "http://$WIN_HOST:11434/api/tags"
 
 ```bash
 cd .brain
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
 ```
 
 - У fallback-режимі PDF-індекс зберігається тут:
@@ -215,7 +224,7 @@ cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run pyth
 
 ```bash
 cd .brain
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain check-index --target vault"
+cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain check-index --target vault"
 ```
 
 - `brain check-index` має читати `active_index.json`, якщо він є, і перевіряти саме активний fallback-індекс, а не лише canonical-шлях `/.brain/.index/...`.
