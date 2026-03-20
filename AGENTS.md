@@ -105,6 +105,11 @@ AlphaFold3/
   - `uv venv` instead of `python -m venv`,
   - `uv add` instead of direct `pip install`,
   - `uv run` for Python entry points and scripts.
+- Launcher conventions:
+  - `uvx` is for one-off external Python CLI tools that should not be installed into the project environment.
+  - Prefer `uvx` when you need a Python tool temporarily and do not want to add it to `/.brain/.venv`.
+  - `npx` is the Node/npm analogue for one-off JavaScript CLI tools.
+  - Use `npx` for non-Python tools such as `markdownlint-cli`; do not route npm tools through `uvx`.
 - Avoid introducing parallel Python workflow conventions (`requirements.txt` + ad hoc `pip install`, manual virtualenv handling, mixed package managers) unless the repository or the user explicitly requires them.
 - When adding Python automation under `/.brain`, keep the `uv` workflow explicit in local documentation and commands.
 - For `/.brain`, the canonical environment is the Windows virtual environment at `/.brain/.venv`.
@@ -145,7 +150,8 @@ cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run pyth
 - Prefer extending those packages over adding flat compatibility wrappers or oversized mixed-responsibility files.
 - When maintaining `/.brain`, verify direct Python dependencies against actual imports/usages after refactors.
 - Remove unused direct dependencies from `/.brain/pyproject.toml`, refresh `/.brain/uv.lock`, and rerun `/.brain` tests when cleanup is safe.
-- For `/.brain`, treat both `pytest` and `flake8` as standard verification steps after Python changes.
+- For `/.brain`, treat `pytest`, `ruff`, and `mypy` as standard verification steps after Python changes.
+- In `/.brain` Ruff configuration, keep `known-first-party = ["brain"]`; do not leave template placeholders such as `your_package`.
 
 Verification examples:
 
@@ -154,7 +160,11 @@ cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run pyte
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run flake8 brain tests"
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run ruff check brain tests"
+```
+
+```bash
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run mypy brain"
 ```
 
 ### 1.5.1 BRAIN environment workflow
@@ -319,6 +329,25 @@ tags: [topic_name, domain_name]    # snake_case
 - In each `flowchart` block, define `classDef` for all 6 classes using the shared palette.
 - Do not use local/custom class names (`root`, `emb`, `model`, `clean`, `gen`, etc.).
 - Exception: `timeline`, `mindmap`, `xychart-beta`, `quadrantChart` may omit `classDef` when readability is not reduced.
+
+### 3.2 Diagram readability and compactness
+
+- Diagrams must be visually compact and easy to scan in Obsidian; do not optimize only for raw technical completeness.
+- Prefer `flowchart LR` for short pipelines, comparisons, and metric/component summaries when it reduces vertical height.
+- Prefer `flowchart TD` only when the process is inherently hierarchical or when left-to-right layout becomes too wide.
+- Keep node labels short:
+  - prefer `Query seq` over long examples,
+  - prefer `DB search` over full database descriptions,
+  - move detailed explanations below the diagram instead of inside nodes.
+- Do not start Mermaid node labels with ordered-list-like prefixes such as `1.`, `2.`, `7.` or values like `76.4% ...` when a plain label or `Metric: value` form is possible.
+- Avoid oversized diagrams:
+  - if a diagram has too many nodes or long labels, split it into two smaller diagrams,
+  - do not force one large "everything at once" flowchart when a pair of focused diagrams is clearer.
+- For simple metric/component diagrams, prefer 4-6 nodes and 1-2 short lines per node.
+- When a diagram becomes visually tall, first try:
+  - shortening labels,
+  - switching `TD` to `LR`,
+  - moving details into bullets or a table below the diagram.
 
 ---
 

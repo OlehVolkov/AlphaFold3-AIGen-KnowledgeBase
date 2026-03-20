@@ -191,6 +191,9 @@ When applicable, you should:
 - Use Python by default
 - Use `uv` as the primary tool for Python environments, dependencies, and execution
 - Prefer `uv venv`, `uv add`, and `uv run` over manual `venv` / `pip` workflows
+- Use `uvx` for one-off external Python CLI tools that should not be installed into the project environment
+- Use `npx` for one-off Node/npm CLI tools such as `markdownlint-cli`
+- Use `ruff` and `mypy` as the static verification tools for `/.brain`
 - For `/.brain`, treat the Windows virtual environment at `/.brain/.venv` as canonical and create or sync it through Windows `cmd.exe` with `uv`
 - When Docker is needed from `WSL`, invoke it through Windows `cmd.exe`
 - Do not hardcode the repository path in operational commands or examples; portability is a must-have

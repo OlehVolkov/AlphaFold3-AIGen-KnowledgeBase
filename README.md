@@ -97,14 +97,18 @@ uv python install 3.12
 - Prefer `uv venv` for environments.
 - Prefer `uv add` for dependencies.
 - Prefer `uv run` for Python scripts and entry points.
+- `uvx` is for one-off external Python CLI tools that should not be installed into the project environment.
+- `npx` is for one-off Node/npm CLI tools.
+- For this repository, run `markdownlint-cli` through `npx`; it is not a Python tool and should not be routed through `uvx`.
 - Avoid mixing `uv` with ad hoc `pip install` / manual `venv` workflows unless a task explicitly requires that compatibility path.
 - For `/.brain`, use the Windows project environment at `/.brain/.venv` as the single canonical environment.
 - Even from `WSL`, create and sync `/.brain/.venv` through `cmd.exe` and `uv`.
 - In `cmd.exe`, call `uv` directly from `PATH`; do not use a full filesystem path to `uv.exe`.
 - For this repository, invoke Docker through Windows `cmd.exe` as well when working from `WSL`.
+- In `/.brain` Ruff configuration, use `known-first-party = ["brain"]` for import sorting; do not keep template placeholders such as `your_package`.
 - Keep `/.brain` code modular; prefer extending the existing package layout instead of adding flat compatibility files.
 - For `/.brain`, periodically audit direct dependencies against actual imports and remove stale packages when they are no longer used.
-- For `/.brain`, run both tests and `flake8` before considering local Python changes complete.
+- For `/.brain`, run `pytest`, `ruff`, and `mypy` before considering local Python changes complete.
 - Use `cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run python -m brain think \"your query\""` for the local multi-role research loop with memory and reflection.
 
 Examples:
@@ -130,7 +134,19 @@ cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run pyte
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run flake8 brain tests"
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run ruff check brain tests"
+```
+
+```bash
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run mypy brain"
+```
+
+```bash
+uvx ruff check .
+```
+
+```bash
+npx --yes markdownlint-cli@0.39.0 '**/*.md' --ignore node_modules --ignore .git --ignore .obsidian --config markdownlint.jsonc
 ```
 
 ## WSL and Ollama

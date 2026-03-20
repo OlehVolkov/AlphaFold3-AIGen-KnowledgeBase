@@ -23,6 +23,37 @@ brain = "brain.cli:main"
 
 [dependency-groups]
 dev = [
-    "flake8>=7.3.0",
+    "mypy>=1.18.2",
     "pytest>=9.0.2",
+    "ruff>=0.13.0",
 ]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    ".venv",
+]
+
+[tool.ruff.lint]
+ignore = [
+    "E203",
+    "E501",
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["brain"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.ruff.lint.flake8-type-checking]
+strict = true
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true

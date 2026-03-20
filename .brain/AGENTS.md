@@ -84,10 +84,14 @@ Local instructions for agents working inside `/.brain`.
   - `cmd.exe /c "docker ..."`
 - Prefer `uv add` over direct `pip install`.
 - Prefer `uv venv` over manual `python -m venv`.
+- `uvx` is for one-off external Python CLI tools that should not be installed into the project environment.
+- `npx` is for one-off Node/npm CLI tools.
+- Use `npx` for non-Python tools such as `markdownlint-cli`; do not route npm tools through `uvx`.
 - Keep code changes in `/.brain` small, local, and automation-focused.
 - Before adding or keeping a Python dependency, verify that it is actually needed by the current codebase.
 - Prefer checking this explicitly via import search / usage search instead of assuming a package is still needed after refactors.
 - If a direct dependency is no longer used, remove it from `pyproject.toml`, refresh `uv.lock`, and rerun tests.
+- In Ruff `isort` settings, keep `known-first-party = ["brain"]`; do not leave template placeholders such as `your_package`.
 - Prefer adding code to the existing package slices:
   - `brain/config/`
   - `brain/shared/`
@@ -126,7 +130,11 @@ cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run pytest test
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run flake8 brain tests"
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run ruff check brain tests"
+```
+
+```bash
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run mypy brain"
 ```
 
 ## File Layout

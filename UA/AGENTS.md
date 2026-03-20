@@ -105,9 +105,15 @@ AlphaFold3/
   - `uv venv` замість `python -m venv`,
   - `uv add` замість прямого `pip install`,
   - `uv run` для запуску Python entry points і скриптів.
+- Конвенції launcher-ів:
+  - `uvx` використовувати для одноразового запуску зовнішніх Python CLI tools, які не треба встановлювати в проєктне середовище.
+  - `uvx` доречний тоді, коли потрібен Python tool тимчасово й без додавання в `/.brain/.venv`.
+  - `npx` є Node/npm-аналогом для одноразового запуску JavaScript CLI tools.
+  - Для non-Python tools на кшталт `markdownlint-cli` використовувати `npx`, а не `uvx`.
 - Не вводити паралельні Python-workflows (`requirements.txt` + довільний `pip install`, ручне керування virtualenv, змішані package managers), якщо цього явно не вимагає сам репозиторій або запит користувача.
 - Якщо Python-автоматизація додається в `/.brain`, `uv`-workflow має бути явно відображений у локальній документації та прикладах команд.
-- Для `/.brain` вважати і `pytest`, і `flake8` стандартними verification-кроками після Python-змін.
+- Для `/.brain` вважати `pytest`, `ruff` і `mypy` стандартними verification-кроками після Python-змін.
+- У Ruff-конфігу для `/.brain` тримати `known-first-party = ["brain"]`; не залишати шаблонні placeholders на кшталт `your_package`.
 - Для `/.brain` canonical environment це Windows virtual environment у `/.brain/.venv`.
 - Навіть якщо агент працює з `WSL`, `/.brain/.venv` треба створювати, перестворювати і синхронізувати через Windows `cmd.exe` з `uv`, а не через Linux-layout `venv`.
 - Не тримати паралельні canonical environments на кшталт `/.brain/.venvx`; для локальної роботи з `brain` має використовуватися один проєктний env `/.brain/.venv`.
@@ -140,7 +146,11 @@ cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run pyte
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run flake8 brain tests"
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run ruff check brain tests"
+```
+
+```bash
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run mypy brain"
 ```
 
 ### 1.5.1 Переносимість шляхів
@@ -280,6 +290,25 @@ tags: [topic_name, domain_name]    # snake_case
 - У кожному `flowchart`-блоці задавати `classDef` для всіх 6 класів із єдиною палітрою.
 - Не використовувати локальні/довільні назви класів (`root`, `emb`, `model`, `clean`, `gen` тощо).
 - Виняток: `timeline`, `mindmap`, `xychart-beta`, `quadrantChart` можуть бути без `classDef`, якщо це не погіршує читабельність.
+
+### 3.2 Читабельність і компактність діаграм
+
+- Діаграми мають бути візуально компактними й зручними для читання в Obsidian; не оптимізувати їх лише під технічну повноту.
+- Для коротких pipeline-діаграм, порівнянь і summary metric/component diagrams зазвичай віддавати перевагу `flowchart LR`, якщо це зменшує висоту.
+- `flowchart TD` використовувати тоді, коли процес справді ієрархічний або коли горизонтальна схема стає надто широкою.
+- Підписи вузлів мають бути короткими:
+  - краще `Query seq`, ніж довгий приклад послідовності,
+  - краще `DB search`, ніж повний опис баз,
+  - деталі краще винести під діаграму в bullets або таблицю.
+- Не починати Mermaid labels із ordered-list-подібних префіксів на кшталт `1.`, `2.`, `7.` або значень типу `76.4% ...`, якщо можна використати звичайний label або форму `Metric: value`.
+- Не робити oversized diagrams:
+  - якщо вузлів або тексту занадто багато, розбивати на дві менші діаграми,
+  - не зводити все в один великий `flowchart`, якщо пара тематично вузьких схем читається краще.
+- Для простих metric/component diagrams зазвичай тримати 4-6 вузлів і 1-2 короткі рядки на вузол.
+- Якщо діаграма виходить занадто високою, спочатку:
+  - скорочувати labels,
+  - пробувати `TD` -> `LR`,
+  - переносити деталі під діаграму в bullets або таблицю.
 
 ---
 

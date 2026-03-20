@@ -95,12 +95,16 @@ uv python install 3.12
 - Для оточень пріоритетно використовувати `uv venv`.
 - Для залежностей пріоритетно використовувати `uv add`.
 - Для запуску Python-скриптів і entry points пріоритетно використовувати `uv run`.
+- `uvx` використовувати для одноразового запуску зовнішніх Python CLI tools, які не треба встановлювати в проєктне середовище.
+- `npx` використовувати для одноразового запуску Node/npm CLI tools.
+- Для цього репозиторію `markdownlint-cli` запускати через `npx`; це не Python tool, тому його не слід пускати через `uvx`.
 - Не змішувати `uv` з довільними `pip install` / ручними `venv`-workflow, якщо задача явно не вимагає такого сумісного режиму.
 - Для `/.brain` використовувати Windows project environment у `/.brain/.venv` як єдиний canonical env.
 - Навіть із `WSL` створювати та синхронізувати `/.brain/.venv` через `cmd.exe` і `uv`.
 - У `cmd.exe` викликати `uv` напряму через `PATH`; не використовувати повний файловий шлях до `uv.exe`.
 - Для цього репозиторію при роботі з `WSL` Docker теж слід викликати через Windows `cmd.exe`.
-- Для `/.brain` перед завершенням локальних Python-змін запускати і тести, і `flake8`.
+- У Ruff-конфігу для `/.brain` використовувати `known-first-party = ["brain"]` для сортування імпортів; не залишати шаблонні placeholders на кшталт `your_package`.
+- Для `/.brain` перед завершенням локальних Python-змін запускати `pytest`, `ruff` і `mypy`.
 
 Приклади:
 
@@ -125,7 +129,19 @@ cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run pyte
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run flake8 brain tests"
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run ruff check brain tests"
+```
+
+```bash
+cmd.exe /c "cd /d %CD%\.brain && set UV_PROJECT_ENVIRONMENT=.venv && uv run mypy brain"
+```
+
+```bash
+uvx ruff check .
+```
+
+```bash
+npx --yes markdownlint-cli@0.39.0 '**/*.md' --ignore node_modules --ignore .git --ignore .obsidian --config markdownlint.jsonc
 ```
 
 ## WSL і Ollama

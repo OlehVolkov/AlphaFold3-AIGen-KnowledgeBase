@@ -169,6 +169,11 @@ cmd.exe /c "cd /d %CD% && uv python install 3.12"
 
 ## Common Commands
 
+- `uvx` is for one-off external Python CLI tools outside the project environment.
+- `npx` is for one-off Node/npm CLI tools.
+- Use `npx` for `markdownlint-cli`; it is not a Python package.
+- In Ruff `isort` settings, use `known-first-party = ["brain"]` for local import sorting; do not keep template placeholders such as `your_package`.
+
 ```bash
 cmd.exe /c "cd /d %CD% && .venv\Scripts\activate.bat"
 ```
@@ -194,7 +199,19 @@ cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run pytest test
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run flake8 brain tests"
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run ruff check brain tests"
+```
+
+```bash
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run mypy brain"
+```
+
+```bash
+uvx ruff check .
+```
+
+```bash
+npx --yes markdownlint-cli@0.39.0 '**/*.md' --ignore node_modules --ignore .git --ignore .obsidian --config markdownlint.jsonc
 ```
 
 ```bash
@@ -258,7 +275,11 @@ cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run pytest test
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run flake8 brain tests"
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run ruff check brain tests"
+```
+
+```bash
+cmd.exe /c "cd /d %CD% && set UV_PROJECT_ENVIRONMENT=.venv && uv run mypy brain"
 ```
 
 ## Configuration
