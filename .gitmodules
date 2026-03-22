@@ -1,0 +1,3 @@
+[submodule ".brains"]
+	path = .brains
+	url = https://github.com/OlehVolkov/Brains-AIGen-RAG.git
