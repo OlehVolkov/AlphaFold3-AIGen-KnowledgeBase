@@ -1,6 +1,6 @@
 # NOTICE — Formatting Fix Log
 
-Last updated: 2026-03-20
+Last updated: 2026-03-22
 Platform: Obsidian vault
 Obsidian compatibility (minimum): 1.12.0
 Note: `app.json` in this vault is empty (`{}`), so the exact app version is not pinned in-repo.
@@ -224,20 +224,20 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
   - `NOTICE.md`
   - `UA/NOTICE.md`
 
-## 31. Windows `/.brain/.venv`, `cmd.exe` workflow, and portable command patterns (2026-03-20)
+## 31. Windows `/.brains/.venv`, `cmd.exe` workflow, and portable command patterns (2026-03-20)
 
 - Synchronized operational guidance across:
   - `AGENTS.md`
   - `UA/AGENTS.md`
   - `README.md`
   - `UA/README.md`
-  - `.brain/AGENTS.md`
-  - `.brain/README.md`
+  - `.brains/AGENTS.md`
+  - `.brains/README.md`
   - `BRAIN.md`
-- Canonical local environment for `/.brain` is now explicitly the Windows virtual environment:
-  - `/.brain/.venv`
+- Canonical local environment for `/.brains` is now explicitly the Windows virtual environment:
+  - `/.brains/.venv`
 - Recorded the required workflow:
-  - create and sync `/.brain/.venv` through Windows `cmd.exe` with `uv`,
+  - create and sync `/.brains/.venv` through Windows `cmd.exe` with `uv`,
   - invoke `uv` directly from `PATH` in `cmd.exe`,
   - invoke Docker from `WSL` through `cmd.exe` as well when needed.
 - Removed machine-specific command examples that hardcoded the local repository path.
@@ -268,13 +268,13 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
 
 - Updated `BRAIN.md` to match the actual repository layout:
   - the existing `UA/` / `EN/` knowledge-base structure is explicitly preserved,
-  - all BRAIN logic is assigned to `/.brain`,
+  - all BRAIN logic is assigned to `/.brains`,
   - all indexed and generated data is assigned to `/.index`,
   - local PDF files are assigned to `/PDF`.
 - Updated `AGENTS.md` and `UA/AGENTS.md`:
-  - added `BRAIN.md`, `/.brain`, `/.index`, and `/PDF` to the allowed root elements and example tree.
+  - added `BRAIN.md`, `/.brains`, `/.index`, and `/PDF` to the allowed root elements and example tree.
 - Created directories:
-  - `/.brain/`
+  - `/.brains/`
   - `/.index/`
   - `/PDF/`
 
@@ -284,15 +284,15 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
 - Added an explicit requirement to check, before creating, indexing, updating, or committing files, whether any of the following would be exposed:
   - secrets (`API keys`, tokens, passwords, private keys, `.env` values),
   - personal data (`PII`) and other sensitive local data.
-- Recorded the rule that such data must not be copied into versioned notes, governance files, `/.brain`, or `/.brain/.index`; redact or mask when needed.
+- Recorded the rule that such data must not be copied into versioned notes, governance files, `/.brains`, or `/.brains/.index`; redact or mask when needed.
 
-## 23. Index moved inside `/.brain` (2026-03-18)
+## 23. Index moved inside `/.brains` (2026-03-18)
 
 - Moved the index directory:
   - `/.index/`
-  - `/.brain/.index/`
+  - `/.brains/.index/`
 - Updated `BRAIN.md`, `AGENTS.md`, and `UA/AGENTS.md` to use the new canonical path for indexed and generated data.
-- `/.index/` is no longer treated as a separate allowed root element; indexing is now part of `/.brain/`.
+- `/.index/` is no longer treated as a separate allowed root element; indexing is now part of `/.brains/`.
 
 ## 24. English tree moved to root (2026-03-18)
 
@@ -345,7 +345,7 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
 - Added `UA/README.md` to the documented `UA/` structure and treated `README.md` / `UA/README.md` as aligned repository-usage guides.
 - Corrected remaining current-governance wording in `NOTICE.md` / `UA/NOTICE.md`:
   - duplicated `AGENTS.md` / `NOTICE.md` references normalized to `UA/AGENTS.md` / `UA/NOTICE.md` where applicable,
-  - current-path references aligned with `/.brain/.index/` where the text was describing the active canonical layout.
+  - current-path references aligned with `/.brains/.index/` where the text was describing the active canonical layout.
 - Re-ran the local vault audit and refreshed `AUDIT.md` with the current counts, parity checks, and wiki-link / DOI coverage status.
 
 ## 28. `uv` adopted as the primary Python workflow (2026-03-18)
@@ -357,8 +357,8 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
   - `BRAIN.md`
   - `README.md`
   - `UA/README.md`
-  - `/.brain/AGENTS.md`
-  - `/.brain/README.md`
+  - `/.brains/AGENTS.md`
+  - `/.brains/README.md`
 - Recorded the preferred command model:
   - `uv venv`
   - `uv add`
@@ -373,8 +373,8 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
   - `UA/AGENTS.md`
   - `README.md`
   - `UA/README.md`
-  - `/.brain/AGENTS.md`
-  - `/.brain/README.md`
+  - `/.brains/AGENTS.md`
+  - `/.brains/README.md`
 - Added example commands for:
   - creating a virtual environment with `uv venv`,
   - adding a dependency with `uv add`,
@@ -388,9 +388,29 @@ Applied a single Mermaid styling standard across newly added/updated EN and UA n
   - `UA/AGENTS.md`
   - `README.md`
   - `UA/README.md`
-  - `/.brain/AGENTS.md`
-  - `/.brain/README.md`
+  - `/.brains/AGENTS.md`
+  - `/.brains/README.md`
 - Added examples for:
   - installing `uv` on macOS / Linux and Windows,
   - installing Python with `uv python install`,
   - pinning the repository workflow to Python `3.12`.
+
+## 32. `.brain` → `.brains` migration and submodule adoption (2026-03-22)
+
+- Replaced the old local `/.brain` path with `/.brains` across repository-level governance and operational documentation.
+- Updated:
+  - `AGENTS.md`
+  - `UA/AGENTS.md`
+  - `README.md`
+  - `UA/README.md`
+  - `BRAIN.md`
+  - `AUDIT.md`
+  - `NOTICE.md`
+  - `UA/NOTICE.md`
+  - `.gitignore`
+- Added a Git submodule at:
+  - `/.brains`
+- Added submodule mapping in:
+  - `.gitmodules`
+- Re-checked live repository files after the rename:
+  - no remaining standalone `/.brain` references were found outside the removed legacy tree.

@@ -1,6 +1,6 @@
 # NOTICE — Журнал виправлень форматування
 
-Останнє оновлення: 2026-03-20
+Останнє оновлення: 2026-03-22
 Платформа: Obsidian vault
 Сумісність Obsidian (мінімум): 1.12.0
 Примітка: `app.json` у vault порожній (`{}`), тому точна версія застосунку не зафіксована в репозиторії.
@@ -222,20 +222,20 @@ GitHub Theme додає власні класи на `<img>` теги — так
   - `NOTICE.md`
   - `UA/NOTICE.md`
 
-## 31. Windows `/.brain/.venv`, workflow через `cmd.exe` і переносимі шаблони команд (2026-03-20)
+## 31. Windows `/.brains/.venv`, workflow через `cmd.exe` і переносимі шаблони команд (2026-03-20)
 
 - Синхронізовано operational guidance у:
   - `AGENTS.md`
   - `UA/AGENTS.md`
   - `README.md`
   - `UA/README.md`
-  - `.brain/AGENTS.md`
-  - `.brain/README.md`
+  - `.brains/AGENTS.md`
+  - `.brains/README.md`
   - `BRAIN.md`
-- Явно зафіксовано, що canonical local environment для `/.brain` це Windows virtual environment:
-  - `/.brain/.venv`
+- Явно зафіксовано, що canonical local environment для `/.brains` це Windows virtual environment:
+  - `/.brains/.venv`
 - Зафіксовано обов'язковий workflow:
-  - створювати й синхронізувати `/.brain/.venv` через Windows `cmd.exe` з `uv`,
+  - створювати й синхронізувати `/.brains/.venv` через Windows `cmd.exe` з `uv`,
   - у `cmd.exe` викликати `uv` напряму через `PATH`,
   - за потреби викликати Docker з `WSL` теж через `cmd.exe`.
 - Прибрано machine-specific examples з жорстко прошитим локальним шляхом репозиторію.
@@ -266,13 +266,13 @@ GitHub Theme додає власні класи на `<img>` теги — так
 
 - Оновлено `BRAIN.md` під фактичний layout репозиторію:
   - існуюча структура бази знань `UA/` / `EN/` оголошена незмінною,
-  - вся BRAIN-логіка закріплена за `/.brain`,
+  - вся BRAIN-логіка закріплена за `/.brains`,
   - всі індексовані та згенеровані дані закріплені за `/.index`,
   - локальні PDF-файли винесені в `/PDF`.
 - Оновлено `AGENTS.md` та `UA/AGENTS.md`:
-  - `BRAIN.md`, `/.brain`, `/.index`, `/PDF` додано до дозволених root-елементів і прикладу структури.
+  - `BRAIN.md`, `/.brains`, `/.index`, `/PDF` додано до дозволених root-елементів і прикладу структури.
 - Створено каталоги:
-  - `/.brain/`
+  - `/.brains/`
   - `/.index/`
   - `/PDF/`
 
@@ -282,15 +282,15 @@ GitHub Theme додає власні класи на `<img>` теги — так
 - Додано явну вимогу перед створенням, індексацією, оновленням або комітом файлів перевіряти, чи не компрометуються:
   - секрети (`API keys`, токени, паролі, приватні ключі, `.env` значення),
   - персональні дані (`PII`) та інші чутливі локальні дані.
-- Зафіксовано правило: такі дані не можна переносити у versioned нотатки, службові файли, `/.brain` або `/.brain/.index`; за потреби їх треба маскувати або редагувати.
+- Зафіксовано правило: такі дані не можна переносити у versioned нотатки, службові файли, `/.brains` або `/.brains/.index`; за потреби їх треба маскувати або редагувати.
 
-## 23. Перенесення індексу всередину `/.brain` (2026-03-18)
+## 23. Перенесення індексу всередину `/.brains` (2026-03-18)
 
 - Індексну директорію перенесено:
   - `/.index/`
-  - `/.brain/.index/`
+  - `/.brains/.index/`
 - `BRAIN.md`, `AGENTS.md` і `UA/AGENTS.md` оновлено під новий canonical path для індексованих і згенерованих даних.
-- `/.index/` більше не вважається окремим дозволеним root-елементом; роль індексу тепер входить у `/.brain/`.
+- `/.index/` більше не вважається окремим дозволеним root-елементом; роль індексу тепер входить у `/.brains/`.
 
 ## 24. Перенесення англомовного дерева в root (2026-03-18)
 
@@ -343,7 +343,7 @@ GitHub Theme додає власні класи на `<img>` теги — так
 - `UA/README.md` додано до задокументованої структури `UA/`, а `README.md` / `UA/README.md` зафіксовано як синхронні usage-guides репозиторію.
 - Уточнено поточні формулювання в `NOTICE.md` / `UA/NOTICE.md`:
   - дубльовані згадки `AGENTS.md` / `NOTICE.md` нормалізовано до `UA/AGENTS.md` / `UA/NOTICE.md`, де це було потрібно,
-  - згадки про активний canonical path вирівняно під `/.brain/.index/` там, де йшлося саме про поточний стан, а не про історію міграцій.
+  - згадки про активний canonical path вирівняно під `/.brains/.index/` там, де йшлося саме про поточний стан, а не про історію міграцій.
 - Повторно виконано локальний аудит vault і оновлено `AUDIT.md` з актуальними підрахунками, перевіркою паритету та станом wiki-links / DOI-покриття.
 
 ## 28. `uv` як основний Python-workflow (2026-03-18)
@@ -355,8 +355,8 @@ GitHub Theme додає власні класи на `<img>` теги — так
   - `BRAIN.md`
   - `README.md`
   - `UA/README.md`
-  - `/.brain/AGENTS.md`
-  - `/.brain/README.md`
+  - `/.brains/AGENTS.md`
+  - `/.brains/README.md`
 - Зафіксовано пріоритетну модель команд:
   - `uv venv`
   - `uv add`
@@ -371,8 +371,8 @@ GitHub Theme додає власні класи на `<img>` теги — так
   - `UA/AGENTS.md`
   - `README.md`
   - `UA/README.md`
-  - `/.brain/AGENTS.md`
-  - `/.brain/README.md`
+  - `/.brains/AGENTS.md`
+  - `/.brains/README.md`
 - Додано приклади для:
   - створення virtual environment через `uv venv`,
   - додавання залежності через `uv add`,
@@ -386,9 +386,29 @@ GitHub Theme додає власні класи на `<img>` теги — так
   - `UA/AGENTS.md`
   - `README.md`
   - `UA/README.md`
-  - `/.brain/AGENTS.md`
-  - `/.brain/README.md`
+  - `/.brains/AGENTS.md`
+  - `/.brains/README.md`
 - Додано приклади для:
   - встановлення `uv` на macOS / Linux і Windows,
   - встановлення Python через `uv python install`,
   - прив'язки workflow репозиторію до Python `3.12`.
+
+## 32. Міграція `.brain` → `.brains` і перехід на сабмодуль (2026-03-22)
+
+- Старий локальний шлях `/.brain` замінено на `/.brains` у repository-level документації та інструкціях.
+- Оновлено:
+  - `AGENTS.md`
+  - `UA/AGENTS.md`
+  - `README.md`
+  - `UA/README.md`
+  - `BRAIN.md`
+  - `AUDIT.md`
+  - `NOTICE.md`
+  - `UA/NOTICE.md`
+  - `.gitignore`
+- Додано Git сабмодуль у:
+  - `/.brains`
+- Додано опис сабмодуля у:
+  - `.gitmodules`
+- Після перейменування повторно перевірено живі файли репозиторію:
+  - окремих залишкових згадок `/.brain` поза вилученим legacy-деревом не знайдено.

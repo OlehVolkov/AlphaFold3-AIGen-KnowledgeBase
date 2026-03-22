@@ -10,7 +10,7 @@
 AlphaFold3/
 ├── .git/
 ├── .gitignore
-├── .brain/
+├── .brains/
 │   └── .index/
 ├── .obsidian/
 ├── .smart-env/
@@ -79,7 +79,7 @@ AlphaFold3/
 - Such data must not be intentionally copied into:
   - `UA/` notes / `EN/` notes,
   - `NOTICE.md`, `UA/NOTICE.md`, `AUDIT.md`, `EN/Summary*.md`, `BRAIN.md`, `AGENTS.md`, `UA/AGENTS.md`,
-  - `/.brain/.index`, `/.brain`, `PDF/`, or other versioned files.
+  - `/.brains/.index`, `/.brains`, `PDF/`, or other versioned files.
 - If the source material contains secrets or personal data, the agent must:
   - avoid copying them verbatim into the repository,
   - redact or mask them when possible,
@@ -88,7 +88,7 @@ AlphaFold3/
 ### 1.4.1 Codex Chat Access
 
 - When this repository is used with Codex in chat, prefer Full Access mode over a restricted sandbox.
-- This is especially important for tasks involving `/.brain`, indexing, retrieval, `Ollama`, `LanceDB`, health-checks, or runtime verification.
+- This is especially important for tasks involving `/.brains`, indexing, retrieval, `Ollama`, `LanceDB`, health-checks, or runtime verification.
 - Restricted sandbox runs may produce false negatives such as `LanceDB` hangs/timeouts or failed index checks even when the active fallback index is valid.
 - If the task depends on confirming real local runtime behavior, the expected default is Full Access.
 
@@ -107,14 +107,14 @@ AlphaFold3/
   - `uv run` for Python entry points and scripts.
 - Launcher conventions:
   - `uvx` is for one-off external Python CLI tools that should not be installed into the project environment.
-  - Prefer `uvx` when you need a Python tool temporarily and do not want to add it to `/.brain/.venv`.
+  - Prefer `uvx` when you need a Python tool temporarily and do not want to add it to `/.brains/.venv`.
   - `npx` is the Node/npm analogue for one-off JavaScript CLI tools.
   - Use `npx` for non-Python tools such as `markdownlint-cli`; do not route npm tools through `uvx`.
 - Avoid introducing parallel Python workflow conventions (`requirements.txt` + ad hoc `pip install`, manual virtualenv handling, mixed package managers) unless the repository or the user explicitly requires them.
-- When adding Python automation under `/.brain`, keep the `uv` workflow explicit in local documentation and commands.
-- For `/.brain`, the canonical environment is the Windows virtual environment at `/.brain/.venv`.
-- Even when the agent is working from `WSL`, create, recreate, and sync `/.brain/.venv` through Windows `cmd.exe` with `uv`, not through a Linux `venv` layout.
-- Do not keep parallel canonical environments such as `/.brain/.venvx`; `/.brain/.venv` is the single project environment for local `brain` work.
+- When adding Python automation under `/.brains`, keep the `uv` workflow explicit in local documentation and commands.
+- For `/.brains`, the canonical environment is the Windows virtual environment at `/.brains/.venv`.
+- Even when the agent is working from `WSL`, create, recreate, and sync `/.brains/.venv` through Windows `cmd.exe` with `uv`, not through a Linux `venv` layout.
+- Do not keep parallel canonical environments such as `/.brains/.venvx`; `/.brains/.venv` is the single project environment for local `brain` work.
 - When Docker is needed from `WSL` for this repository, invoke it through Windows `cmd.exe` as well.
 - Prefer `cmd.exe /c "docker ..."` over calling Docker directly from the Linux shell in this repository workflow.
 - Must not hardcode the local repository path in commands, docs, scripts, or examples.
@@ -123,22 +123,22 @@ AlphaFold3/
 Examples:
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && uv python install 3.12"
+cmd.exe /c "cd /d %CD%\.brains && uv python install 3.12"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && uv venv .venv --python 3.12"
+cmd.exe /c "cd /d %CD%\.brains && uv venv .venv --python 3.12"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv sync --all-groups"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv sync --all-groups"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain"
 ```
 
-- For local automation under `/.brain`, preserve the modular package layout:
+- For local automation under `/.brains`, preserve the modular package layout:
   - `brain/config/`
   - `brain/shared/`
   - `brain/sources/pdf/`
@@ -148,47 +148,47 @@ cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run 
   - `brain/mcp/tools/`
   - `brain/commands/`
 - Prefer extending those packages over adding flat compatibility wrappers or oversized mixed-responsibility files.
-- When maintaining `/.brain`, verify direct Python dependencies against actual imports/usages after refactors.
-- Remove unused direct dependencies from `/.brain/pyproject.toml`, refresh `/.brain/uv.lock`, and rerun `/.brain` tests when cleanup is safe.
-- For `/.brain`, treat `pytest`, `ruff`, and `mypy` as the standard verification toolbox after Python changes.
+- When maintaining `/.brains`, verify direct Python dependencies against actual imports/usages after refactors.
+- Remove unused direct dependencies from `/.brains/pyproject.toml`, refresh `/.brains/uv.lock`, and rerun `/.brains` tests when cleanup is safe.
+- For `/.brains`, treat `pytest`, `ruff`, and `mypy` as the standard verification toolbox after Python changes.
 - Do not run the full `pytest tests -q` suite by default after every small change.
 - By default:
   - run `ruff` and `mypy` separately,
   - run only targeted pytest files or targeted tests related to the changed code,
   - run the full pytest suite only for broad refactors, cross-cutting changes, or when explicitly requested.
-- In `/.brain` Ruff configuration, keep `known-first-party = ["brain"]`; do not leave template placeholders such as `your_package`.
+- In `/.brains` Ruff configuration, keep `known-first-party = ["brain"]`; do not leave template placeholders such as `your_package`.
 
 Verification examples:
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests/test_cli.py -q"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests/test_cli.py -q"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brain tests"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brain tests"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brain"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brain"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests -q"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests -q"
 ```
 
 ### 1.5.1 BRAIN environment workflow
 
-- Treat `/.brain/.venv` as the canonical local interpreter for `brain`.
+- Treat `/.brains/.venv` as the canonical local interpreter for `brain`.
 - When invoking `brain` commands, ensure the underlying project environment is the Windows `/.venv`.
-- If the agent is currently in `WSL`, prefer invoking Windows `uv` / Python through `cmd.exe /c "cd /d %CD%\.brain && ..."` for environment creation, dependency sync, and direct interpreter checks.
+- If the agent is currently in `WSL`, prefer invoking Windows `uv` / Python through `cmd.exe /c "cd /d %CD%\.brains && ..."` for environment creation, dependency sync, and direct interpreter checks.
 - In `cmd.exe`, call `uv` directly from `PATH`; do not use an absolute filesystem path to `uv.exe`.
 - Apply the same rule to Docker commands needed for local tooling or services: invoke them through `cmd.exe`.
 - Treat path portability as a must-have for all operational examples and automation snippets.
 
 ### 1.5.2 BRAIN-first workflow
 
-- When `/.brain` provides retrieval or tool support for the current task, use it first instead of manually browsing the vault.
-- Treat `/.brain` as the default operational layer for:
+- When `/.brains` provides retrieval or tool support for the current task, use it first instead of manually browsing the vault.
+- Treat `/.brains` as the default operational layer for:
   - vault search,
   - PDF search,
   - note reads before edits,
@@ -200,10 +200,10 @@ cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run 
   3. direct file edits only after retrieval confirms the target paths and context.
   4. `run_experiment` or `think` when the task needs multi-step synthesis instead of a single lookup.
 - Prefer direct module or CLI usage over transport overhead when working locally in this repository:
-  - `cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain ..."`
+  - `cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain ..."`
   - local Python imports from `brain/...`
 - Treat the `MCP` surface as the canonical tool contract for note and retrieval operations even when the same logic is invoked directly through Python.
-- Do not bypass `/.brain` for convenience when the task depends on grounded retrieval, active index pointers, or repository-specific search logic.
+- Do not bypass `/.brains` for convenience when the task depends on grounded retrieval, active index pointers, or repository-specific search logic.
 
 ### 1.6 WSL and Ollama
 
@@ -241,32 +241,32 @@ curl "http://$WIN_HOST:11434/api/tags"
 
 ### 1.7 WSL and LanceDB
 
-- If `/.brain` runs inside `WSL` while the repository lives on `/mnt/c/...`, `LanceDB` may fail on the default `/.brain/.index/...` path with I/O or metadata errors during table creation/overwrite.
-- The canonical default still remains `/.brain/.index/...`.
+- If `/.brains` runs inside `WSL` while the repository lives on `/mnt/c/...`, `LanceDB` may fail on the default `/.brains/.index/...` path with I/O or metadata errors during table creation/overwrite.
+- The canonical default still remains `/.brains/.index/...`.
 - When that specific `WSL + /mnt/c + LanceDB` failure happens, use a Linux-native fallback index root:
 
 ```bash
-cd .brain
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
+cd .brains
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
 ```
 
 - In this fallback mode, store the PDF index at:
   - `/tmp/alphafold3-pdf-index/manifest.json`
   - `/tmp/alphafold3-pdf-index/lancedb`
 - Also write the active fallback pointer into:
-  - `/.brain/.index/pdf_search/active_index.json`
+  - `/.brains/.index/pdf_search/active_index.json`
 - Use the same pointer pattern for a fallback vault index via:
-  - `/.brain/.index/vault_search/active_index.json`
-- Record clearly when the fallback path is being used so future runs do not assume that the active index is under `/.brain/.index/pdf_search`.
+  - `/.brains/.index/vault_search/active_index.json`
+- Record clearly when the fallback path is being used so future runs do not assume that the active index is under `/.brains/.index/pdf_search`.
 - Under restricted sandbox environments, `LanceDB` may also hang during `connect()` or `open_table()` even when the fallback index in `/tmp/...` is valid.
 - Before concluding that an index is corrupted, verify it outside the sandbox with:
 
 ```bash
-cd .brain
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain check-index --target vault"
+cd .brains
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain check-index --target vault"
 ```
 
-- `brain check-index` must read `active_index.json` when present and validate the currently active fallback index, not only the canonical `/.brain/.index/...` path.
+- `brain check-index` must read `active_index.json` when present and validate the currently active fallback index, not only the canonical `/.brains/.index/...` path.
 
 ---
 
@@ -385,7 +385,7 @@ All scientific/technical claims require sources:
 - No mixed languages inside one language folder.
 - Do not add non-system files to vault root.
 - Do not commit secrets, `PII`, or other sensitive local data.
-- Allowed root files/directories: `.git/`, `.gitignore`, `.brain/`, `.obsidian/`, `.smart-env/`, `PDF/`, `Home.md`, `README.md`, `AGENTS.md`, `BRAIN.md`, `NOTICE.md`, `AUDIT.md`, `EN/`, `UA/`.
+- Allowed root files/directories: `.git/`, `.gitignore`, `.brains/`, `.obsidian/`, `.smart-env/`, `PDF/`, `Home.md`, `README.md`, `AGENTS.md`, `BRAIN.md`, `NOTICE.md`, `AUDIT.md`, `EN/`, `UA/`.
 
 ---
 

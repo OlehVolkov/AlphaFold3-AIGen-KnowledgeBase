@@ -112,7 +112,7 @@ Status: **PASS with medium residual risk**
 
 ## 5. Corrections Applied During This Audit Cycle
 
-- Refreshed `AUDIT.md` to match the current repository state after the latest note expansion, navigation updates, and `/.brain` structure changes.
+- Refreshed `AUDIT.md` to match the current repository state after the latest note expansion, navigation updates, and `/.brains` structure changes.
 - No direct content-note edits were applied as part of this audit refresh.
 
 ## 6. Confidence Level Matrix

@@ -10,7 +10,7 @@
 AlphaFold3/
 ├── .git/
 ├── .gitignore
-├── .brain/
+├── .brains/
 │   └── .index/
 ├── .obsidian/
 ├── .smart-env/
@@ -79,7 +79,7 @@ AlphaFold3/
 - Заборонено навмисно виносити такі дані в:
   - нотатки `UA/` / нотатки `EN/`,
   - `NOTICE.md`, `UA/NOTICE.md`, `AUDIT.md`, `EN/Summary*.md`, `BRAIN.md`, `AGENTS.md`, `UA/AGENTS.md`,
-  - `/.brain/.index`, `/.brain`, `PDF/` або інші versioned файли.
+  - `/.brains/.index`, `/.brains`, `PDF/` або інші versioned файли.
 - Якщо вхідні матеріали містять секрети або персональні дані, агент повинен:
   - не копіювати їх дослівно в репозиторій,
   - за можливості редагувати або маскувати їх,
@@ -88,7 +88,7 @@ AlphaFold3/
 ### 1.4.1 Доступ Codex у чаті
 
 - Коли цей репозиторій використовується з `Codex` у чаті, пріоритетно надавати режим Full Access замість restricted sandbox.
-- Це особливо важливо для задач, пов'язаних із `/.brain`, indexing, retrieval, `Ollama`, `LanceDB`, health-check або runtime-перевіркою.
+- Це особливо важливо для задач, пов'язаних із `/.brains`, indexing, retrieval, `Ollama`, `LanceDB`, health-check або runtime-перевіркою.
 - Запуски в restricted sandbox можуть давати хибні негативні результати, зокрема `LanceDB` hangs/timeouts або failed index checks, навіть коли активний fallback-індекс валідний.
 - Якщо задача залежить від перевірки реальної локальної runtime-поведінки, очікуваний default це Full Access.
 
@@ -107,21 +107,21 @@ AlphaFold3/
   - `uv run` для запуску Python entry points і скриптів.
 - Конвенції launcher-ів:
   - `uvx` використовувати для одноразового запуску зовнішніх Python CLI tools, які не треба встановлювати в проєктне середовище.
-  - `uvx` доречний тоді, коли потрібен Python tool тимчасово й без додавання в `/.brain/.venv`.
+  - `uvx` доречний тоді, коли потрібен Python tool тимчасово й без додавання в `/.brains/.venv`.
   - `npx` є Node/npm-аналогом для одноразового запуску JavaScript CLI tools.
   - Для non-Python tools на кшталт `markdownlint-cli` використовувати `npx`, а не `uvx`.
 - Не вводити паралельні Python-workflows (`requirements.txt` + довільний `pip install`, ручне керування virtualenv, змішані package managers), якщо цього явно не вимагає сам репозиторій або запит користувача.
-- Якщо Python-автоматизація додається в `/.brain`, `uv`-workflow має бути явно відображений у локальній документації та прикладах команд.
-- Для `/.brain` вважати `pytest`, `ruff` і `mypy` стандартним verification-toolbox після Python-змін.
+- Якщо Python-автоматизація додається в `/.brains`, `uv`-workflow має бути явно відображений у локальній документації та прикладах команд.
+- Для `/.brains` вважати `pytest`, `ruff` і `mypy` стандартним verification-toolbox після Python-змін.
 - Не проганяти повний `pytest tests -q` за замовчуванням після кожної дрібної зміни.
 - За замовчуванням:
   - запускати `ruff` і `mypy` окремо,
   - запускати лише targeted pytest-файли або конкретні тести, пов'язані зі зміненим кодом,
   - повний pytest-suite запускати лише для широких refactor-ів, cross-cutting changes або за явним запитом.
-- У Ruff-конфігу для `/.brain` тримати `known-first-party = ["brain"]`; не залишати шаблонні placeholders на кшталт `your_package`.
-- Для `/.brain` canonical environment це Windows virtual environment у `/.brain/.venv`.
-- Навіть якщо агент працює з `WSL`, `/.brain/.venv` треба створювати, перестворювати і синхронізувати через Windows `cmd.exe` з `uv`, а не через Linux-layout `venv`.
-- Не тримати паралельні canonical environments на кшталт `/.brain/.venvx`; для локальної роботи з `brain` має використовуватися один проєктний env `/.brain/.venv`.
+- У Ruff-конфігу для `/.brains` тримати `known-first-party = ["brain"]`; не залишати шаблонні placeholders на кшталт `your_package`.
+- Для `/.brains` canonical environment це Windows virtual environment у `/.brains/.venv`.
+- Навіть якщо агент працює з `WSL`, `/.brains/.venv` треба створювати, перестворювати і синхронізувати через Windows `cmd.exe` з `uv`, а не через Linux-layout `venv`.
+- Не тримати паралельні canonical environments на кшталт `/.brains/.venvx`; для локальної роботи з `brain` має використовуватися один проєктний env `/.brains/.venv`.
 - У `cmd.exe` викликати `uv` напряму через `PATH`; не використовувати absolute path до `uv.exe`.
 - Якщо для цього репозиторію з `WSL` потрібен Docker, його теж слід викликати через Windows `cmd.exe`.
 - Для цього workflow пріоритетно використовувати `cmd.exe /c "docker ..."` замість прямого виклику Docker із Linux shell.
@@ -131,35 +131,35 @@ AlphaFold3/
 Приклади:
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && uv python install 3.12"
+cmd.exe /c "cd /d %CD%\.brains && uv python install 3.12"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && uv venv .venv --python 3.12"
+cmd.exe /c "cd /d %CD%\.brains && uv venv .venv --python 3.12"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv sync --all-groups"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv sync --all-groups"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests/test_cli.py -q"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests/test_cli.py -q"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brain tests"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brain tests"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brain"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brain"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests -q"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests -q"
 ```
 
 ### 1.5.1 Переносимість шляхів
@@ -202,32 +202,32 @@ curl "http://$WIN_HOST:11434/api/tags"
 
 ### 1.7 WSL і LanceDB
 
-- Якщо `/.brain` запускається всередині `WSL`, а сам репозиторій лежить на `/mnt/c/...`, `LanceDB` може падати на стандартному шляху `/.brain/.index/...` з `I/O` або `metadata`-помилками під час створення чи перезапису таблиць.
-- Канонічний default при цьому все одно лишається `/.brain/.index/...`.
+- Якщо `/.brains` запускається всередині `WSL`, а сам репозиторій лежить на `/mnt/c/...`, `LanceDB` може падати на стандартному шляху `/.brains/.index/...` з `I/O` або `metadata`-помилками під час створення чи перезапису таблиць.
+- Канонічний default при цьому все одно лишається `/.brains/.index/...`.
 - Коли стається саме цей збій `WSL + /mnt/c + LanceDB`, використовувати fallback index root у Linux-native файловій системі:
 
 ```bash
-cd .brain
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
+cd .brains
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
 ```
 
 - У fallback-режимі PDF-індекс зберігається тут:
   - `/tmp/alphafold3-pdf-index/manifest.json`
   - `/tmp/alphafold3-pdf-index/lancedb`
 - Також треба записувати pointer на активний fallback-шлях у:
-  - `/.brain/.index/pdf_search/active_index.json`
+  - `/.brains/.index/pdf_search/active_index.json`
 - Таку саму pointer-схему треба використовувати і для fallback markdown-індексу vault через:
-  - `/.brain/.index/vault_search/active_index.json`
-- Треба явно фіксувати, що використовується fallback-шлях, щоб наступні запуски не припускали, ніби активний індекс лежить у `/.brain/.index/pdf_search`.
+  - `/.brains/.index/vault_search/active_index.json`
+- Треба явно фіксувати, що використовується fallback-шлях, щоб наступні запуски не припускали, ніби активний індекс лежить у `/.brains/.index/pdf_search`.
 - У restricted sandbox-середовищах `LanceDB` може також зависати на `connect()` або `open_table()`, навіть коли fallback-індекс у `/tmp/...` валідний.
 - Перш ніж вважати індекс пошкодженим, перевіряти його поза sandbox через:
 
 ```bash
-cd .brain
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain check-index --target vault"
+cd .brains
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain check-index --target vault"
 ```
 
-- `brain check-index` має читати `active_index.json`, якщо він є, і перевіряти саме активний fallback-індекс, а не лише canonical-шлях `/.brain/.index/...`.
+- `brain check-index` має читати `active_index.json`, якщо він є, і перевіряти саме активний fallback-індекс, а не лише canonical-шлях `/.brains/.index/...`.
 
 ---
 
@@ -346,7 +346,7 @@ tags: [topic_name, domain_name]    # snake_case
 - Не змішувати мови в межах мовної папки.
 - Не додавати несистемні файли в корінь vault.
 - Не комітити секрети, `PII` або інші чутливі локальні дані.
-- Дозволені root-файли/папки: `.git/`, `.gitignore`, `.brain/`, `.obsidian/`, `.smart-env/`, `PDF/`, `Home.md`, `README.md`, `AGENTS.md`, `BRAIN.md`, `NOTICE.md`, `AUDIT.md`, `EN/`, `UA/`.
+- Дозволені root-файли/папки: `.git/`, `.gitignore`, `.brains/`, `.obsidian/`, `.smart-env/`, `PDF/`, `Home.md`, `README.md`, `AGENTS.md`, `BRAIN.md`, `NOTICE.md`, `AUDIT.md`, `EN/`, `UA/`.
 
 ## 7. NOTICE-файли
 

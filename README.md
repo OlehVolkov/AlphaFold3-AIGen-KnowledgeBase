@@ -8,8 +8,8 @@ This repository is an Obsidian knowledge base with:
 
 - a stable bilingual note tree where `UA/` stores Ukrainian notes and `EN/` stores English notes
 - vault governance and editing rules in `AGENTS.md`, `UA/AGENTS.md`, and `BRAIN.md`
-- local research helpers in `/.brain`
-- generated indexing data in `/.brain/.index`
+- local research helpers in `/.brains`
+- generated indexing data in `/.brains/.index`
 - local PDF storage in `/PDF`
 - `uv` as the primary Python tool for local automation
 
@@ -26,11 +26,11 @@ The existing bilingual layout is the source of truth: `UA/` is the Ukrainian bra
 - `BRAIN.md`: research-agent and retrieval workflow rules
 - `AUDIT.md`: audit snapshot and quality summary
 - `NOTICE.md`, `UA/NOTICE.md`: change log for structural and formatting refactors
-- `/.brain`: local BRAIN logic, scripts, prompts, utilities
-- `/.brain/.index`: generated index data, caches, manifests, embeddings
+- `/.brains`: local BRAIN logic, scripts, prompts, utilities
+- `/.brains/.index`: generated index data, caches, manifests, embeddings
 - `/PDF`: local PDF storage
-- `/.brain/brain/`: modular Python package for settings, PDF indexing, vault indexing, research loops, and CLI commands
-- `/.brain` CLI stays on `Typer`, with `Rich` for output and `Loguru` for logging
+- `/.brains/brain/`: modular Python package for settings, PDF indexing, vault indexing, research loops, and CLI commands
+- `/.brains` CLI stays on `Typer`, with `Rich` for output and `Loguru` for logging
 
 ## Knowledge Base Structure
 
@@ -62,19 +62,19 @@ Reason:
 - local indexing and health-check flows may depend on direct filesystem access, `/tmp` fallback indexes, and real local `Ollama` / `LanceDB` runtime behavior
 - restricted sandbox runs can produce false negatives such as `LanceDB` timeouts or failed index health-checks even when the actual index is valid
 
-If a Codex task involves indexing, retrieval, `/.brain`, `Ollama`, `LanceDB`, or runtime verification, the expected default is Full Access.
+If a Codex task involves indexing, retrieval, `/.brains`, `Ollama`, `LanceDB`, or runtime verification, the expected default is Full Access.
 
 ## Local Research Directories
 
-- `/.brain`: place reusable local tooling here
-- `/.brain/.index`: place generated indexing data here
+- `/.brains`: place reusable local tooling here
+- `/.brains/.index`: place generated indexing data here
 - `/PDF`: place local PDFs here
 
 Rules:
 
 - `/PDF` is local storage for source files
 - PDF payload files in `/PDF` must not be committed
-- generated index data should stay in `/.brain/.index`, not in the note tree
+- generated index data should stay in `/.brains/.index`, not in the note tree
 - do not expose secrets, `.env` values, credentials, or `PII` in notes, indexes, or governance files
 - use `uv` as the primary tool for Python virtual environments, dependencies, and script execution
 
@@ -101,50 +101,50 @@ uv python install 3.12
 - `npx` is for one-off Node/npm CLI tools.
 - For this repository, run `markdownlint-cli` through `npx`; it is not a Python tool and should not be routed through `uvx`.
 - Avoid mixing `uv` with ad hoc `pip install` / manual `venv` workflows unless a task explicitly requires that compatibility path.
-- For `/.brain`, use the Windows project environment at `/.brain/.venv` as the single canonical environment.
-- Even from `WSL`, create and sync `/.brain/.venv` through `cmd.exe` and `uv`.
+- For `/.brains`, use the Windows project environment at `/.brains/.venv` as the single canonical environment.
+- Even from `WSL`, create and sync `/.brains/.venv` through `cmd.exe` and `uv`.
 - In `cmd.exe`, call `uv` directly from `PATH`; do not use a full filesystem path to `uv.exe`.
 - For this repository, invoke Docker through Windows `cmd.exe` as well when working from `WSL`.
-- In `/.brain` Ruff configuration, use `known-first-party = ["brain"]` for import sorting; do not keep template placeholders such as `your_package`.
-- Keep `/.brain` code modular; prefer extending the existing package layout instead of adding flat compatibility files.
-- For `/.brain`, periodically audit direct dependencies against actual imports and remove stale packages when they are no longer used.
-- For `/.brain`, use `pytest`, `ruff`, and `mypy` as the verification toolbox.
+- In `/.brains` Ruff configuration, use `known-first-party = ["brain"]` for import sorting; do not keep template placeholders such as `your_package`.
+- Keep `/.brains` code modular; prefer extending the existing package layout instead of adding flat compatibility files.
+- For `/.brains`, periodically audit direct dependencies against actual imports and remove stale packages when they are no longer used.
+- For `/.brains`, use `pytest`, `ruff`, and `mypy` as the verification toolbox.
 - By default, run `ruff` and `mypy` plus targeted pytest files related to the changed code.
 - Run the full `pytest tests -q` suite only for broad refactors, cross-cutting changes, or when you explicitly want the whole suite.
-- Use `cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain think \"your query\""` for the local multi-role research loop with memory and reflection.
+- Use `cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain think \"your query\""` for the local multi-role research loop with memory and reflection.
 
 Examples:
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && uv python install 3.12"
+cmd.exe /c "cd /d %CD%\.brains && uv python install 3.12"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && uv venv .venv --python 3.12"
+cmd.exe /c "cd /d %CD%\.brains && uv venv .venv --python 3.12"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv sync --all-groups"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv sync --all-groups"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests/test_cli.py -q"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests/test_cli.py -q"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brain tests"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brain tests"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brain"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brain"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests -q"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests -q"
 ```
 
 ```bash
@@ -207,17 +207,17 @@ Do not store tokens, credentials, or other secrets in `Ollama` prompts, shell hi
 
 ## WSL and LanceDB
 
-When `/.brain` runs under `WSL` against a repository located on `/mnt/c/...`, `LanceDB` may fail with low-level I/O or metadata errors while creating or overwriting tables inside `/.brain/.index/...`.
+When `/.brains` runs under `WSL` against a repository located on `/mnt/c/...`, `LanceDB` may fail with low-level I/O or metadata errors while creating or overwriting tables inside `/.brains/.index/...`.
 
 Default behavior remains:
 
-- generated index data lives in `/.brain/.index`
+- generated index data lives in `/.brains/.index`
 
 If PDF indexing fails in this `WSL + /mnt/c + LanceDB` scenario, use a Linux-native fallback path instead of the Windows-mounted repository filesystem:
 
 ```bash
-cd .brain
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
+cd .brains
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
 ```
 
 In that fallback mode, the index is stored at:
@@ -227,11 +227,11 @@ In that fallback mode, the index is stored at:
 
 Additionally, the canonical index directory keeps a local pointer file with the active fallback location:
 
-- `/.brain/.index/pdf_search/active_index.json`
+- `/.brains/.index/pdf_search/active_index.json`
 
-This fallback is temporary/local to the current machine and should be used only when `LanceDB` fails on the default `/.brain/.index/...` path under `WSL`.
+This fallback is temporary/local to the current machine and should be used only when `LanceDB` fails on the default `/.brains/.index/...` path under `WSL`.
 
-Apply the same pattern to the vault markdown index when `index-vault` is built in a fallback location: keep the pointer file at `/.brain/.index/vault_search/active_index.json`.
+Apply the same pattern to the vault markdown index when `index-vault` is built in a fallback location: keep the pointer file at `/.brains/.index/vault_search/active_index.json`.
 
 Important runtime note:
 
@@ -239,8 +239,8 @@ Important runtime note:
 - when you need to verify whether an index is actually readable, run the health-check outside the sandbox:
 
 ```bash
-cd .brain
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain check-index --target vault"
+cd .brains
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain check-index --target vault"
 ```
 
 - the command reads `active_index.json` automatically and checks the active fallback index when a pointer is present

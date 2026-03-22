@@ -8,8 +8,8 @@
 
 - стабільним двомовним деревом нотаток, де `UA/` містить українські матеріали, а `EN/` містить англомовні;
 - правилами керування vault і редагування в `AGENTS.md`, `UA/AGENTS.md` і `BRAIN.md`;
-- локальними research-інструментами в `/.brain`;
-- згенерованими індексними даними в `/.brain/.index`;
+- локальними research-інструментами в `/.brains`;
+- згенерованими індексними даними в `/.brains/.index`;
 - локальним сховищем PDF у `/PDF`.
 - `uv` як основним Python-інструментом для локальної автоматизації.
 
@@ -26,8 +26,8 @@
 - `BRAIN.md`: правила research-agent workflow і retrieval-поведінки
 - `AUDIT.md`: знімок аудиту й короткий quality summary
 - `NOTICE.md`, `UA/NOTICE.md`: журнал структурних і форматних змін
-- `/.brain`: локальна BRAIN-логіка, скрипти, prompts, utilities
-- `/.brain/.index`: згенеровані index-дані, кеші, manifests, embeddings
+- `/.brains`: локальна BRAIN-логіка, скрипти, prompts, utilities
+- `/.brains/.index`: згенеровані index-дані, кеші, manifests, embeddings
 - `/PDF`: локальне сховище PDF
 
 ## Структура бази знань
@@ -60,19 +60,19 @@
 - локальні indexing і health-check сценарії можуть залежати від прямого доступу до файлової системи, fallback-індексів у `/tmp` і реальної runtime-поведінки `Ollama` / `LanceDB`
 - запуски в restricted sandbox можуть давати хибні негативні результати, наприклад `LanceDB timeout` або failed index health-check, навіть коли реальний індекс валідний
 
-Якщо задача `Codex` стосується indexing, retrieval, `/.brain`, `Ollama`, `LanceDB` або runtime-перевірок, очікуваний default це Full Access.
+Якщо задача `Codex` стосується indexing, retrieval, `/.brains`, `Ollama`, `LanceDB` або runtime-перевірок, очікуваний default це Full Access.
 
 ## Локальні research-каталоги
 
-- `/.brain`: місце для reusable local tooling
-- `/.brain/.index`: місце для generated indexing data
+- `/.brains`: місце для reusable local tooling
+- `/.brains/.index`: місце для generated indexing data
 - `/PDF`: місце для локальних PDF
 
 Правила:
 
 - `/PDF` це локальне сховище source files
 - PDF payload files у `/PDF` не повинні комітитися
-- generated index data мають лишатися в `/.brain/.index`, а не в дереві нотаток
+- generated index data мають лишатися в `/.brains/.index`, а не в дереві нотаток
 - не можна виносити секрети, `.env` значення, credentials або `PII` у нотатки, індекси чи governance-файли
 - для Python-оточень, залежностей і запуску скриптів пріоритетно використовувати `uv`
 
@@ -99,47 +99,47 @@ uv python install 3.12
 - `npx` використовувати для одноразового запуску Node/npm CLI tools.
 - Для цього репозиторію `markdownlint-cli` запускати через `npx`; це не Python tool, тому його не слід пускати через `uvx`.
 - Не змішувати `uv` з довільними `pip install` / ручними `venv`-workflow, якщо задача явно не вимагає такого сумісного режиму.
-- Для `/.brain` використовувати Windows project environment у `/.brain/.venv` як єдиний canonical env.
-- Навіть із `WSL` створювати та синхронізувати `/.brain/.venv` через `cmd.exe` і `uv`.
+- Для `/.brains` використовувати Windows project environment у `/.brains/.venv` як єдиний canonical env.
+- Навіть із `WSL` створювати та синхронізувати `/.brains/.venv` через `cmd.exe` і `uv`.
 - У `cmd.exe` викликати `uv` напряму через `PATH`; не використовувати повний файловий шлях до `uv.exe`.
 - Для цього репозиторію при роботі з `WSL` Docker теж слід викликати через Windows `cmd.exe`.
-- У Ruff-конфігу для `/.brain` використовувати `known-first-party = ["brain"]` для сортування імпортів; не залишати шаблонні placeholders на кшталт `your_package`.
-- Для `/.brain` використовувати `pytest`, `ruff` і `mypy` як verification-toolbox.
+- У Ruff-конфігу для `/.brains` використовувати `known-first-party = ["brain"]` для сортування імпортів; не залишати шаблонні placeholders на кшталт `your_package`.
+- Для `/.brains` використовувати `pytest`, `ruff` і `mypy` як verification-toolbox.
 - За замовчуванням запускати `ruff`, `mypy` і лише targeted pytest-файли, пов'язані зі зміненим кодом.
 - Повний `pytest tests -q` запускати лише для широких refactor-ів, cross-cutting changes або коли потрібен весь suite.
 
 Приклади:
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && uv python install 3.12"
+cmd.exe /c "cd /d %CD%\.brains && uv python install 3.12"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && uv venv .venv --python 3.12"
+cmd.exe /c "cd /d %CD%\.brains && uv venv .venv --python 3.12"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv sync --all-groups"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv sync --all-groups"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests/test_cli.py -q"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests/test_cli.py -q"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brain tests"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brain tests"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brain"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brain"
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests -q"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run pytest tests -q"
 ```
 
 ```bash
@@ -202,17 +202,17 @@ curl http://127.0.0.1:11434/api/generate \
 
 ## WSL і LanceDB
 
-Коли `/.brain` запускається в `WSL` для репозиторію, що лежить на `/mnt/c/...`, `LanceDB` може падати з низькорівневими `I/O` або `metadata`-помилками під час створення чи перезапису таблиць усередині `/.brain/.index/...`.
+Коли `/.brains` запускається в `WSL` для репозиторію, що лежить на `/mnt/c/...`, `LanceDB` може падати з низькорівневими `I/O` або `metadata`-помилками під час створення чи перезапису таблиць усередині `/.brains/.index/...`.
 
 Базове правило лишається таким:
 
-- generated index data зберігаються в `/.brain/.index`
+- generated index data зберігаються в `/.brains/.index`
 
 Якщо індексація PDF падає саме в цьому сценарії `WSL + /mnt/c + LanceDB`, треба використовувати fallback-шлях у Linux-native файловій системі замість Windows-mounted каталогу репозиторію:
 
 ```bash
-cd .brain
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
+cd .brains
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
 ```
 
 У fallback-режимі індекс зберігається тут:
@@ -222,11 +222,11 @@ cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run 
 
 Додатково canonical-каталог індексу зберігає локальний pointer-файл з активним fallback-шляхом:
 
-- `/.brain/.index/pdf_search/active_index.json`
+- `/.brains/.index/pdf_search/active_index.json`
 
-Цей fallback є тимчасовим/локальним для поточної машини і має використовуватись лише тоді, коли `LanceDB` падає на стандартному шляху `/.brain/.index/...` під `WSL`.
+Цей fallback є тимчасовим/локальним для поточної машини і має використовуватись лише тоді, коли `LanceDB` падає на стандартному шляху `/.brains/.index/...` під `WSL`.
 
-Та сама схема застосовується і до markdown-індексу vault, якщо `index-vault` будується у fallback-шляху: pointer-файл треба тримати в `/.brain/.index/vault_search/active_index.json`.
+Та сама схема застосовується і до markdown-індексу vault, якщо `index-vault` будується у fallback-шляху: pointer-файл треба тримати в `/.brains/.index/vault_search/active_index.json`.
 
 Важлива runtime-нотатка:
 
@@ -234,8 +234,8 @@ cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run 
 - коли треба перевірити, чи індекс справді читається, запускати health-check поза sandbox:
 
 ```bash
-cd .brain
-cmd.exe /c "cd /d %CD%\.brain && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain check-index --target vault"
+cd .brains
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain check-index --target vault"
 ```
 
 - команда автоматично читає `active_index.json` і перевіряє активний fallback-індекс, якщо pointer присутній
