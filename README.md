@@ -7,7 +7,7 @@ Bilingual Obsidian vault for AlphaFold 3 and related STEM topics.
 This repository is an Obsidian knowledge base with:
 
 - a stable bilingual note tree where `UA/` stores Ukrainian notes and `EN/` stores English notes
-- vault governance and editing rules in `AGENTS.md`, `UA/AGENTS.md`, and `BRAIN.md`
+- vault governance and editing rules in `AGENTS.md`, `UA/AGENTS.md`, and `/.brains/BRAIN.md`
 - local research helpers in `/.brains`
 - generated indexing data in `/.brains/.index`
 - local PDF storage in `/PDF`
@@ -23,7 +23,7 @@ The existing bilingual layout is the source of truth: `UA/` is the Ukrainian bra
 - `UA/`: Ukrainian notes
 - `AGENTS.md`: English repository rules
 - `UA/AGENTS.md`: Ukrainian mirror of repository rules
-- `BRAIN.md`: research-agent and retrieval workflow rules
+- `/.brains/BRAIN.md`: research-agent and retrieval workflow rules
 - `AUDIT.md`: audit snapshot and quality summary
 - `NOTICE.md`, `UA/NOTICE.md`: change log for structural and formatting refactors
 - `/.brains`: local BRAIN logic, scripts, prompts, utilities
@@ -44,7 +44,7 @@ The existing bilingual layout is the source of truth: `UA/` is the Ukrainian bra
 Before editing:
 
 1. Read `AGENTS.md` or `UA/AGENTS.md`.
-2. Read `BRAIN.md` if the task involves retrieval, indexing, automation, or research workflows.
+2. Read `/.brains/BRAIN.md` if the task involves retrieval, indexing, automation, or research workflows.
 3. Preserve the existing bilingual layout: `UA/` for Ukrainian and `EN/` for English.
 4. Keep absolute wiki-links from vault root.
 5. Keep language separation strict:

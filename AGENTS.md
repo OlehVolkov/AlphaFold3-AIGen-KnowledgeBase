@@ -11,6 +11,7 @@ AlphaFold3/
 ├── .git/
 ├── .gitignore
 ├── .brains/
+│   ├── BRAIN.md
 │   └── .index/
 ├── .obsidian/
 ├── .smart-env/
@@ -18,7 +19,6 @@ AlphaFold3/
 ├── AGENTS.md
 ├── Home.md
 ├── AUDIT.md
-├── BRAIN.md
 ├── EN/
 │   ├── 1. AlphaFold3/
 │   ├── 2. Concepts/
@@ -50,6 +50,7 @@ AlphaFold3/
 - Substantial UA notes must have EN mirrors.
 - `Home.md` is the main English entry point; `EN/Summary*.md` files are allowed for technical digests/implementation notes.
 - `README.md` and `UA/README.md` describe repository usage and should stay aligned at the policy level.
+- For retrieval, indexing, automation, and research-agent workflow rules, use `/.brains/BRAIN.md` as the canonical instruction file; do not recreate a root-level `BRAIN.md`.
 
 ### 1.2 EN ↔ UA Synchronization (required)
 
@@ -78,7 +79,7 @@ AlphaFold3/
   - personal data (`PII`) or other sensitive local user data.
 - Such data must not be intentionally copied into:
   - `UA/` notes / `EN/` notes,
-  - `NOTICE.md`, `UA/NOTICE.md`, `AUDIT.md`, `EN/Summary*.md`, `BRAIN.md`, `AGENTS.md`, `UA/AGENTS.md`,
+  - `NOTICE.md`, `UA/NOTICE.md`, `AUDIT.md`, `EN/Summary*.md`, `/.brains/BRAIN.md`, `AGENTS.md`, `UA/AGENTS.md`,
   - `/.brains/.index`, `/.brains`, `PDF/`, or other versioned files.
 - If the source material contains secrets or personal data, the agent must:
   - avoid copying them verbatim into the repository,
@@ -112,6 +113,11 @@ AlphaFold3/
   - Use `npx` for non-Python tools such as `markdownlint-cli`; do not route npm tools through `uvx`.
 - Avoid introducing parallel Python workflow conventions (`requirements.txt` + ad hoc `pip install`, manual virtualenv handling, mixed package managers) unless the repository or the user explicitly requires them.
 - When adding Python automation under `/.brains`, keep the `uv` workflow explicit in local documentation and commands.
+- If a task requires a reusable helper script, store it under `/.scripts` instead of leaving it as a temporary one-off artifact.
+- Scripts added under `/.scripts` must include a short header comment or docstring that explains:
+  - what the script does,
+  - which repository-specific constants or structure assumptions should be reviewed first when adapting it to another repository.
+- Prefer writing these helper scripts so they can be reused or adapted by other agents in similar repositories, especially when folder structure, note taxonomy, or governance pages differ.
 - For `/.brains`, the canonical environment is the Windows virtual environment at `/.brains/.venv`.
 - Even when the agent is working from `WSL`, create, recreate, and sync `/.brains/.venv` through Windows `cmd.exe` with `uv`, not through a Linux `venv` layout.
 - Do not keep parallel canonical environments such as `/.brains/.venvx`; `/.brains/.venv` is the single project environment for local `brain` work.
@@ -385,7 +391,7 @@ All scientific/technical claims require sources:
 - No mixed languages inside one language folder.
 - Do not add non-system files to vault root.
 - Do not commit secrets, `PII`, or other sensitive local data.
-- Allowed root files/directories: `.git/`, `.gitignore`, `.brains/`, `.obsidian/`, `.smart-env/`, `PDF/`, `Home.md`, `README.md`, `AGENTS.md`, `BRAIN.md`, `NOTICE.md`, `AUDIT.md`, `EN/`, `UA/`.
+- Allowed root files/directories: `.git/`, `.gitignore`, `.brains/`, `.obsidian/`, `.smart-env/`, `PDF/`, `Home.md`, `README.md`, `AGENTS.md`, `NOTICE.md`, `AUDIT.md`, `EN/`, `UA/`.
 
 ---
 

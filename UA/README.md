@@ -7,7 +7,7 @@
 Цей репозиторій є Obsidian-базою знань з:
 
 - стабільним двомовним деревом нотаток, де `UA/` містить українські матеріали, а `EN/` містить англомовні;
-- правилами керування vault і редагування в `AGENTS.md`, `UA/AGENTS.md` і `BRAIN.md`;
+- правилами керування vault і редагування в `AGENTS.md`, `UA/AGENTS.md` і `/.brains/BRAIN.md`;
 - локальними research-інструментами в `/.brains`;
 - згенерованими індексними даними в `/.brains/.index`;
 - локальним сховищем PDF у `/PDF`.
@@ -23,7 +23,7 @@
 - `UA/`: українські нотатки
 - `AGENTS.md`: англомовні правила репозиторію
 - `UA/AGENTS.md`: українське дзеркало правил репозиторію
-- `BRAIN.md`: правила research-agent workflow і retrieval-поведінки
+- `/.brains/BRAIN.md`: правила research-agent workflow і retrieval-поведінки
 - `AUDIT.md`: знімок аудиту й короткий quality summary
 - `NOTICE.md`, `UA/NOTICE.md`: журнал структурних і форматних змін
 - `/.brains`: локальна BRAIN-логіка, скрипти, prompts, utilities
@@ -42,7 +42,7 @@
 Перед редагуванням:
 
 1. Прочитати `AGENTS.md` або `UA/AGENTS.md`.
-2. Прочитати `BRAIN.md`, якщо задача стосується retrieval, indexing, automation або research-workflows.
+2. Прочитати `/.brains/BRAIN.md`, якщо задача стосується retrieval, indexing, automation або research-workflows.
 3. Зберігати чинну двомовну структуру: `UA/` для української, `EN/` для англійської.
 4. Використовувати лише absolute wiki-links від кореня vault.
 5. Строго розділяти мови:

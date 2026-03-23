@@ -11,6 +11,7 @@ AlphaFold3/
 ├── .git/
 ├── .gitignore
 ├── .brains/
+│   ├── BRAIN.md
 │   └── .index/
 ├── .obsidian/
 ├── .smart-env/
@@ -18,7 +19,6 @@ AlphaFold3/
 ├── AGENTS.md
 ├── Home.md
 ├── AUDIT.md
-├── BRAIN.md
 ├── EN/
 │   ├── 1. AlphaFold3/
 │   ├── 2. Concepts/
@@ -50,6 +50,7 @@ AlphaFold3/
 - Суттєві UA-нотатки мають EN-дзеркало.
 - `Home.md` — головна англомовна точка входу; `EN/Summary*.md` дозволені як технічні дайджести/implementation-нотатки.
 - `README.md` і `UA/README.md` описують використання репозиторію та мають лишатися синхронними на рівні політик.
+- Для retrieval, indexing, automation і research-agent workflow канонічним файлом інструкцій є `/.brains/BRAIN.md`; не слід знову створювати `BRAIN.md` у корені.
 
 ### 1.2 Синхронізація EN ↔ UA (обов'язково)
 
@@ -78,7 +79,7 @@ AlphaFold3/
   - персональні дані (`PII`) або чутливі локальні дані користувача.
 - Заборонено навмисно виносити такі дані в:
   - нотатки `UA/` / нотатки `EN/`,
-  - `NOTICE.md`, `UA/NOTICE.md`, `AUDIT.md`, `EN/Summary*.md`, `BRAIN.md`, `AGENTS.md`, `UA/AGENTS.md`,
+  - `NOTICE.md`, `UA/NOTICE.md`, `AUDIT.md`, `EN/Summary*.md`, `/.brains/BRAIN.md`, `AGENTS.md`, `UA/AGENTS.md`,
   - `/.brains/.index`, `/.brains`, `PDF/` або інші versioned файли.
 - Якщо вхідні матеріали містять секрети або персональні дані, агент повинен:
   - не копіювати їх дослівно в репозиторій,
@@ -112,6 +113,11 @@ AlphaFold3/
   - Для non-Python tools на кшталт `markdownlint-cli` використовувати `npx`, а не `uvx`.
 - Не вводити паралельні Python-workflows (`requirements.txt` + довільний `pip install`, ручне керування virtualenv, змішані package managers), якщо цього явно не вимагає сам репозиторій або запит користувача.
 - Якщо Python-автоматизація додається в `/.brains`, `uv`-workflow має бути явно відображений у локальній документації та прикладах команд.
+- Якщо для задачі потрібен reusable helper script, його слід зберігати в `/.scripts`, а не залишати як тимчасовий одноразовий артефакт.
+- Скрипти, додані в `/.scripts`, повинні містити короткий header comment або docstring, який пояснює:
+  - що саме робить скрипт,
+  - які repository-specific constants або structural assumptions треба перевірити насамперед при адаптації під інший репозиторій.
+- Такі helper scripts варто писати з розрахунком на повторне використання або адаптацію іншими агентами в подібних репозиторіях, особливо коли відрізняються структура папок, таксономія нотаток або governance-сторінки.
 - Для `/.brains` вважати `pytest`, `ruff` і `mypy` стандартним verification-toolbox після Python-змін.
 - Не проганяти повний `pytest tests -q` за замовчуванням після кожної дрібної зміни.
 - За замовчуванням:
@@ -346,7 +352,7 @@ tags: [topic_name, domain_name]    # snake_case
 - Не змішувати мови в межах мовної папки.
 - Не додавати несистемні файли в корінь vault.
 - Не комітити секрети, `PII` або інші чутливі локальні дані.
-- Дозволені root-файли/папки: `.git/`, `.gitignore`, `.brains/`, `.obsidian/`, `.smart-env/`, `PDF/`, `Home.md`, `README.md`, `AGENTS.md`, `BRAIN.md`, `NOTICE.md`, `AUDIT.md`, `EN/`, `UA/`.
+- Дозволені root-файли/папки: `.git/`, `.gitignore`, `.brains/`, `.obsidian/`, `.smart-env/`, `PDF/`, `Home.md`, `README.md`, `AGENTS.md`, `NOTICE.md`, `AUDIT.md`, `EN/`, `UA/`.
 
 ## 7. NOTICE-файли
 
