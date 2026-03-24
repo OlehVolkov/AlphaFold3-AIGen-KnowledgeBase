@@ -114,7 +114,8 @@ AlphaFold3/
 - Не вводити паралельні Python-workflows (`requirements.txt` + довільний `pip install`, ручне керування virtualenv, змішані package managers), якщо цього явно не вимагає сам репозиторій або запит користувача.
 - Якщо Python-автоматизація додається в `/.brains`, `uv`-workflow має бути явно відображений у локальній документації та прикладах команд.
 - Якщо для задачі потрібен reusable helper script, його слід зберігати в `/.scripts`, а не залишати як тимчасовий одноразовий артефакт.
-- Скрипти, додані в `/.scripts`, повинні містити короткий header comment або docstring, який пояснює:
+- Якщо скрипт специфічний саме для workflow `/.brains`, його слід тримати в `/.brains/scripts`, а не в кореневому `/.scripts`.
+- Скрипти, додані в `/.scripts` або `/.brains/scripts`, повинні містити короткий header comment або docstring, який пояснює:
   - що саме робить скрипт,
   - які repository-specific constants або structural assumptions треба перевірити насамперед при адаптації під інший репозиторій.
 - Такі helper scripts варто писати з розрахунком на повторне використання або адаптацію іншими агентами в подібних репозиторіях, особливо коли відрізняються структура папок, таксономія нотаток або governance-сторінки.
@@ -124,7 +125,22 @@ AlphaFold3/
   - запускати `ruff` і `mypy` окремо,
   - запускати лише targeted pytest-файли або конкретні тести, пов'язані зі зміненим кодом,
   - повний pytest-suite запускати лише для широких refactor-ів, cross-cutting changes або за явним запитом.
+- Для `/.brains` канонічною командою type-check вважати `uv run mypy brains`.
+- Mypy-конфіг у репозиторії має залишатися виконуваним у стандартному локальному середовищі; не підміняти це ad hoc command-line flags у прикладах або звичній перевірці, якщо не змінюється сама конфігурація.
+- У цьому репозиторії для `mypy` слід зберігати `follow_imports = "skip"` як default policy, доки окрема зміна не доведе, що повний import traversal і стабільний, і реально корисніший.
+- Причина: важкі optional dependency trees на кшталт `docling`, `sentence-transformers`, `transformers` і `torch` можуть робити full import traversal непропорційно повільним або провокувати internal mypy failures у Windows workflow з `/.brains/.venv`.
+- Якщо `mypy` виглядає як такий, що завис, спершу перевіряти, чи проблема не в важкому third-party import traversal, а не одразу припускати локальну typing-помилку.
+- Для перевикористовуваної mypy-діагностики в `/.brains` пріоритетно використовувати helper script `/.brains/scripts/diagnose_mypy_hang.py`, а не разові shell-експерименти.
+- Не прибирати mypy safeguards для import-skipping цих важких third-party пакетів, доки оновлена конфігурація не буде підтверджена реальним успішним запуском `uv run mypy brains` у цьому репозиторії.
 - У Ruff-конфігу для `/.brains` тримати `known-first-party = ["brain"]`; не залишати шаблонні placeholders на кшталт `your_package`.
+- Для `/.brains` repository-specific operational defaults, які можуть відрізнятися між репозиторіями або структурою vault, слід зберігати в `/.brains/config/brains.toml`, а не як Python hardcode.
+- Зокрема:
+  - exclusions для governance-сторінок у graph retrieval тримати в `[graph].governance_files`,
+  - явні mirror/special page pairs тримати в `[graph].special_page_pairs`,
+  - default queries для `check-index` тримати в `[health].pdf_probe_query` і `[health].vault_probe_query`.
+- `/.brains`-specific helper scripts не повинні містити власний inline `DEFAULT_CONFIG`, якщо ці значення вже задаються через TOML; такі скрипти мають читати `config/brains.toml` і, за наявності, `config/local.toml`.
+- Для `/.brains` helper scripts, які входять у звичайний локальний workflow, слід віддавати пріоритет переносимим Python wrappers замість shell-only wrappers, якщо це практично можливо.
+- Для workflow завантаження та реіндексації літературних PDF канонічним helper entrypoint вважати `/.brains/scripts/fetch_literature_pdfs.py`.
 - Для `/.brains` canonical environment це Windows virtual environment у `/.brains/.venv`.
 - Навіть якщо агент працює з `WSL`, `/.brains/.venv` треба створювати, перестворювати і синхронізувати через Windows `cmd.exe` з `uv`, а не через Linux-layout `venv`.
 - Не тримати паралельні canonical environments на кшталт `/.brains/.venvx`; для локальної роботи з `brain` має використовуватися один проєктний env `/.brains/.venv`.
@@ -161,7 +177,7 @@ cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brain"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brains"
 ```
 
 ```bash

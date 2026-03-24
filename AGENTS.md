@@ -114,7 +114,8 @@ AlphaFold3/
 - Avoid introducing parallel Python workflow conventions (`requirements.txt` + ad hoc `pip install`, manual virtualenv handling, mixed package managers) unless the repository or the user explicitly requires them.
 - When adding Python automation under `/.brains`, keep the `uv` workflow explicit in local documentation and commands.
 - If a task requires a reusable helper script, store it under `/.scripts` instead of leaving it as a temporary one-off artifact.
-- Scripts added under `/.scripts` must include a short header comment or docstring that explains:
+- If the script is specific to `/.brains` workflows, keep it under `/.brains/scripts` rather than the root `/.scripts`.
+- Scripts added under `/.scripts` or `/.brains/scripts` must include a short header comment or docstring that explains:
   - what the script does,
   - which repository-specific constants or structure assumptions should be reviewed first when adapting it to another repository.
 - Prefer writing these helper scripts so they can be reused or adapted by other agents in similar repositories, especially when folder structure, note taxonomy, or governance pages differ.
@@ -162,7 +163,22 @@ cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run
   - run `ruff` and `mypy` separately,
   - run only targeted pytest files or targeted tests related to the changed code,
   - run the full pytest suite only for broad refactors, cross-cutting changes, or when explicitly requested.
+- For `/.brains`, treat `uv run mypy brains` as the canonical type-check command.
+- Keep the repository mypy configuration runnable in the default local environment; do not switch to ad hoc command-line flags in examples or routine verification unless the configuration itself is being updated.
+- In this repository, `mypy` should keep `follow_imports = "skip"` as the default policy unless a later change proves that full import following is both stable and materially more useful.
+- Reason: optional heavy dependency trees such as `docling`, `sentence-transformers`, `transformers`, and `torch` can make full import traversal unreasonably slow or trigger internal mypy failures in the Windows `/.brains/.venv` workflow.
+- If mypy appears to hang, first verify whether the issue is heavy third-party import traversal rather than a local typing error.
+- For reusable `/.brains` mypy diagnosis, prefer the helper script `/.brains/scripts/diagnose_mypy_hang.py` instead of one-off shell experiments.
+- Do not remove the mypy import-skipping safeguards for those heavy third-party packages unless the updated configuration has been verified with a real successful `uv run mypy brains` run in this repository.
 - In `/.brains` Ruff configuration, keep `known-first-party = ["brain"]`; do not leave template placeholders such as `your_package`.
+- For `/.brains`, keep repository-specific operational defaults that may vary across repositories or vault layouts in `/.brains/config/brains.toml`, not as Python hardcode.
+- In particular:
+  - keep graph governance-page exclusions in `[graph].governance_files`,
+  - keep explicit mirror/special page pairs in `[graph].special_page_pairs`,
+  - keep default `check-index` probe queries in `[health].pdf_probe_query` and `[health].vault_probe_query`.
+- `/.brains`-specific helper scripts must not carry their own inline `DEFAULT_CONFIG` when the same values already live in TOML; they should read `config/brains.toml` and, when present, `config/local.toml`.
+- For `/.brains` helper scripts that are part of the normal local workflow, prefer portable Python wrappers over shell-only wrappers when practical.
+- For literature PDF download/reindex workflow, treat `/.brains/scripts/fetch_literature_pdfs.py` as the canonical helper entrypoint.
 
 Verification examples:
 
@@ -175,7 +191,7 @@ cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brain"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run mypy brains"
 ```
 
 ```bash

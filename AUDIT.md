@@ -5,7 +5,7 @@ tags: [audit, quality, confidence, references]
 
 # Knowledge Base Audit (AlphaFold3 Vault)
 
-Date: 2026-03-23
+Date: 2026-03-24
 Scope: `UA/`, `EN/`, root governance/navigation pages, `/.brains/BRAIN.md`, wiki-link integrity, DOI/source coverage, mirror-consistency checks, and optional `/.brains` runtime health.
 
 ## 1. Method
@@ -93,39 +93,27 @@ Status: **FAIL** (medium)
 
 ### Vault Index
 
-- `status`: `ok`
-- `row_count`: `1742`
-- `index_root`: `C:\__PROJECTS\Obsidian\AlphaFold3\.brains\.index\vault_search`
-- `pointer_used`: `False`
+- command did not produce parseable JSON
 
 ### Pdf Index
 
-- `status`: `ok`
-- `row_count`: `1597`
-- `index_root`: `C:\__PROJECTS\Obsidian\AlphaFold3\.brains\.index\pdf_search`
-- `pointer_used`: `False`
+- command did not produce parseable JSON
 
 ## 6. Retrieval Quality Probes
 
 ### Query: `pairformer`
 
-- top result: `EN/1. AlphaFold3/1.2. Architecture/1.2.2. Pairformer.md`
-- top section: `Pairformer > What is the Pairformer?`
-- preferred top hit: `yes`
+- command did not produce parseable JSON
 - assessment: Canonical Pairformer notes should rank first.
 
 ### Query: `foldseek`
 
-- top result: `EN/1. AlphaFold3/1.5. Resources/1.5.7. Foldseek and Structure Search.md`
-- top section: `1.5.7. Foldseek and Structure Search`
-- preferred top hit: `yes`
+- command did not produce parseable JSON
 - assessment: The dedicated Foldseek note should be the primary hit.
 
 ### Query: `confidence`
 
-- top result: `EN/1. AlphaFold3/1.5. Resources/1.5.8. AlphaFold DB FAQ.md`
-- top section: `AlphaFold DB FAQ > How should I interpret confidence on the site?`
-- preferred top hit: `no`
+- command did not produce parseable JSON
 - assessment: Generic confidence queries may also surface FAQ or pLDDT context, but the dedicated confidence note is preferred.
 
 ## 7. Corrections Applied During This Audit Cycle
@@ -143,11 +131,11 @@ Status: **FAIL** (medium)
 | 3. Models | High | 10 mirrored pairs, 0 branch-level notes without DOI, 0 parity issue(s). |
 | 4. Datasets | Medium | 5 mirrored pairs, 10 branch-level notes without DOI, 0 parity issue(s). |
 | Governance and navigation | High | 14/14 key pages present, 0 broken wiki-links in the audit scan. |
-| `/.brains` retrieval layer | High | 2/2 indexes healthy, 2/3 preferred probe hits ranked first. |
+| `/.brains` retrieval layer | Low | 0/2 indexes healthy, 0/3 preferred probe hits ranked first. |
 
 ## 9. Recommended Next Actions
 
 1. Keep the static wiki-link scan in regular maintenance so future broken links do not accumulate silently.
 2. Resolve the `11` EN↔UA parity issues, starting with numbered note mismatches and `##` section mismatches.
 3. Raise DOI coverage in the `37` numbered notes that still lack `> DOI:` blocks, starting with the largest affected section.
-4. Review retrieval ranking for the `1` probe(s) where the preferred note is not ranked first.
+4. Review retrieval ranking for the `3` probe(s) where the preferred note is not ranked first.
