@@ -22,7 +22,7 @@ In practice, a modular Python design works best: each stage is an isolated compo
 ## Main Python implementation approaches
 
 | Approach | When to choose | Advantages | Risks/limitations |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `Inference-first` (existing stack + pipeline adaptation) | Need fast practical results | Lowest R&D risk, shortest time-to-result | Less architectural control |
 | `AF3-like modular reimplementation` | Need research flexibility | Fine-grained component control, ablations | High validation cost |
 | `Hybrid` (ready embeddings + custom diffusion head) | Need speed/control balance | Good trade-off between performance and control | Integration complexity |

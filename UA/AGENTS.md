@@ -111,6 +111,12 @@ AlphaFold3/
   - `uvx` доречний тоді, коли потрібен Python tool тимчасово й без додавання в `/.brains/.venv`.
   - `npx` є Node/npm-аналогом для одноразового запуску JavaScript CLI tools.
   - Для non-Python tools на кшталт `markdownlint-cli` використовувати `npx`, а не `uvx`.
+  - Якщо для локальної сумісності важливий саме Node/npm runtime, `npm` і `npx` слід пріоритетно викликати через Windows `cmd.exe`, так само як `uv` і Docker.
+  - Поточні перевірені runtimes:
+    - у `WSL`-side `node` версія `v18.19.1`,
+    - у Windows-side `node` через `cmd.exe` версія `v20.20.2`, і саме цей runtime є канонічним для локального workflow репозиторію.
+  - Поточний перевірений шлях для `markdownlint`:
+    - Windows-side `cmd.exe /c "npx --yes markdownlint-cli ..."` працює і має вважатися нормальним шляхом запуску.
 - Не вводити паралельні Python-workflows (`requirements.txt` + довільний `pip install`, ручне керування virtualenv, змішані package managers), якщо цього явно не вимагає сам репозиторій або запит користувача.
 - Якщо Python-автоматизація додається в `/.brains`, `uv`-workflow має бути явно відображений у локальній документації та прикладах команд.
 - Якщо для задачі потрібен reusable helper script, його слід зберігати в `/.scripts`, а не залишати як тимчасовий одноразовий артефакт.
@@ -125,6 +131,8 @@ AlphaFold3/
   - запускати `ruff` і `mypy` окремо,
   - запускати лише targeted pytest-файли або конкретні тести, пов'язані зі зміненим кодом,
   - повний pytest-suite запускати лише для широких refactor-ів, cross-cutting changes або за явним запитом.
+- У `/.brains` checked-in pytest-конфіг уже містить reporting повільних тестів і `faulthandler` timeout для повного suite.
+- Коли повний прогін справді потрібен, канонічною командою вважати `uv run pytest tests -q`; не додавати зайві timing/debug flags у звичайні приклади, якщо ви не діагностуєте сам pytest.
 - Для `/.brains` канонічною командою type-check вважати `uv run mypy brains`.
 - Mypy-конфіг у репозиторії має залишатися виконуваним у стандартному локальному середовищі; не підміняти це ad hoc command-line flags у прикладах або звичній перевірці, якщо не змінюється сама конфігурація.
 - У цьому репозиторії для `mypy` слід зберігати `follow_imports = "skip"` як default policy, доки окрема зміна не доведе, що повний import traversal і стабільний, і реально корисніший.
@@ -132,7 +140,7 @@ AlphaFold3/
 - Якщо `mypy` виглядає як такий, що завис, спершу перевіряти, чи проблема не в важкому third-party import traversal, а не одразу припускати локальну typing-помилку.
 - Для перевикористовуваної mypy-діагностики в `/.brains` пріоритетно використовувати helper script `/.brains/scripts/diagnose_mypy_hang.py`, а не разові shell-експерименти.
 - Не прибирати mypy safeguards для import-skipping цих важких third-party пакетів, доки оновлена конфігурація не буде підтверджена реальним успішним запуском `uv run mypy brains` у цьому репозиторії.
-- У Ruff-конфігу для `/.brains` тримати `known-first-party = ["brain"]`; не залишати шаблонні placeholders на кшталт `your_package`.
+- У Ruff-конфігу для `/.brains` тримати `known-first-party = ["brains"]`; не залишати шаблонні placeholders на кшталт `your_package`.
 - Для `/.brains` repository-specific operational defaults, які можуть відрізнятися між репозиторіями або структурою vault, слід зберігати в `/.brains/config/brains.toml`, а не як Python hardcode.
 - Зокрема:
   - exclusions для governance-сторінок у graph retrieval тримати в `[graph].governance_files`,
@@ -143,10 +151,14 @@ AlphaFold3/
 - Для workflow завантаження та реіндексації літературних PDF канонічним helper entrypoint вважати `/.brains/scripts/fetch_literature_pdfs.py`.
 - Для `/.brains` canonical environment це Windows virtual environment у `/.brains/.venv`.
 - Навіть якщо агент працює з `WSL`, `/.brains/.venv` треба створювати, перестворювати і синхронізувати через Windows `cmd.exe` з `uv`, а не через Linux-layout `venv`.
-- Не тримати паралельні canonical environments на кшталт `/.brains/.venvx`; для локальної роботи з `brain` має використовуватися один проєктний env `/.brains/.venv`.
+- Не запускати lifecycle-команди для canonical `/.brains/.venv` з Linux-боку `WSL`; для цього репозиторію ця заборона стосується `uv venv`, `uv sync`, `uv run` і прямого використання `.venv/bin/python`.
+- Linux-style директорії на кшталт `/.brains/.venv/bin/`, `/.brains/.venv/lib/` або `/.brains/.venv/lib64/` слід вважати broken state для цього репозиторію, а не допустимим варіантом canonical environment.
+- Якщо `/.brains/.venv/Scripts/python.exe` відсутній або поруч з ним з'явилися Linux-style директорії `/.venv`, треба спершу відновити середовище, а вже потім запускати перевірки, indexing чи локальну автоматизацію.
+- Не тримати паралельні canonical environments на кшталт `/.brains/.venvx`; для локальної роботи з `brains` має використовуватися один проєктний env `/.brains/.venv`.
 - У `cmd.exe` викликати `uv` напряму через `PATH`; не використовувати absolute path до `uv.exe`.
 - Якщо для цього репозиторію з `WSL` потрібен Docker, його теж слід викликати через Windows `cmd.exe`.
 - Для цього workflow пріоритетно використовувати `cmd.exe /c "docker ..."` замість прямого виклику Docker із Linux shell.
+- Таку саму перевагу слід віддавати `npm` і `npx`, коли важливі Node-версія або Windows-side інтеграція.
 - Не можна жорстко прошивати локальний шлях репозиторію в командах, документації, скриптах чи прикладах.
 - Пріоритетно використовувати переносимі шаблони на кшталт `%CD%`, відносні шляхи від поточного каталогу або явні placeholders типу `<REPO_ROOT>` замість machine-specific absolute paths.
 
@@ -165,7 +177,7 @@ cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv syn
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brains"
 ```
 
 ```bash
@@ -173,7 +185,7 @@ cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brain tests"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brains tests"
 ```
 
 ```bash
@@ -187,6 +199,20 @@ cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run
 ### 1.5.1 Переносимість шляхів
 
 - Переносимість шляхів для operational examples та automation snippets вважати must-have вимогою.
+- Не описувати одну глобальну версію Node для цього репозиторію без перевірки конкретного runtime.
+- Станом зараз:
+  - у `WSL`-side `node` версія `v18.19.1`,
+  - у Windows-side `node` через `cmd.exe` версія `v20.20.2`, і саме цей Windows runtime є канонічним для локального workflow репозиторію.
+- Поточне markdownlint-правило:
+  - для Node tooling слід віддавати пріоритет Windows-side `cmd.exe /c "npx ..."`,
+  - не запускати кілька Windows-side `npx`-інсталяцій паралельно проти одного shared cache,
+  - якщо `%LocalAppData%\\npm-cache\\_npx` починає сипати extraction або module-resolution errors, слід очистити директорію `_npx` і повторити команду один раз, послідовно.
+- Якщо canonical `/.brains/.venv` став неконсистентним, відновлювати його в такому порядку:
+  - зупинити Windows-процеси, які ще тримають `/.brains/.venv/Scripts/python.exe`,
+  - видалити `/.brains/.venv`,
+  - перестворити його командою `cmd.exe /c "cd /d %CD%\.brains && uv venv .venv --python 3.12"`,
+  - пересинхронізувати командою `cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv sync --all-groups --python 3.12"`,
+  - перевірити через `cmd.exe /c "cd /d %CD%\.brains && .venv\\Scripts\\python.exe -V"`.
 
 ### 1.6 WSL і Ollama
 
@@ -230,7 +256,7 @@ curl "http://$WIN_HOST:11434/api/tags"
 
 ```bash
 cd .brains
-cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brains index --index-root /tmp/alphafold3-pdf-index"
 ```
 
 - У fallback-режимі PDF-індекс зберігається тут:
@@ -246,10 +272,10 @@ cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run
 
 ```bash
 cd .brains
-cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain check-index --target vault"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brains check-index --target vault"
 ```
 
-- `brain check-index` має читати `active_index.json`, якщо він є, і перевіряти саме активний fallback-індекс, а не лише canonical-шлях `/.brains/.index/...`.
+- `brains check-index` має читати `active_index.json`, якщо він є, і перевіряти саме активний fallback-індекс, а не лише canonical-шлях `/.brains/.index/...`.
 
 ---
 
@@ -413,7 +439,7 @@ tags: [topic_name, domain_name]    # snake_case
 Нотатка `1.2.6. Featurization` містить розділи 10 і 11 з Python-кодом.
 
 | Розділ | Зміст |
-|---|---|
+| --- | --- |
 | 10.1 | Встановлення залежностей (`numpy`, `rdkit`, `gemmi`, `biopython`) |
 | 10.2 | Токенізація білка → one-hot `(L, 22)` |
 | 10.3 | Токенізація ліганду зі SMILES → атоми + bond graph |

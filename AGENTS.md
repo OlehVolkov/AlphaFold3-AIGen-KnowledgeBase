@@ -111,6 +111,12 @@ AlphaFold3/
   - Prefer `uvx` when you need a Python tool temporarily and do not want to add it to `/.brains/.venv`.
   - `npx` is the Node/npm analogue for one-off JavaScript CLI tools.
   - Use `npx` for non-Python tools such as `markdownlint-cli`; do not route npm tools through `uvx`.
+  - When Node/npm tooling matters for local workflow compatibility, prefer invoking `npm` and `npx` through Windows `cmd.exe`, just like `uv` and Docker.
+  - Current checked runtimes:
+    - `WSL`-side `node` is `v18.19.1`,
+    - Windows-side `node` via `cmd.exe` is `v20.20.2`, which is the canonical local runtime for repository workflows.
+  - Current checked markdownlint path:
+    - Windows-side `cmd.exe /c "npx --yes markdownlint-cli ..."` is working and should be treated as the normal path.
 - Avoid introducing parallel Python workflow conventions (`requirements.txt` + ad hoc `pip install`, manual virtualenv handling, mixed package managers) unless the repository or the user explicitly requires them.
 - When adding Python automation under `/.brains`, keep the `uv` workflow explicit in local documentation and commands.
 - If a task requires a reusable helper script, store it under `/.scripts` instead of leaving it as a temporary one-off artifact.
@@ -121,7 +127,10 @@ AlphaFold3/
 - Prefer writing these helper scripts so they can be reused or adapted by other agents in similar repositories, especially when folder structure, note taxonomy, or governance pages differ.
 - For `/.brains`, the canonical environment is the Windows virtual environment at `/.brains/.venv`.
 - Even when the agent is working from `WSL`, create, recreate, and sync `/.brains/.venv` through Windows `cmd.exe` with `uv`, not through a Linux `venv` layout.
-- Do not keep parallel canonical environments such as `/.brains/.venvx`; `/.brains/.venv` is the single project environment for local `brain` work.
+- Do not run canonical `/.brains/.venv` lifecycle commands from the Linux side of `WSL`; for this repository that prohibition applies to `uv venv`, `uv sync`, `uv run`, and direct use of `.venv/bin/python`.
+- Treat Linux-style directories such as `/.brains/.venv/bin/`, `/.brains/.venv/lib/`, or `/.brains/.venv/lib64/` as a broken state for this repository, not as an acceptable variant of the canonical environment.
+- If `/.brains/.venv/Scripts/python.exe` is missing, or if Linux-style `/.venv` directories appear next to it, stop and repair the environment before running checks, indexing, or local automation.
+- Do not keep parallel canonical environments such as `/.brains/.venvx`; `/.brains/.venv` is the single project environment for local `brains` work.
 - When Docker is needed from `WSL` for this repository, invoke it through Windows `cmd.exe` as well.
 - Prefer `cmd.exe /c "docker ..."` over calling Docker directly from the Linux shell in this repository workflow.
 - Must not hardcode the local repository path in commands, docs, scripts, or examples.
@@ -142,18 +151,18 @@ cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv syn
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brains"
 ```
 
 - For local automation under `/.brains`, preserve the modular package layout:
-  - `brain/config/`
-  - `brain/shared/`
-  - `brain/sources/pdf/`
-  - `brain/sources/pdf/backends/`
-  - `brain/sources/vault/`
-  - `brain/research/`
-  - `brain/mcp/tools/`
-  - `brain/commands/`
+  - `brains/config/`
+  - `brains/shared/`
+  - `brains/sources/pdf/`
+  - `brains/sources/pdf/backends/`
+  - `brains/sources/vault/`
+  - `brains/research/`
+  - `brains/mcp/tools/`
+  - `brains/commands/`
 - Prefer extending those packages over adding flat compatibility wrappers or oversized mixed-responsibility files.
 - When maintaining `/.brains`, verify direct Python dependencies against actual imports/usages after refactors.
 - Remove unused direct dependencies from `/.brains/pyproject.toml`, refresh `/.brains/uv.lock`, and rerun `/.brains` tests when cleanup is safe.
@@ -163,6 +172,8 @@ cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run
   - run `ruff` and `mypy` separately,
   - run only targeted pytest files or targeted tests related to the changed code,
   - run the full pytest suite only for broad refactors, cross-cutting changes, or when explicitly requested.
+- In `/.brains`, the checked-in pytest configuration already reports the slowest tests and enables a faulthandler timeout for the full suite.
+- When a full suite run is needed, treat `uv run pytest tests -q` as the canonical command; do not add extra timing/debug flags in routine examples unless you are diagnosing pytest itself.
 - For `/.brains`, treat `uv run mypy brains` as the canonical type-check command.
 - Keep the repository mypy configuration runnable in the default local environment; do not switch to ad hoc command-line flags in examples or routine verification unless the configuration itself is being updated.
 - In this repository, `mypy` should keep `follow_imports = "skip"` as the default policy unless a later change proves that full import following is both stable and materially more useful.
@@ -170,7 +181,7 @@ cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run
 - If mypy appears to hang, first verify whether the issue is heavy third-party import traversal rather than a local typing error.
 - For reusable `/.brains` mypy diagnosis, prefer the helper script `/.brains/scripts/diagnose_mypy_hang.py` instead of one-off shell experiments.
 - Do not remove the mypy import-skipping safeguards for those heavy third-party packages unless the updated configuration has been verified with a real successful `uv run mypy brains` run in this repository.
-- In `/.brains` Ruff configuration, keep `known-first-party = ["brain"]`; do not leave template placeholders such as `your_package`.
+- In `/.brains` Ruff configuration, keep `known-first-party = ["brains"]`; do not leave template placeholders such as `your_package`.
 - For `/.brains`, keep repository-specific operational defaults that may vary across repositories or vault layouts in `/.brains/config/brains.toml`, not as Python hardcode.
 - In particular:
   - keep graph governance-page exclusions in `[graph].governance_files`,
@@ -187,7 +198,7 @@ cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run
 ```
 
 ```bash
-cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brain tests"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run ruff check brains tests"
 ```
 
 ```bash
@@ -200,12 +211,27 @@ cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run
 
 ### 1.5.1 BRAIN environment workflow
 
-- Treat `/.brains/.venv` as the canonical local interpreter for `brain`.
-- When invoking `brain` commands, ensure the underlying project environment is the Windows `/.venv`.
+- Treat `/.brains/.venv` as the canonical local interpreter for `brains`.
+- When invoking `brains` commands, ensure the underlying project environment is the Windows `/.venv`.
 - If the agent is currently in `WSL`, prefer invoking Windows `uv` / Python through `cmd.exe /c "cd /d %CD%\.brains && ..."` for environment creation, dependency sync, and direct interpreter checks.
 - In `cmd.exe`, call `uv` directly from `PATH`; do not use an absolute filesystem path to `uv.exe`.
 - Apply the same rule to Docker commands needed for local tooling or services: invoke them through `cmd.exe`.
+- Apply the same preference to `npm` and `npx` when Node-side version or Windows integration matters.
 - Treat path portability as a must-have for all operational examples and automation snippets.
+- Do not describe one global Node version for this repository without checking the runtime first.
+- At the moment:
+  - `WSL`-side `node` is `v18.19.1`,
+  - Windows-side `node` via `cmd.exe` is `v20.20.2`, and that Windows runtime is the canonical local runtime for repository workflows.
+- Current markdownlint-specific rule:
+  - prefer Windows-side `cmd.exe /c "npx ..."` for Node tooling,
+  - do not run multiple Windows-side `npx` installs in parallel against the same shared cache,
+  - if `%LocalAppData%\\npm-cache\\_npx` starts throwing extraction or module-resolution errors, clear that `_npx` directory and rerun the command once, sequentially.
+- If the canonical `/.brains/.venv` becomes inconsistent, recover it in this order:
+  - stop Windows processes that still hold `/.brains/.venv/Scripts/python.exe`,
+  - remove `/.brains/.venv`,
+  - recreate it with `cmd.exe /c "cd /d %CD%\.brains && uv venv .venv --python 3.12"`,
+  - resync with `cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv sync --all-groups --python 3.12"`,
+  - verify with `cmd.exe /c "cd /d %CD%\.brains && .venv\\Scripts\\python.exe -V"`.
 
 ### 1.5.2 BRAIN-first workflow
 
@@ -220,10 +246,11 @@ cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run
   1. `search-vault` or `search_pdfs` to gather grounded context.
   2. `read_note` for the specific notes that will be updated or compared.
   3. direct file edits only after retrieval confirms the target paths and context.
-  4. `run_experiment` or `think` when the task needs multi-step synthesis instead of a single lookup.
+  4. `run_experiment` or `think` when the task needs a retrieval bundle for an external agent instead of a single lookup.
+  5. final synthesis should happen in the external agent layer, not inside `/.brains`.
 - Prefer direct module or CLI usage over transport overhead when working locally in this repository:
-  - `cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain ..."`
-  - local Python imports from `brain/...`
+  - `cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brains ..."`
+  - local Python imports from `brains/...`
 - Treat the `MCP` surface as the canonical tool contract for note and retrieval operations even when the same logic is invoked directly through Python.
 - Do not bypass `/.brains` for convenience when the task depends on grounded retrieval, active index pointers, or repository-specific search logic.
 
@@ -269,7 +296,7 @@ curl "http://$WIN_HOST:11434/api/tags"
 
 ```bash
 cd .brains
-cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain index --index-root /tmp/alphafold3-pdf-index"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brains index --index-root /tmp/alphafold3-pdf-index"
 ```
 
 - In this fallback mode, store the PDF index at:
@@ -285,10 +312,10 @@ cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run
 
 ```bash
 cd .brains
-cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brain check-index --target vault"
+cmd.exe /c "cd /d %CD%\.brains && set \"UV_PROJECT_ENVIRONMENT=.venv\" && uv run python -m brains check-index --target vault"
 ```
 
-- `brain check-index` must read `active_index.json` when present and validate the currently active fallback index, not only the canonical `/.brains/.index/...` path.
+- `brains check-index` must read `active_index.json` when present and validate the currently active fallback index, not only the canonical `/.brains/.index/...` path.
 
 ---
 
@@ -454,7 +481,7 @@ All scientific/technical claims require sources:
 Note `1.2.6. Featurization` contains sections 10 and 11 with Python code.
 
 | Section | Content |
-|---|---|
+| --- | --- |
 | 10.1 | Dependencies (`numpy`, `rdkit`, `gemmi`, `biopython`) |
 | 10.2 | Protein tokenization → one-hot `(L, 22)` |
 | 10.3 | Ligand tokenization from SMILES → atoms + bond graph |
